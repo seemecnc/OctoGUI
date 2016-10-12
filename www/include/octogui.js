@@ -1,3 +1,5 @@
+var hotLoadZLift = 50;
+
 var printerStatus = "Checking...";
 var api = "http://" + window.location.host + "/api/";
 var apikey = "ABAABABB";
@@ -18,6 +20,7 @@ var returnE;
 var watchLogFor = [];
 var watchLogForE = false;
 var hotLoading = false;
+var maxZHeight = 0;
 
 var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2" ];
@@ -558,7 +561,7 @@ function printCommand(command){
   var c;
   if(command == "pause"){
     c = JSON.stringify({ 'command': "pause", 'action': 'toggle' });
-    if(printerStatus == "Printing") {
+    if(printerStatus == "Printing" &&  currentZ < (maxZHeight - hotLoadZLift - 10)) {
       document.getElementById('hotUnload').style.visibility = "visible";
       returnZ = currentZ;
       watchLogForE = true;
@@ -640,6 +643,7 @@ function getPrinterProfile(){
         if(jdata.profiles[i].default){
           printerId = jdata.profiles[i].id;
           heatedBed = jdata.profiles[i].heatedBed;
+          maxZHeight = jdata.profiles[i].volume.height;
           document.getElementById('printerModel').innerHTML = jdata.profiles[i].name;
           if(heatedBed) {
             document.getElementById('bedTempDisplay').style.visibility = "visible";
@@ -665,9 +669,9 @@ function getPrinterProfile(){
 }
 
 function pauseUnload(){
-  if(printerStatus == "Paused" && typeof hotUnloadString[printerId] !== 'undefined'){
+  if(printerStatus == "Paused" && typeof hotUnloadString[printerId] !== 'undefined' && currentZ < (maxZHeight - hotLoadZLift - 10)){
     hotLoading = true;
-    moveHead('z',50);
+    moveHead('z',hotLoadZLift);
     sendCommand(hotUnloadString[printerId]);
     document.getElementById('hotUnload').style.visibility = "hidden";
     document.getElementById('hotLoad').style.visibility = "visible";
