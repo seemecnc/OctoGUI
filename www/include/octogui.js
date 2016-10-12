@@ -234,7 +234,7 @@ function setBedTemp(target){
     url: api+"printer/bed?apikey="+apikey,
     type: "post",
     contentType:"application/json; charset=utf-8",
-    data: JSON.stringify({"command":"target","targets":{"tool0": target}})
+    data: JSON.stringify({"command":"target","target":target})
   });
   btempTarget = target;
   document.getElementById('bedTempTarget').innerHTML = btempTarget;
