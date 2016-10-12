@@ -75,7 +75,6 @@ sock.onmessage = function(e) {
 
 function spottedLog(key, log){
   log = log.replace(/Recv:\ /,'');
-  console.log(log);
   switch(key){
 
     case "E":
