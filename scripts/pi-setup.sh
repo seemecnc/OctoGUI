@@ -172,7 +172,7 @@ cd /var/www/html
 git clone https://github.com/seemecnc/OctoGUI
 ln -nsf /var/www/html/OctoGUI/www/include /var/www/html/include
 ln -nsf /var/www/html/OctoGUI/www/fonts /var/www/html/fonts
-ln -nsf /var/www/html/OctoGUI/www/css /var/www/html/fonts
+ln -nsf /var/www/html/OctoGUI/www/css /var/www/html/css
 ln -nsf /var/www/html/OctoGUI/www/index.html /var/www/html/index.html
 
 #uncork the usb power bus
