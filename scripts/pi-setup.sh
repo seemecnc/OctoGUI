@@ -168,9 +168,12 @@ fi
 chmod 755 /home/pi/start.sh /home/pi/.config/autostart/chromium.desktop
 chown -R pi:pi /home/pi/.config /home/pi/start.sh /home/pi/.xscreensaver /home/pi/.ssh /home/pi/.bashrc /var/www/html
 
-ln -nsf /var/www/html/seeme/include /var/www/html/include
-ln -nsf /var/www/html/seeme/fonts /var/www/html/fonts
-ln -nsf /var/www/html/seeme/status.html /var/www/html/index.html
+cd /var/www/html
+git clone https://github.com/seemecnc/OctoGUI
+ln -nsf /var/www/html/OctoGUI/www/include /var/www/html/include
+ln -nsf /var/www/html/OctoGUI/www/fonts /var/www/html/fonts
+ln -nsf /var/www/html/OctoGUI/www/css /var/www/html/fonts
+ln -nsf /var/www/html/OctoGUI/www/index.html /var/www/html/index.html
 
 #uncork the usb power bus
 check=$(grep "max_usb_current" /boot/config.txt)
