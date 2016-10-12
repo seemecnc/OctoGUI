@@ -581,7 +581,7 @@ function printCommand(command){
     }
     if(printerStatus == "Paused") { resumeHotLoad(); }
   }else{
-    if(command == "play" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); resumeHotLoad(); }
+    if(command == "start" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); resumeHotLoad(); }
     else{ c = JSON.stringify({ 'command': command }); }
   }
   $.ajax({
