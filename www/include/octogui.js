@@ -556,6 +556,15 @@ function connectPrinter(com){
   });
 }
 
+function resumeHotLoad(){
+  document.getElementById('hotUnload').style.visibility = "hidden";
+  if(hotLoading){
+    sendCommand( ["90", "G0 Z" + returnZ +" F720", "G92 E" + returnE ] );
+    document.getElementById('hotLoad').style.visibility = "hidden";
+    hotLoading = false;
+  }
+}
+
 function printCommand(command){
 
   var c;
@@ -570,16 +579,9 @@ function printCommand(command){
       watchLogFor['stateToPaused'] = 'Paused';
       watchLogFor.length++;
     }
-    if(printerStatus == "Paused") {
-      document.getElementById('hotUnload').style.visibility = "hidden";
-      if(hotLoading){
-        sendCommand( ["90", "G0 Z" + returnZ +" F720", "G92 E" + returnE ] );
-        document.getElementById('hotLoad').style.visibility = "hidden";
-        hotLoading = false;
-      }
-    }
+    if(printerStatus == "Paused") { resumeHotLoad(); }
   }else{
-    if(command == "play" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); }
+    if(command == "play" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); resumeHotLoad(); }
     else{ c = JSON.stringify({ 'command': command }); }
   }
   $.ajax({
