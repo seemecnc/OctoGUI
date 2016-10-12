@@ -579,8 +579,8 @@ function printCommand(command){
       }
     }
   }else{
-    if(command == "play" && printerStatus == "Paused"){ printCommand('pause'); return; }
-    c = JSON.stringify({ 'command': command });
+    if(command == "play" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); }
+    else{ c = JSON.stringify({ 'command': command }); }
   }
   $.ajax({
     url: api+"job?apikey="+apikey,
