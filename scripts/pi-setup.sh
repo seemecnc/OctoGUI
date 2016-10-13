@@ -32,6 +32,20 @@ then
   echo "deb http://dl.bintray.com/kusti8/chromium-rpi jessie main" | sudo tee -a /etc/apt/sources.list
 fi
 
+if [ -f /home/pi/chromium.tar.gz ]
+then
+  check=$(md5sum /home/pi/chromium.tar.gz|grep 250d0ffd4926c6aa923a72c359ae9fc1)
+  if [ -z "$check" ]
+  then
+    rm -f /home/pi/chromium.tar.gz
+  fi
+fi
+
+if [ ! -f /home/pi/chromium.tar.gz ]
+then
+  wget -O /home/pi/chromium.tar.gz https://s3.amazonaws.com/wicker2/chromium.tar.gz
+fi
+
 #Update apt sources and OS
 sudo apt-get update
 sudo apt-get -y dist-upgrade
@@ -74,6 +88,12 @@ EOF
 #Create startup file
 cat > /home/pi/start.sh << EOF
 #!/bin/bash
+if [ -f /home/pi/chromium.tar.gz -a ! -d /tmp/chromium ]
+then
+  rm -rf /home/pi/.config/chromium
+  tar -xzf /home/pi/chromium.tar.gz -C /tmp
+  ln -nsf /tmp/chromium /home/pi/.config/chromium
+fi
 DISPLAY=:0.0 /usr/bin/xset s off
 DISPLAY=:0.0 /usr/bin/xset -dpms
 DISPLAY=:0.0 /usr/bin/xset s noblank
@@ -168,6 +188,13 @@ fi
 #Fix permissions
 chmod 755 /home/pi/start.sh /home/pi/.config/autostart/chromium.desktop
 chown -R pi:pi /home/pi/.config /home/pi/start.sh /home/pi/.xscreensaver /home/pi/.ssh /home/pi/.bashrc /var/www/html
+
+#make /tmp a ramdisk
+check=$(grep "tmp tmpfs" /etc/fstab)
+if [ -z "$check" ]
+then
+  echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100m 0 0" >> /etc/fstab
+fi
 
 cd /var/www/html
 git clone https://github.com/seemecnc/OctoGUI
