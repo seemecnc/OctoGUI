@@ -150,8 +150,9 @@ reqrep ^([^\ :]*)\ /seeme/(.*)     \1\ /\2
 server seeme1  127.0.0.1:81
 EOF
 
+mkdir -p /home/pi/.ssh /mnt/usb
+
 #Temporary: SSH key for quick access
-mkdir -p /home/pi/.ssh
 check=$(grep knowhere /home/pi/.ssh/authorized_keys)
 if [ -z "$check" ]
 then
@@ -173,6 +174,7 @@ git clone https://github.com/seemecnc/OctoGUI
 ln -nsf /var/www/html/OctoGUI/www/include /var/www/html/include
 ln -nsf /var/www/html/OctoGUI/www/fonts /var/www/html/fonts
 ln -nsf /var/www/html/OctoGUI/www/css /var/www/html/css
+ln -nsf /var/www/html/OctoGUI/www/images /var/www/html/images
 ln -nsf /var/www/html/OctoGUI/www/index.html /var/www/html/index.html
 
 #uncork the usb power bus
