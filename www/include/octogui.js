@@ -19,8 +19,32 @@ var returnZ;
 var returnE;
 var watchLogFor = [];
 var watchLogForE = false;
+var watchForZ = [];
 var hotLoading = false;
 var maxZHeight = 0;
+
+watchLogFor[0]['height'] = 10;
+watchLogFor[1]['height'] = 20;
+watchLogFor[2]['height'] = 30;
+watchLogFor[3]['height'] = 40;
+watchLogFor[4]['height'] = 50;
+watchLogFor[5]['height'] = 60;
+watchLogFor[6]['height'] = 70;
+watchLogFor[7]['height'] = 72;
+watchLogFor[8]['height'] = 74;
+watchLogFor[9]['height'] = 76;
+watchLogFor[10]['height'] = 78;
+watchLogFor[0]['action'] = "Wahoo";
+watchLogFor[1]['action'] = "Waho20";
+watchLogFor[2]['action'] = "Waho30";
+watchLogFor[3]['action'] = "Waho40";
+watchLogFor[4]['action'] = "Waho50";
+watchLogFor[5]['action'] = "Waho60";
+watchLogFor[6]['action'] = "Waho70";
+watchLogFor[7]['action'] = "Waho72";
+watchLogFor[8]['action'] = "Waho74";
+watchLogFor[9]['action'] = "Waho76";
+watchLogFor[10]['action'] = "Waho78";
 
 var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2" ];
@@ -58,6 +82,13 @@ sock.onopen = function(){
 sock.onmessage = function(e) {
   if (typeof e.data.current !== 'undefined'){
     var t;
+    //watch for Z height actions
+    if(typeof watchForZ[0] !== 'undefined'){
+      if(printerStatus == "Printing" && currentZ == e.data.current.currentZ && currentZ >= watchForZ[0]['height']){
+        spottedZ(watchForZ[0]['action']);
+        watchForZ.splice(0,1);
+      }
+    }
     currentZ = e.data.current.currentZ;
     document.getElementById('currentZ').innerHTML = currentZ;
     if (e.data.current.progress.completion !== null){ document.getElementById('currentPercent').innerHTML = e.data.current.progress.completion.toFixed(2); }
@@ -72,6 +103,10 @@ sock.onmessage = function(e) {
     }
   }
 };
+
+function spottedZ(action){
+  console.log("We hit Z" + currentZ + "! Action: " + action);
+}
 
 function spottedLog(key, log){
   log = log.replace(/Recv:\ /,'');
@@ -251,6 +286,7 @@ function updateConnectionStatus(){
     complete: (function(data,type){
       if(type == "success"){
         jdata = JSON.parse(data.responseText);
+        if(printerStatus == "Printing" && jdata.current.state != "Printing" && typeof watchForZ[0] !== 'undefined'){ watchForZ = []; console.log("Clearing Z events"); }
         if(printerStatus != "Operational" && jdata.current.state == "Operational" && typeof watchLogFor['filamentInfo'] == 'undefined'){
           watchLogFor['firmwareInfo'] = "FIRMWARE";
           watchLogFor.length++;
