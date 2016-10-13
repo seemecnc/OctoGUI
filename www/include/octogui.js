@@ -84,6 +84,7 @@ function spottedLog(key, log){
 
     case "stateToPaused":
       console.log("Printer is paused. Last E is " + returnE);
+      if(returnE > 0) { document.getElementById('hotUnload').style.visibility = "visible"; }
       watchLogFor.splice(key,1);
       watchLogFor.splice("E",1);
       break;
@@ -561,6 +562,7 @@ function resumeHotLoad(){
     sendCommand( ["90", "G0 Z" + returnZ +" F720", "G92 E" + returnE ] );
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
+    returnE = 0;
   }
 }
 
@@ -570,7 +572,6 @@ function printCommand(command){
   if(command == "pause"){
     c = JSON.stringify({ 'command': "pause", 'action': 'toggle' });
     if(printerStatus == "Printing" &&  currentZ < (maxZHeight - hotLoadZLift - 10)) {
-      document.getElementById('hotUnload').style.visibility = "visible";
       returnZ = currentZ;
       watchLogForE = true;
       watchLogFor['E'] = ' E';

@@ -27,9 +27,18 @@ then
   #Stop Octoprint
   service octoprint stop
 
-  #Add Repo for Chromium Packages - TEST: check if chromium is available in the standard repo
+  #Add Repo for Chromium Packages
   wget -qO - http://bintray.com/user/downloadSubjectPublicKey?username=bintray | sudo apt-key add -
   echo "deb http://dl.bintray.com/kusti8/chromium-rpi jessie main" | sudo tee -a /etc/apt/sources.list
+
+  #Update apt sources and OS
+  sudo apt-get update
+  sudo apt-get -y dist-upgrade
+
+  #Install Required Packages
+  apt-get install -y raspberrypi-ui-mods lightdm xinit lxterminal lxde-core joe chromium-browser usbmount unclutter nginx php5-fpm php-apc php5-curl xdotool
+  apt-get remove -y xscreensaver
+  apt-get -y autoremove
 fi
 
 if [ -f /home/pi/chromium.tar.gz ]
@@ -45,15 +54,6 @@ if [ ! -f /home/pi/chromium.tar.gz ]
 then
   wget -O /home/pi/chromium.tar.gz https://s3.amazonaws.com/wicker2/chromium.tar.gz
 fi
-
-#Update apt sources and OS
-sudo apt-get update
-sudo apt-get -y dist-upgrade
-
-#Install Required Packages
-apt-get install -y raspberrypi-ui-mods lightdm xinit lxterminal lxde-core joe chromium-browser usbmount unclutter nginx php5-fpm php-apc php5-curl xdotool
-apt-get remove -y xscreensaver
-apt-get -y autoremove
 
 #Add Terminal keyboard shortcut
 check=$(grep "C-A-t" /home/pi/.config/openbox/lxde-pi-rc.xml)
@@ -196,8 +196,13 @@ then
   echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100m 0 0" >> /etc/fstab
 fi
 
-cd /var/www/html
-git clone https://github.com/seemecnc/OctoGUI
+#Install OctoGUI from git if it's not already there
+if [ ! -d /var/www/html/OctoGUI ]
+then
+  cd /var/www/html
+  git clone https://github.com/seemecnc/OctoGUI
+fi
+
 ln -nsf /var/www/html/OctoGUI/www/include /var/www/html/include
 ln -nsf /var/www/html/OctoGUI/www/fonts /var/www/html/fonts
 ln -nsf /var/www/html/OctoGUI/www/css /var/www/html/css
