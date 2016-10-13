@@ -23,11 +23,8 @@ var watchForZ = [];
 var hotLoading = false;
 var maxZHeight = 0;
 
-var tempArray;
 for(l = 0;l <= 20;l++){
-  tempArray['height'] = l * 5;
-  tempArray['action'] = "Yay, " + tempArray['height'];
-  watchLogFor[l] = tempArray;
+  watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
 }
 
 var calibrateString = [];
