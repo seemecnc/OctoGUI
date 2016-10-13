@@ -23,28 +23,12 @@ var watchForZ = [];
 var hotLoading = false;
 var maxZHeight = 0;
 
-watchLogFor[0]['height'] = 10;
-watchLogFor[1]['height'] = 20;
-watchLogFor[2]['height'] = 30;
-watchLogFor[3]['height'] = 40;
-watchLogFor[4]['height'] = 50;
-watchLogFor[5]['height'] = 60;
-watchLogFor[6]['height'] = 70;
-watchLogFor[7]['height'] = 72;
-watchLogFor[8]['height'] = 74;
-watchLogFor[9]['height'] = 76;
-watchLogFor[10]['height'] = 78;
-watchLogFor[0]['action'] = "Wahoo";
-watchLogFor[1]['action'] = "Waho20";
-watchLogFor[2]['action'] = "Waho30";
-watchLogFor[3]['action'] = "Waho40";
-watchLogFor[4]['action'] = "Waho50";
-watchLogFor[5]['action'] = "Waho60";
-watchLogFor[6]['action'] = "Waho70";
-watchLogFor[7]['action'] = "Waho72";
-watchLogFor[8]['action'] = "Waho74";
-watchLogFor[9]['action'] = "Waho76";
-watchLogFor[10]['action'] = "Waho78";
+var tempArray;
+for(l = 0;l <= 20;l++){
+  tempArray['height'] = l * 5;
+  tempArray['action'] = "Yay, " + tempArray['height'];
+  watchLogFor[l] = tempArray;
+}
 
 var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2" ];
