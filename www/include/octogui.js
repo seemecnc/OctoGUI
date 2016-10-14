@@ -267,7 +267,7 @@ function updateConnectionStatus(){
     complete: (function(data,type){
       if(type == "success"){
         jdata = JSON.parse(data.responseText);
-        if(printerStatus == "Printing" && jdata.current.state != "Printing" && typeof watchForZ[0] !== 'undefined'){ watchForZ = []; console.log("Clearing Z events"); }
+        if(printerStatus == "Printing" && jdata.current.state != "Printing" && jdata.current.state != "Paused" && typeof watchForZ[0] !== 'undefined'){ watchForZ = []; console.log("Clearing Z events"); }
         if(printerStatus != "Operational" && jdata.current.state == "Operational" && typeof watchLogFor['filamentInfo'] == 'undefined'){
           watchLogFor['firmwareInfo'] = "FIRMWARE";
           watchLogFor.length++;
