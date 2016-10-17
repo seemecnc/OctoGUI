@@ -58,6 +58,8 @@ sock.onopen = function(){
     watchLogFor.length++;
     sendCommand("M115");
   }
+  watchLogFor['Z'] = "Z";
+  watchLogFor.length++;
 }
 
 sock.onmessage = function(e) {
@@ -96,6 +98,12 @@ function spottedLog(key, log){
     case "E":
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
+      break;
+
+    case "Z":
+      returnZ = log.replace(/.*Z/,'');
+      returnZ = returnZ.replace(/\*.*/,'');
+      console.log("ReturnZ: " + returnZ);
       break;
 
     case "stateToPaused":
