@@ -581,13 +581,13 @@ function connectPrinter(com){
             })
           });
         }
-        else {
-          c = { 'command': "disconnect"};
-          printerStatus = "Disconnecting";
-          document.getElementById('currentStatus').innerHTML = printerStatus;
-        }
       });
     });
+  }
+  else {
+    c = { 'command': "disconnect"};
+    printerStatus = "Disconnecting";
+    document.getElementById('currentStatus').innerHTML = printerStatus;
   }
 }
 
