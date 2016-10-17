@@ -581,7 +581,7 @@ function connectPrinter(com){
             })
           });
         }
-      });
+      })
     });
   }
   else {
