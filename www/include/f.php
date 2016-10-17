@@ -63,6 +63,7 @@ function printerPort(){
   while($num < 9 && $found == 0){
     $port = "/dev/ttyACM".$num;
     if(file_exists($port)) $found = 1;
+    $num++;
   }
 
   if($found) return($port);
