@@ -721,12 +721,16 @@ function startupTasks(){
   $('#eTempInput').numpad({
     onKeypadClose: function(){
       setExtruderTemp(Number(document.getElementById('eTempInput').value));
-    }
+    },
+    hidePlusMinusButton: true,
+    hideDecimalButton: true
   });
   $('#bTempInput').numpad({
     onKeypadClose: function(){
       setBedTemp(Number(document.getElementById('bTempInput').value));
-    }
+    },
+    hidePlusMinusButton: true,
+    hideDecimalButton: true
   });
   document.getElementById('apiKey').innerHTML = apikey;
   getPrinterProfile();
@@ -735,3 +739,9 @@ function startupTasks(){
 
 window.setInterval( function(){ updateStatus(); }, 1000);
 
+$.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width:80%"></table>';
+$.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
+$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" />';
+$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="width:75%"></button>';
+$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="width:100%;"></button>';
+$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');}
