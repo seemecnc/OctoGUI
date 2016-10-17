@@ -699,11 +699,13 @@ function getPrinterProfile(){
 
 function pauseUnload(){
   if(printerStatus == "Paused" && typeof hotUnloadString[printerId] !== 'undefined' && currentZ < (maxZHeight - hotLoadZLift - 10)){
-    hotLoading = true;
-    moveHead('z',hotLoadZLift);
-    sendCommand(hotUnloadString[printerId]);
-    document.getElementById('hotUnload').style.visibility = "hidden";
-    document.getElementById('hotLoad').style.visibility = "visible";
+    if(returnE > 0){
+      hotLoading = true;
+      moveHead('z',hotLoadZLift);
+      sendCommand(hotUnloadString[printerId]);
+      document.getElementById('hotUnload').style.visibility = "hidden";
+      document.getElementById('hotLoad').style.visibility = "visible";
+    }else{ alert("Error. Last extruder position not found. Please Resume your print, then pause to try again."); }
   }
 }
 
