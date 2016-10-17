@@ -56,7 +56,25 @@ function listFiles(){
   return($files);
 }
 
+function printerPort(){
+
+  $found = 0;
+  $num = 0;
+  while($num < 9 && $found == 0){
+    $port = "/dev/ttyACM".$num;
+    if(file_exists($port)) $found = 1;
+  }
+
+  if($found) return($port);
+  else return("ERROR");
+
+}
+
 switch($_REQUEST['c']){
+
+  case "port":
+    echo printerPort();
+    break;
 
   case "list":
     //List all files on local FS and USB FS if mounted
