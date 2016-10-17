@@ -103,7 +103,7 @@ function spottedLog(key, log){
     case "Z":
       returnZ = log.replace(/.*Z/,'');
       returnZ = returnZ.replace(/\*.*/,'');
-      console.log("ReturnZ: " + returnZ);
+      //console.log("ReturnZ: " + returnZ);
       break;
 
     case "stateToPaused":
@@ -469,13 +469,13 @@ function updateFiles(){
                   { text: 'Print ' + f.name + ' now', value: '2' },
                   { text: 'Delete ' + f.name, value: '3' }],
                   callback: function (result) {
-                    result.forEach(function(r){
+                    if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
                       switch(r){
                         case "1": selectFile("local/" + f.name); break;
                         case "2": selectFile("local/" + f.name); printCommand("start"); break;
                         case "3": deleteFile(f.origin, f.name); break;
                       }
-                    });
+                    }); }
                   }
               });
               };
@@ -493,12 +493,12 @@ function updateFiles(){
                   { text: 'Copy ' + f.name + ' to local storage', value: '1' },
                   { text: 'Delete ' + f.name + ' from USB', value: '2' } ],
                   callback: function (result) {
-                    result.forEach(function(r){
+                    if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
                       switch(r){
                         case "1": transferFile(f.name); break;
                         case "2": deleteFile(f.origin, f.name); break;
                       }
-                    });
+                    }); }
                   }
               });
               };
