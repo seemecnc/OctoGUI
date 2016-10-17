@@ -103,14 +103,13 @@ function spottedLog(key, log){
     case "Z":
       returnZ = log.replace(/.*Z/,'');
       returnZ = returnZ.replace(/\*.*/,'');
-      //console.log("ReturnZ: " + returnZ);
       break;
 
     case "stateToPaused":
       console.log("Printer is paused. Last E is " + returnE);
       if(returnE > 0) { document.getElementById('hotUnload').style.visibility = "visible"; }
-      watchLogFor.splice(key,1);
-      watchLogFor.splice("E",1);
+      delete watchLogFor[key]; watchLogFor.length--;
+      delete watchLogFor["E"]; watchLogFor.length--;
       break;
 
     case "firmwareInfo":
@@ -143,13 +142,13 @@ function spottedLog(key, log){
           break;
       }
       if(pId != printerId){ setPrinterProfile(pId); }
-      watchLogFor.splice(key,1);
+      delete watchLogFor[key]; watchLogFor.length--;
       break;
 
     case "filamentInfo":
       document.getElementById('filamentInfo').style.visibility = "visible";
       document.getElementById('filamentInfo').innerHTML = log;
-      watchLogFor.splice(key,1);
+      delete watchLogFor[key]; watchLogFor.length--;
       break;
 
   }
@@ -649,6 +648,7 @@ function moveHead(axis,distance){
 }
 
 function setPrinterProfile(newPrinterId){
+  connectPrinter("disconnect");
   $.ajax({
     url: api+"printerprofiles/" + newPrinterId + "?apikey="+apikey,
     type: "patch",
