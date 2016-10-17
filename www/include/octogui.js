@@ -656,6 +656,7 @@ function setPrinterProfile(newPrinterId){
     data: JSON.stringify({"profile":{"default":1}}),
     success: (function(){
       getPrinterProfile();
+      bootbox.alert("New printer detected. Press OK to reconnect", function(){ connectPrinter("connect"); });
     })
   });
 
