@@ -570,17 +570,7 @@ function connectPrinter(com){
       type: "get",
       complete: (function(data,type){
         if(data.responseText == "ERROR"){ c = { 'command': "connect","baudrate": 250000 }; }
-        else{ c = { 'command': "connect","baudrate": 250000,"port": data.responseText };
-          $.ajax({
-            url: api+"connection?apikey="+apikey,
-            type: "post",
-            contentType:"application/json; charset=utf-8",
-            data: JSON.stringify(c),
-            success: (function(){
-              updateStatus();
-            })
-          });
-        }
+        else{ c = { 'command': "connect","baudrate": 250000,"port": data.responseText }; }
       })
     });
   }
@@ -589,6 +579,15 @@ function connectPrinter(com){
     printerStatus = "Disconnecting";
     document.getElementById('currentStatus').innerHTML = printerStatus;
   }
+  $.ajax({
+    url: api+"connection?apikey="+apikey,
+    type: "post",
+    contentType:"application/json; charset=utf-8",
+    data: JSON.stringify(c),
+    success: (function(){
+      updateStatus();
+    })
+  });
 }
 
 function resumeHotLoad(){
