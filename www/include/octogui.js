@@ -282,6 +282,8 @@ function updateConnectionStatus(){
           watchLogFor['filamentInfo'] = "Printed filament";
           watchLogFor.length++;
           sendCommand("M115");
+        }else{
+          if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational"){ sendCommand("M115"); }
         }
         printerStatus = jdata.current.state;
         if(printerStatus.includes("Error: Z-probe failed")){ connectPrinter("connect"); printerStatus = "Connecting"; }
@@ -568,9 +570,12 @@ function connectPrinter(com){
     $.ajax({
       url: "include/f.php?c=port",
       type: "get",
+      contentType:"application/json; charset=utf-8",
       complete: (function(data,type){
-        if(data.responseText == "ERROR"){ c = { 'command': "connect","baudrate": 250000 }; }
-        else{ c = { 'command': "connect","baudrate": 250000,"port": data.responseText }; }
+        jdata = JSON.parse(data.responseText);
+        if(jdata.port == "ERROR"){ c = { 'command': "connect","baudrate": 250000 }; }
+        else{ c = { 'command': "connect","baudrate": 250000,"port": jdata.port }; }
+        $.ajax({ url: api+"connection?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: JSON.stringify(c), success: (function(){ updateStatus(); }) });
       })
     });
   }
@@ -578,16 +583,8 @@ function connectPrinter(com){
     c = { 'command': "disconnect"};
     printerStatus = "Disconnecting";
     document.getElementById('currentStatus').innerHTML = printerStatus;
+    $.ajax({ url: api+"connection?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: JSON.stringify(c), success: (function(){ updateStatus(); }) });
   }
-  $.ajax({
-    url: api+"connection?apikey="+apikey,
-    type: "post",
-    contentType:"application/json; charset=utf-8",
-    data: JSON.stringify(c),
-    success: (function(){
-      updateStatus();
-    })
-  });
 }
 
 function resumeHotLoad(){

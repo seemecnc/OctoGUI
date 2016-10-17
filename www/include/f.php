@@ -73,7 +73,7 @@ function printerPort(){
 switch($_REQUEST['c']){
 
   case "port":
-    echo printerPort();
+    echo "{\"port\":\"".printerPort()."\"}";
     break;
 
   case "list":
