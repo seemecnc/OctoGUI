@@ -599,6 +599,7 @@ function printCommand(command){
     c = JSON.stringify({ 'command': "pause", 'action': 'toggle' });
     if(printerStatus == "Printing" && currentZ < (maxZHeight - hotLoadZLift - 10)) {
       if(!returnZ >= 0) { returnZ = currentZ; }
+      console.log("Printing paused at " + currentZ + ". Return Z is: " + returnZ);
       watchLogForE = true;
       watchLogFor['E'] = ' E';
       watchLogFor.length++;
