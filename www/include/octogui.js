@@ -130,7 +130,8 @@ function spottedLog(key, log){
           pId = "rostock_max_v3";
           break;
         default:
-          alert("Printer ("+fwp+") not supported!");
+          pId = 'default';
+          console.log("Printer ("+fwp+") not supported!");
           break;
       }
       if(pId != printerId){ setPrinterProfile(pId); }
