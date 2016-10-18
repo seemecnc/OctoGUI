@@ -1,4 +1,4 @@
-var hotLoadZLift = 50;
+var hotLoadZLift = 0;
 
 var printerStatus = "Checking...";
 var api = "http://" + window.location.host + "/api/";
@@ -31,13 +31,13 @@ for(l = 0;l <= 20;l++){
 
 var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2" ];
-calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED" ];
 calibrateString['orion'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED" ];
+calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED" ];
 
 var loadFilamentString = [];
-loadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E530 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M104 S0" ];
-loadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E560 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M104 S0" ];
-loadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E750 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M104 S0" ];
+loadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E530 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84" ];
+loadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E560 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84" ];
+loadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E750 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84" ];
 
 var unloadFilamentString = [];
 unloadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84" ];
@@ -46,10 +46,12 @@ unloadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E30 F7
 
 var hotUnloadString = [];
 hotUnloadString['eris'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
+hotUnloadString['orion'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
 hotUnloadString['rostock_max_v3'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-830", "G90", "G92 E0" ];
 
 var hotLoadString = [];
 hotLoadString['eris'] = [ "G91", "G1 E530 F5000", "G1 E80 F150", "G90", "G92 E0" ];
+hotLoadString['orion'] = [ "G91", "G1 E560 F5000", "G1 E80 F150", "G90", "G92 E0" ];
 hotLoadString['rostock_max_v3'] = [ "G91", "G1 E750 F5000", "G1 E100 F150", "G90", "G92 E0" ];
 
 
