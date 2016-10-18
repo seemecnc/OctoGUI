@@ -24,16 +24,15 @@ var maxZHeight = 0;
 var currentSpeed = 100;
 var pauseTimeout = 0;
 var pauseTemp = 0;
-var hideOverlayOnTemp = -1;
 
 for(l = 0;l <= 20;l++){
   watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
 }
 
 var calibrateString = [];
-calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2", "M104 S1" ];
-calibrateString['orion'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M104 S1" ];
-calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M104 S1" ];
+calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2", "M115" ];
+calibrateString['orion'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
+calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
 
 var loadFilamentString = [];
 loadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E530 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84" ];
@@ -151,6 +150,11 @@ function spottedLog(key, log){
       delete watchLogFor[key]; watchLogFor.length--;
       break;
 
+    case "hideOverlay":
+      hideOverlay();
+      delete watchLogFor[key]; watchLogFor.length--;
+      break;
+
   }
 }
 
@@ -192,7 +196,7 @@ function calibratePrinter(){
       bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
         if(result){
           sendCommand(calibrateString[printerId]);
-          hideOverlayOnTemp = 1;
+          watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
           showOverlay("Printer is Calibrating");
         }
       });
@@ -337,12 +341,7 @@ function updateStatus(){
             if(tempCount > 600){ tempCount = 1; }
           }else{ tempCount = 1; }
           etemp = jdata.temperature.tool0.actual;
-          if(hideOverlayOnTemp >= 0 && hideOverlayOnTemp == jdata.temperature.tool0.target){
-            hideOverlayOnTemp = -1;
-            hideOverlay();
-            setExtruderTemp(0);
-          }
-          else{ etempTarget = jdata.temperature.tool0.target; }
+          etempTarget = jdata.temperature.tool0.target;
           if(heatedBed && typeof jdata.temperature.bed !== 'undefined'){
             btemp = jdata.temperature.bed.actual;
             btempTarget = jdata.temperature.bed.target;
