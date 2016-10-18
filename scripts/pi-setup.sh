@@ -34,12 +34,12 @@ then
   #Update apt sources and OS
   sudo apt-get update
   sudo apt-get -y dist-upgrade
-
-  #Install Required Packages
-  apt-get install -y raspberrypi-ui-mods lightdm xinit lxterminal lxde-core joe chromium-browser usbmount unclutter nginx php5-fpm php-apc php5-curl xdotool
   apt-get remove -y xscreensaver
   apt-get -y autoremove
 fi
+
+#Install Required Packages
+apt-get install -y raspberrypi-ui-mods lightdm xinit lxterminal lxde-core joe chromium-browser usbmount unclutter nginx php5-fpm php-apc php5-curl xdotool jq
 
 if [ -f /home/pi/chromium.tar.gz ]
 then
