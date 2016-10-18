@@ -71,7 +71,7 @@ sock.onmessage = function(e) {
     var t;
     //watch for Z height actions
     if(typeof watchForZ[0] !== 'undefined'){
-      if(printerStatus == "Printing" && currentZ == e.data.current.currentZ && currentZ >= watchForZ[0]['height']){
+      if(printerStatus == "Printing" && currentZ == e.data.current.currentZ && currentZ >= watchForZ[0]['height'] && currentZ != null){
         spottedZ(watchForZ[0]['action']);
         watchForZ.splice(0,1);
       }
