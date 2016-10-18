@@ -593,7 +593,7 @@ function connectPrinter(com){
 function resumeHotLoad(){
   document.getElementById('hotUnload').style.visibility = "hidden";
   if(hotLoading){
-    sendCommand( ["90", "G0 Z" + returnZ +" F720", "G92 E" + returnE ] );
+    sendCommand( ["90", "G0 Z" + returnZ +" F1440", "G92 E" + returnE ] );
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
     returnE = 0;
@@ -710,7 +710,8 @@ function pauseUnload(){
     if(returnE > 0){
       hotLoading = true;
       returnZ = currentZ;
-      moveHead('z',hotLoadZLift);
+      if(hotLoadZLift > 0){ moveHead('z',hotLoadZLift); }
+      else{ moveHead('z',(maxZHeight - 15)); }
       sendCommand(hotUnloadString[printerId]);
       document.getElementById('hotUnload').style.visibility = "hidden";
       document.getElementById('hotLoad').style.visibility = "visible";
