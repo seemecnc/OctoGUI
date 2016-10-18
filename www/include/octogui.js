@@ -789,7 +789,16 @@ function startupTasks(){
   document.getElementById('apiKey').innerHTML = apikey;
   document.getElementById('speedFactor').value = currentSpeed;
   getPrinterProfile();
+}
 
+function showOverlay(content){
+  document.getElementById('overlayContent').innerHTML = content;
+  document.getElementById('overlay').style.width = "100%";
+}
+
+function hideOverlay(){
+  document.getElementById('overlay').style.width = "0";
+  document.getElementById('overlayContent').innerHTML = "";
 }
 
 window.setInterval( function(){ updateStatus(); }, 1000);
