@@ -209,7 +209,13 @@ function calibratePrinter(){
 
 function loadFilament(){
   if(printerStatus == "Operational"){
-    if (typeof loadFilamentString[printerId] !== 'undefined'){ sendCommand(loadFilamentString[printerId]); }
+    if (typeof loadFilamentString[printerId] !== 'undefined'){
+      bootbox.confirm("You are about to LOAD filament. Make sure that it is 1 inch past the end of the extruder.", function(result){
+        if(result){
+          sendCommand(loadFilamentString[printerId]);
+        }
+      });
+    }
     else{
       bootbox.alert({
         message: "Load Filament script is not set for the " + printerId,
@@ -226,7 +232,13 @@ function loadFilament(){
 
 function unloadFilament(){
   if(printerStatus == "Operational"){
-    if (typeof unloadFilamentString[printerId] !== 'undefined'){ sendCommand(unloadFilamentString[printerId]); }
+    if (typeof unloadFilamentString[printerId] !== 'undefined'){
+      bootbox.confirm("You are about to UNLOAD filament. Please Confirm this is what you want to do.", function(result){
+        if(result){
+          sendCommand(unloadFilamentString[printerId]);
+        }
+      });
+    }
     else{
       bootbox.alert({
         message: "Unload Filament script is not set for the " + printerId,
