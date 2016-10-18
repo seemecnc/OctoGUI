@@ -22,6 +22,8 @@ var watchForZ = [];
 var hotLoading = false;
 var maxZHeight = 0;
 var currentSpeed = 100;
+var pauseTimeout = 0;
+var pauseTemp = 0;
 
 for(l = 0;l <= 20;l++){
   watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
@@ -291,6 +293,14 @@ function updateConnectionStatus(){
 function updateStatus(){
 
   updateConnectionStatus();
+  if(printerStatus == "Paused" && pauseTimeout > 0){
+    if(pauseTimeout + (5 * 60 * 1000) <= (new Date().valueOf())){
+      console.log("Printer paused for too long. Shutting off hot end");
+      pauseTemp = etempTarget;
+      setExtruderTemp(0);
+      pauseTimeout = 0;
+    }
+  }
   if(printerStatus == "Operational" || printerStatus == "Printing" || printerStatus == "Paused"){
     $.ajax({
       url: api+"printer?apikey="+apikey,
@@ -704,13 +714,20 @@ function pauseUnload(){
       sendCommand(hotUnloadString[printerId]);
       document.getElementById('hotUnload').style.visibility = "hidden";
       document.getElementById('hotLoad').style.visibility = "visible";
+      pauseTimeout = new Date().valueOf();
     }else{ alert("Error. Last extruder position not found. Please Resume your print, then pause to try again."); }
   }
 }
 
 function playLoad(){
+  var c = hotLoadString[printerId];
   if(printerStatus == "Paused" && typeof hotLoadString[printerId] !== 'undefined'){
-    sendCommand(hotLoadString[printerId]);
+    if(pauseTemp > 0){
+      console.log("Heating extruder before loading filament");
+      c.unshift("M109 S"+pauseTemp);
+      pauseTemp = 0;
+    }
+    sendCommand(c);
   }
 }
 
