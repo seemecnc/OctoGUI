@@ -66,17 +66,17 @@ fi
 #Setup uptime check file
 cat > /home/pi/ucheck.sh << EOF
 #!/bin/bash
-let maxuptime=$(( 20 * 3600))
+let maxuptime=\$(( 20 * 3600))
 problem="null"
-utime=$(cat /proc/uptime|cut -f1 -d'.')
-if [ $utime -lt $maxuptime ]; then echo "Uptime not long enough - $utime"; problem="uptime"; fi
+utime=\$(cat /proc/uptime|cut -f1 -d'.')
+if [ \$utime -lt \$maxuptime ]; then echo "Uptime not long enough - \$utime"; problem="uptime"; fi
 
-res=$(curl -s http://localhost/api/printer?apikey=ABAABABB)
-if [ "$res" != "Printer is not operational" ]; then status=$(echo "$res"|jq .state.text|sed -e 's/"//g'); check=$(echo "$status"|grep -i Error)
-  if [ "$status" != "Operational" -a -z "$check" ]; then problem="Status: $status"; fi
+res=\$(curl -s http://localhost/api/printer?apikey=ABAABABB)
+if [ "\$res" != "Printer is not operational" ]; then status=\$(echo "\$res"|jq .state.text|sed -e 's/"//g'); check=\$(echo "\$status"|grep -i Error)
+  if [ "\$status" != "Operational" -a -z "\$check" ]; then problem="Status: \$status"; fi
 fi
 
-if [ "$problem" == "null" ]; then sudo /usr/bin/shutdown -r now; fi
+if [ "\$problem" == "null" ]; then sudo /usr/bin/shutdown -r now; fi
 EOF
 
 #Setup crontab
