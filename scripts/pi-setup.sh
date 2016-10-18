@@ -62,6 +62,29 @@ then
   sed /home/pi/.config/openbox/lxde-pi-rc.xml -i -e 's/<keyboard>/<keyboard>\n<keybind key=\"C-A-t\"><action name=\"Execute\"><command>lxterminal<\/command><\/action>\n<\/keybind>/'
 fi
 
+#Setup uptime check file
+cat > /home/pi/ucheck.sh << EOF
+#!/bin/bash
+let maxuptime=$(( 20 * 3600))
+problem="null"
+utime=$(cat /proc/uptime|cut -f1 -d'.')
+if [ $utime -lt $maxuptime ]; then echo "Uptime not long enough - $utime"; problem="uptime"; fi
+
+res=$(curl -s http://localhost/api/printer?apikey=ABAABABB)
+if [ "$res" != "Printer is not operational" ]; then status=$(echo "$res"|jq .state.text|sed -e 's/"//g'); check=$(echo "$status"|grep -i Error)
+  if [ "$status" != "Operational" -a -z "$check" ]; then problem="Status: $status"; fi
+fi
+
+if [ "$problem" == "null" ]; then sudo /usr/bin/shutdown -r now; fi
+EOF
+
+#Setup crontab
+cat > /home/pi/crontab << EOF
+1 3 * * * /home/pi/ucheck.sh
+
+EOF
+crontab -u pi /home/pi/crontab
+
 #Setup nginx config
 cat > /etc/nginx/sites-available/default << EOF
 server {
@@ -188,8 +211,8 @@ then
 fi
 
 #Fix permissions
-chmod 755 /home/pi/start.sh /home/pi/.config/autostart/chromium.desktop
-chown -R pi:pi /home/pi/.config /home/pi/start.sh /home/pi/.xscreensaver /home/pi/.ssh /home/pi/.bashrc /var/www/html
+chmod 755 /home/pi/start.sh /home/pi/ucheck.sh /home/pi/.config/autostart/chromium.desktop
+chown -R pi:pi /home/pi/.config /home/pi/*sh /home/pi/.xscreensaver /home/pi/.ssh /home/pi/.bashrc /var/www/html
 
 #make /tmp a ramdisk
 check=$(grep "tmp tmpfs" /etc/fstab)
