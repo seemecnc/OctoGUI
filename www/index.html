@@ -19,6 +19,8 @@
       <script>document.write('<script src="include/octogui.js?dev=' + Math.floor(Math.random() * 1000) + '"\><\/script>');</script>
   </head>
   <body onload='startupTasks();'>
+    <div id="overlay" class="overlay"><a class="closebtn" onclick="hideOverlay()">&times;</a>
+    <div id="overlayContent" class="overlay-content"></div></div>
     <br><div align=center><table border=1><tr><td align=left valign=top width="25%">
     Status: <div id="currentStatus" style="display:inline-block">Checking...</div><br>
     Printer: <div id="printerModel" style="display:inline-block"></div><br>
