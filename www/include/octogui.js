@@ -18,7 +18,6 @@ var currentZ;
 var returnZ;
 var returnE;
 var watchLogFor = [];
-var watchLogForE = false;
 var watchForZ = [];
 var hotLoading = false;
 var maxZHeight = 0;
@@ -58,8 +57,6 @@ sock.onopen = function(){
     watchLogFor.length++;
     sendCommand("M115");
   }
-  watchLogFor['Z'] = "Z";
-  watchLogFor.length++;
 }
 
 sock.onmessage = function(e) {
@@ -98,11 +95,6 @@ function spottedLog(key, log){
     case "E":
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
-      break;
-
-    case "Z":
-      returnZ = log.replace(/.*Z/,'');
-      returnZ = returnZ.replace(/\*.*/,'');
       break;
 
     case "stateToPaused":
@@ -603,9 +595,7 @@ function printCommand(command){
   if(command == "pause"){
     c = JSON.stringify({ 'command': "pause", 'action': 'toggle' });
     if(printerStatus == "Printing" && currentZ < (maxZHeight - hotLoadZLift - 10)) {
-      if(!returnZ >= 0) { returnZ = currentZ; }
-      console.log("Printing paused at " + currentZ + ". Return Z is: " + returnZ);
-      watchLogForE = true;
+      console.log("Printing paused at " + currentZ);
       watchLogFor['E'] = ' E';
       watchLogFor.length++;
       watchLogFor['stateToPaused'] = 'Paused';
@@ -708,6 +698,7 @@ function pauseUnload(){
   if(printerStatus == "Paused" && typeof hotUnloadString[printerId] !== 'undefined' && currentZ < (maxZHeight - hotLoadZLift - 10)){
     if(returnE > 0){
       hotLoading = true;
+      returnZ = currentZ;
       moveHead('z',hotLoadZLift);
       sendCommand(hotUnloadString[printerId]);
       document.getElementById('hotUnload').style.visibility = "hidden";
