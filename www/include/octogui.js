@@ -738,7 +738,7 @@ function startupTasks(){
   });
   $('#speedFactor').numpad({
     onKeypadClose: function(){
-      setSpeedFactor(Number(document.getElementById('bTempInput').value));
+      setSpeedFactor(Number(document.getElementById('speedFactor').value));
     },
     hidePlusMinusButton: true,
     hideDecimalButton: true
