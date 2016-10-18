@@ -728,6 +728,7 @@ function playLoad(){
       pauseTemp = 0;
     }
     sendCommand(c);
+    document.getElementById('hotLoad').style.visibility = "hidden";
   }
 }
 
