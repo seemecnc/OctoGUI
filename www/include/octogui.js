@@ -21,6 +21,7 @@ var watchLogFor = [];
 var watchForZ = [];
 var hotLoading = false;
 var maxZHeight = 0;
+var currentSpeed = 100;
 
 for(l = 0;l <= 20;l++){
   watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
@@ -713,6 +714,11 @@ function playLoad(){
   }
 }
 
+function setSpeedFactor(speed){
+  console.log("Setting speed factor to: "+speed);
+  sendCommand("M220 S" + speed);
+}
+
 function startupTasks(){
   updateFiles();
   getClientIP();
@@ -730,7 +736,15 @@ function startupTasks(){
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
+  $('#speedFactor').numpad({
+    onKeypadClose: function(){
+      setSpeedFactor(Number(document.getElementById('bTempInput').value));
+    },
+    hidePlusMinusButton: true,
+    hideDecimalButton: true
+  });
   document.getElementById('apiKey').innerHTML = apikey;
+  document.getElementById('speedFactor').value = currentSpeed;
   getPrinterProfile();
 
 }
