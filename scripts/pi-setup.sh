@@ -36,6 +36,7 @@ then
   sudo apt-get -y dist-upgrade
   apt-get remove -y xscreensaver
   apt-get -y autoremove
+  firstrun=1
 fi
 
 #Install Required Packages
@@ -249,7 +250,10 @@ then
 fi
 
 #Custom setup before rebooting
-raspi-config
+if [ -n "$firstrun" ]
+then
+  raspi-config
+fi
 
 echo
 echo "Setup complete. Please reboot"
