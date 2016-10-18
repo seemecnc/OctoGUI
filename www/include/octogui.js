@@ -36,10 +36,12 @@ calibrateString['orion'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117
 
 var loadFilamentString = [];
 loadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E530 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M104 S0" ];
+loadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E560 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M104 S0" ];
 loadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E750 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M104 S0" ];
 
 var unloadFilamentString = [];
 unloadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E30 F150", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84" ];
+unloadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E30 F150", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84" ];
 unloadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E30 F150", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-830", "M104 S0", "G90", "G92 E0", "M84" ];
 
 var hotUnloadString = [];
