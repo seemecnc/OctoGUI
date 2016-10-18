@@ -76,7 +76,7 @@ if [ "\$res" != "Printer is not operational" ]; then status=\$(echo "\$res"|jq .
   if [ "\$status" != "Operational" -a -z "\$check" ]; then problem="Status: \$status"; fi
 fi
 
-if [ "\$problem" == "null" ]; then sudo /usr/bin/shutdown -r now; fi
+if [ "\$problem" == "null" ]; then sudo /sbin/shutdown -r now; fi
 EOF
 
 #Setup crontab
