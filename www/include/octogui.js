@@ -338,14 +338,6 @@ function updateStatus(){
       complete: (function(data,type){
         if(type == "success"){
           jdata = JSON.parse(data.responseText);
-          //Octoprint temperature polling bug workaround
-          if(printerStatus == "Operational" && jdata.temperature.tool0.actual == etemp){
-            if(tempCount % 3 == 0){
-              sendCommand("M105");
-              tempCount = 1;
-            }else{ tempCount++; }
-            if(tempCount > 600){ tempCount = 1; }
-          }else{ tempCount = 1; }
           etemp = jdata.temperature.tool0.actual;
           etempTarget = jdata.temperature.tool0.target;
           if(heatedBed && typeof jdata.temperature.bed !== 'undefined'){
@@ -371,7 +363,6 @@ function updateStatus(){
   document.getElementById('eTempInput').value = etempTarget;
   document.getElementById('bedTempTarget').innerHTML = btempTarget;
   document.getElementById('bTempInput').value = btempTarget;
-//  if(fileTimeout + 15000 <= (new Date().valueOf())){ updateFiles(); }
 }
 
 function updateJobStatus(){
