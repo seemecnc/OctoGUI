@@ -775,13 +775,12 @@ function startupTasks(){
   } );
 
   $('#filesList tbody').on( 'click', 'tr', function () {
-    console.log(this.cells[0].innerHTML);
     var origin = this.cells[0].innerHTML;
     var name = this.cells[1].innerHTML;
     switch(origin){
       case "local":
         bootbox.prompt({
-          title: name
+          title: name,
           inputType: 'checkbox',
           inputOptions: [
             { text: 'Load ' + name + ' for printing', value: '1' },
