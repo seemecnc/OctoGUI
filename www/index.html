@@ -23,7 +23,7 @@
   <body onload='startupTasks();'>
     <div id="overlay" class="overlay"><a class="closebtn" onclick="hideOverlay()">&times;</a>
     <div id="overlayContent" class="overlay-content"></div></div>
-    <br><div align=center><table border=1><tr><td align=left valign=top width="25%">
+    <br><div align=center><table border=1><tr><td align=left valign=top width="20%">
     Status: <div id="currentStatus" style="display:inline-block">Checking...</div><br>
     Printer: <div id="printerModel" style="display:inline-block"></div><br>
     <div style="display:inline-block;visibility:hidden" id="firmwareInfo"></div><br>
@@ -33,14 +33,14 @@
     <a onclick="connectPrinter('connect')">Connect</a> - <a onclick="connectPrinter('disconnect')">Disconnect</a><br><br>
     <span class="glyphicon glyphicon-play" onclick='printCommand("start")'></span> <span class="glyphicon glyphicon-pause" onclick='printCommand("pause")'></span> <span class="glyphicon glyphicon-stop" onclick='printCommand("cancel")'></span>
     </td>
-        <td align=left valign=top width="30%">
+        <td align=left valign=top width="45%">
           <span class="glyphicon glyphicon-refresh" onclick='updateFiles()'></span> &nbsp;
           <span class="glyphicon glyphicon-list" onclick='setSortBy("name")'></span> &nbsp;
-          <span class="glyphicon glyphicon-calendar" onclick='setSortBy("date")'></span><br><br>
+          <span class="glyphicon glyphicon-calendar" onclick='setSortBy("date")'></span>
           <table border=0 cellpadding=3 cellspacing=3 id="filesList">
           </table>
     </td>
-    <td align=left valign=top width="40%">
+    <td align=left valign=top width="30%">
       Current Job:<br>
       Name: <div style="display:inline-block" id="currentName"></div><br>
       Filament: <div style="display:inline-block" id="currentFilament"></div><br>

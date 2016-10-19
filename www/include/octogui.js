@@ -24,6 +24,8 @@ var maxZHeight = 0;
 var currentSpeed = 100;
 var pauseTimeout = 0;
 var pauseTemp = 0;
+var dt;
+var bah = 1;
 
 for(l = 0;l <= 20;l++){
   watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
@@ -480,13 +482,14 @@ function updateFiles(){
     complete: (function(data,type){
       if(type == "success"){
         jdata = JSON.parse(data.responseText);
-        $("#filesList tr").remove();
+        //$("#filesList tr").remove();
         var i = 0;
         var sortString;
         if(sortRev){ sortString = "-" + sortBy; }
         else{ sortString = sortBy; }
         var files = jdata.sort(dynamicSort(sortString));
         var dataSet = [];
+        dt.clear().draw();
         files.forEach(function(f){
           /*
           row = fl.insertRow(i);
@@ -495,7 +498,7 @@ function updateFiles(){
             case "local":
               cell.innerHTML = "L " + f.name;
               cell.onclick = function() { bootbox.prompt({
-                title: f.name,
+                title: f.name,	
                 inputType: 'checkbox',
                 inputOptions: [
                   { text: 'Load ' + f.name + ' for printing', value: '1' },
@@ -537,16 +540,8 @@ function updateFiles(){
               };
               break;
           }*/
-          dataSet[i] = [ f.name, f.origin ];
-          i++;
+          dt.row.add([ f.origin, f.name ]).draw();
         });
-        $('#filesList').DataTable( {
-          data: dataSet,
-          columns: [
-            { title: "Name" },
-            { title: "Loc" }
-          ]
-        } );
       }
     })
   });
@@ -776,7 +771,22 @@ function setSpeedFactor(speed){
 }
 
 function startupTasks(){
-  updateFiles();
+       dt = $('#filesList').DataTable( {
+          columns: [ { title: "L" }, { title: "Name" } ],
+          searching: false,
+          fixedHeader: false,
+          ordering: false,
+          info: false,
+          pageLength: 4,
+          lengthChange: false,
+          select: { items: "row", single: true},
+          fnDrawCallback: function() { $("#filesList thead").remove(); }
+        } );
+        
+        $('#filesList tbody').on( 'click', 'tr', function () {
+          console.log(this.cells[0].innerHTML);
+        } );
+  
   getClientIP();
   $('#eTempInput').numpad({
     onKeypadClose: function(){
@@ -802,6 +812,7 @@ function startupTasks(){
   document.getElementById('apiKey').innerHTML = apikey;
   document.getElementById('speedFactor').value = currentSpeed;
   getPrinterProfile();
+  updateFiles();
 }
 
 function showOverlay(content){
