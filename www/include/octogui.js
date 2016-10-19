@@ -369,7 +369,7 @@ function updateStatus(){
   document.getElementById('eTempInput').value = etempTarget;
   document.getElementById('bedTempTarget').innerHTML = btempTarget;
   document.getElementById('bTempInput').value = btempTarget;
-  if(fileTimeout + 15000 <= (new Date().valueOf())){ updateFiles(); }
+//  if(fileTimeout + 15000 <= (new Date().valueOf())){ updateFiles(); }
 }
 
 function updateJobStatus(){
@@ -486,7 +486,9 @@ function updateFiles(){
         if(sortRev){ sortString = "-" + sortBy; }
         else{ sortString = sortBy; }
         var files = jdata.sort(dynamicSort(sortString));
+        var dataSet = [];
         files.forEach(function(f){
+          /*
           row = fl.insertRow(i);
           cell = row.insertCell(0);
           switch(f.origin){
@@ -534,9 +536,17 @@ function updateFiles(){
               });
               };
               break;
-          }
+          }*/
+          dataSet[i] = [ f.name, f.origin ];
           i++;
         });
+        $('#filesList').DataTable( {
+          data: dataSet,
+          columns: [
+            { title: "Name" },
+            { title: "Loc" }
+          ]
+        } );
       }
     })
   });
