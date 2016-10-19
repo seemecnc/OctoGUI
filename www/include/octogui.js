@@ -471,10 +471,6 @@ function deleteFile(origin, file){
 }
 
 function updateFiles(){
-  fileTimeout = new Date().valueOf();
-  var fl = document.getElementById('filesList');
-  var row;
-  var cell;
   $.ajax({
     url: "include/f.php?c=list",
     type: "get",
@@ -482,18 +478,13 @@ function updateFiles(){
     complete: (function(data,type){
       if(type == "success"){
         jdata = JSON.parse(data.responseText);
-        //$("#filesList tr").remove();
-        var i = 0;
         var sortString;
         if(sortRev){ sortString = "-" + sortBy; }
         else{ sortString = sortBy; }
         var files = jdata.sort(dynamicSort(sortString));
-        var dataSet = [];
         dt.clear().draw();
         files.forEach(function(f){
           /*
-          row = fl.insertRow(i);
-          cell = row.insertCell(0);
           switch(f.origin){
             case "local":
               cell.innerHTML = "L " + f.name;
@@ -771,41 +762,78 @@ function setSpeedFactor(speed){
 }
 
 function startupTasks(){
-       dt = $('#filesList').DataTable( {
-          columns: [ { title: "L" }, { title: "Name" } ],
-          searching: false,
-          fixedHeader: false,
-          ordering: false,
-          info: false,
-          pageLength: 4,
-          lengthChange: false,
-          select: { items: "row", single: true},
-          fnDrawCallback: function() { $("#filesList thead").remove(); }
-        } );
-        
-        $('#filesList tbody').on( 'click', 'tr', function () {
-          console.log(this.cells[0].innerHTML);
-        } );
-  
+  dt = $('#filesList').DataTable( {
+    columns: [ { title: "L" }, { title: "Name" } ],
+    searching: false,
+    fixedHeader: false,
+    ordering: false,
+    info: false,
+    pageLength: 4,
+    lengthChange: false,
+    select: { items: "row", single: true},
+    fnDrawCallback: function() { $("#filesList thead").remove(); }
+  } );
+
+  $('#filesList tbody').on( 'click', 'tr', function () {
+    console.log(this.cells[0].innerHTML);
+    var origin = this.cells[0].innerHTML;
+    var name = this.cells[1].innerHTML;
+    switch(origin){
+      case "local":
+        bootbox.prompt({
+          title: name
+          inputType: 'checkbox',
+          inputOptions: [
+            { text: 'Load ' + name + ' for printing', value: '1' },
+            { text: 'Print ' + name + ' now', value: '2' },
+            { text: 'Delete ' + name, value: '3' }],
+            callback: function (result) {
+              if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
+                switch(r){
+                  case "1": selectFile("local/" + name); break;
+                  case "2": selectFile("local/" + name); printCommand("start"); break;
+                  case "3": deleteFile(origin, name); break;
+                }
+              }); }
+            }
+        });
+        break;
+      case "sdcard":
+        selectFile(origin + "/" + name);
+        break;
+      case "usb":
+        bootbox.prompt({
+          title: name,
+          inputType: 'checkbox',
+          inputOptions: [
+            { text: 'Copy ' + name + ' to local storage', value: '1' },
+            { text: 'Delete ' + name + ' from USB', value: '2' } ],
+            callback: function (result) {
+              if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
+                switch(r){
+                  case "1": transferFile(name); break;
+                  case "2": deleteFile(origin, name); break;
+                }
+              }); }
+            }
+        });
+        break;
+    }
+  } );
+
   getClientIP();
   $('#eTempInput').numpad({
-    onKeypadClose: function(){
-      setExtruderTemp(Number(document.getElementById('eTempInput').value));
-    },
+    onKeypadClose: function(){ setExtruderTemp(Number(document.getElementById('eTempInput').value)); },
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
   $('#bTempInput').numpad({
-    onKeypadClose: function(){
-      setBedTemp(Number(document.getElementById('bTempInput').value));
-    },
+    onKeypadClose: function(){ setBedTemp(Number(document.getElementById('bTempInput').value)); },
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
   $('#speedFactor').numpad({
-    onKeypadClose: function(){
-      setSpeedFactor(Number(document.getElementById('speedFactor').value));
-    },
+    onKeypadClose: function(){ setSpeedFactor(Number(document.getElementById('speedFactor').value)); },
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
