@@ -417,8 +417,7 @@ function transferFile(file){
       bootbox.alert({ message: text, backdrop: true });
       document.getElementById('currentName').innerHTML = "Loading...";
       document.getElementById('currentFilament').innerHTML = "Calculating...";
-      updateFiles();
-      dt.page(currentPage).draw();
+      updateFiles(currentPage);
       updateStatus();
     })
   });
@@ -434,8 +433,7 @@ function deleteFile(origin, file){
         contentType:"application/json; charset=utf-8",
         complete: (function(data,type){
           if(data.status == 204){
-            updateFiles();
-            dt.page(currentPage).draw();
+            updateFiles(currentPage);
           }
           else{ alert("Error deleting " + file); }
         })
@@ -449,8 +447,7 @@ function deleteFile(origin, file){
         complete: (function(data,type){
           jdata = JSON.parse(data.responseText);
           if(jdata.status == 1){
-            updateFiles();
-            dt.page(currentPage).draw();
+            updateFiles(currentPage);
           }
           else{ alert("Error deleting " + file); }
         })
@@ -463,8 +460,7 @@ function deleteFile(origin, file){
         contentType:"application/json; charset=utf-8",
         complete: (function(data,type){
           if(data.status == 204){
-            updateFiles();
-            dt.page(currentPage).draw();
+            updateFiles(currentPage);
           }
           else{ alert("Error deleting " + file); }
         })
@@ -473,7 +469,8 @@ function deleteFile(origin, file){
   }
 }
 
-function updateFiles(){
+function updateFiles(page){
+  page = page || 0;
   $.ajax({
     url: "include/f.php?c=list",
     type: "get",
@@ -487,6 +484,7 @@ function updateFiles(){
         var files = jdata.sort(dynamicSort(sortString));
         dt.clear().draw();
         files.forEach(function(f){ dt.row.add([ f.origin, f.name ]).draw(); });
+        if(page > 0) dt.page(page).draw();
       }
     })
   });
