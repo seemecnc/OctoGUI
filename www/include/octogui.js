@@ -405,6 +405,7 @@ function setSortBy(s){
 
 function transferFile(file){
   var text;
+  var currentPage = dt.page();
   $.ajax({
     url: "include/f.php?c=copy&f=" + file,
     type: "get",
@@ -417,12 +418,14 @@ function transferFile(file){
       document.getElementById('currentName').innerHTML = "Loading...";
       document.getElementById('currentFilament').innerHTML = "Calculating...";
       updateFiles();
+      dt.page(currentPage).draw();
       updateStatus();
     })
   });
 }
 
 function deleteFile(origin, file){
+  var currentPage = dt.page();
   switch(origin){
     case "local":
       $.ajax({
@@ -430,7 +433,10 @@ function deleteFile(origin, file){
         type: "delete",
         contentType:"application/json; charset=utf-8",
         complete: (function(data,type){
-          if(data.status == 204){ updateFiles(); }
+          if(data.status == 204){
+            updateFiles();
+            dt.page(currentPage).draw();
+          }
           else{ alert("Error deleting " + file); }
         })
       });
@@ -442,7 +448,10 @@ function deleteFile(origin, file){
         data: {"f" : file},
         complete: (function(data,type){
           jdata = JSON.parse(data.responseText);
-          if(jdata.status == 1){ updateFiles(); }
+          if(jdata.status == 1){
+            updateFiles();
+            dt.page(currentPage).draw();
+          }
           else{ alert("Error deleting " + file); }
         })
       });
@@ -453,7 +462,10 @@ function deleteFile(origin, file){
         type: "delete",
         contentType:"application/json; charset=utf-8",
         complete: (function(data,type){
-          if(data.status == 204){ updateFiles(); }
+          if(data.status == 204){
+            updateFiles();
+            dt.page(currentPage).draw();
+          }
           else{ alert("Error deleting " + file); }
         })
       });
@@ -474,56 +486,7 @@ function updateFiles(){
         else{ sortString = sortBy; }
         var files = jdata.sort(dynamicSort(sortString));
         dt.clear().draw();
-        files.forEach(function(f){
-          /*
-          switch(f.origin){
-            case "local":
-              cell.innerHTML = "L " + f.name;
-              cell.onclick = function() { bootbox.prompt({
-                title: f.name,	
-                inputType: 'checkbox',
-                inputOptions: [
-                  { text: 'Load ' + f.name + ' for printing', value: '1' },
-                  { text: 'Print ' + f.name + ' now', value: '2' },
-                  { text: 'Delete ' + f.name, value: '3' }],
-                  callback: function (result) {
-                    if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
-                      switch(r){
-                        case "1": selectFile("local/" + f.name); break;
-                        case "2": selectFile("local/" + f.name); printCommand("start"); break;
-                        case "3": deleteFile(f.origin, f.name); break;
-                      }
-                    }); }
-                  }
-              });
-              };
-              break;
-            case "sdcard":
-              cell.innerHTML = "S " + f.name;
-              cell.onclick = function() { selectFile(f.origin + "/" + f.name); };
-              break;
-            case "usb":
-              cell.innerHTML = "U " + f.name;
-              cell.onclick = function() { bootbox.prompt({
-                title: f.name,
-                inputType: 'checkbox',
-                inputOptions: [
-                  { text: 'Copy ' + f.name + ' to local storage', value: '1' },
-                  { text: 'Delete ' + f.name + ' from USB', value: '2' } ],
-                  callback: function (result) {
-                    if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
-                      switch(r){
-                        case "1": transferFile(f.name); break;
-                        case "2": deleteFile(f.origin, f.name); break;
-                      }
-                    }); }
-                  }
-              });
-              };
-              break;
-          }*/
-          dt.row.add([ f.origin, f.name ]).draw();
-        });
+        files.forEach(function(f){ dt.row.add([ f.origin, f.name ]).draw(); });
       }
     })
   });
