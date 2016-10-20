@@ -66,7 +66,7 @@ fi
 #Setup uptime check file
 cat > /home/pi/ucheck.sh << EOF
 #!/bin/bash
-let maxuptime=\$(( 12 * 3600))
+let maxuptime=\$(( 24 * 3600))
 problem="null"
 utime=\$(cat /proc/uptime|cut -f1 -d'.')
 if [ \$utime -lt \$maxuptime ]; then echo "Uptime not long enough - \$utime"; problem="uptime"; fi
