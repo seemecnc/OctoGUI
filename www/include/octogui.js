@@ -482,9 +482,13 @@ function updateFiles(page){
         if(sortRev){ sortString = "-" + sortBy; }
         else{ sortString = sortBy; }
         var files = jdata.sort(dynamicSort(sortString));
-        dt.clear().draw();
-        files.forEach(function(f){ dt.row.add([ f.origin, f.name ]).draw(); });
-        if(page > 0) dt.page(page).draw();
+        dt.clear();
+        files.forEach(function(f){ dt.row.add([ f.origin, f.name ]); });
+        dt.draw();
+        if(page > 0){
+          if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
+          dt.page(page).draw(false);
+        }
       }
     })
   });
