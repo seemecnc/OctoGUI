@@ -484,11 +484,10 @@ function updateFiles(page){
         var files = jdata.sort(dynamicSort(sortString));
         dt.clear();
         files.forEach(function(f){ dt.row.add([ f.origin, f.name ]); });
-        dt.draw();
         if(page > 0){
           if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
           dt.page(page).draw(false);
-        }
+        }else { dt.draw(); }
       }
     })
   });
