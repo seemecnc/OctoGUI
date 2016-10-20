@@ -384,12 +384,16 @@ function updateJobStatus(){
 
 }
 
-function selectFile(file){
+function selectFile(file,print){
+  print = print || 0;
+  var c;
+  if(print){ c = {"command":"select","print":true}; }
+  else{ c = {"command":"select"}; }
   $.ajax({
     url: api+"files/" + file +"?apikey="+apikey,
     type: "post",
     contentType:"application/json; charset=utf-8",
-    data: JSON.stringify({"command":"select"}),
+    data: JSON.stringify(c),
     success: (function(){ updateStatus(); })
   });
 }
@@ -745,7 +749,11 @@ function startupTasks(){
               if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
                 switch(r){
                   case "1": selectFile("local/" + name); break;
-                  case "2": selectFile("local/" + name); printCommand("start"); break;
+                  case "2":
+                    selectFile("local/" + name,true);
+                    watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
+                    showOverlay("Preparing to Print:\n" + name);
+                    break;
                   case "3": deleteFile(origin, name); break;
                 }
               }); }
