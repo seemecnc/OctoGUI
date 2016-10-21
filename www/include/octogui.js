@@ -616,6 +616,8 @@ function printCommand(command){
   if(command == "cancel"){
     bootbox.confirm("Are you sure you want to cancel the current print job?.", function(result){
       if(result){
+        showOverlay("Canceling print job");
+        watchLogFor["hideOverlay"] = "Operational"; watchLogFor.length++;
         $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c, success: (function(){ setExtruderTemp(0); if(heatedBed){ setBedTemp(0); } }) });
       }
     });
