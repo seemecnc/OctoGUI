@@ -1,32 +1,30 @@
-var hotLoadZLift = 0;
+var hotLoadZLift = 0;      // Specify how high to lift the head when changing filament
 
-var printerStatus = "Checking...";
+var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
 var api = "http://" + window.location.host + "/api/";
 var apikey = "ABAABABB";
-var etemp = "--";
-var etempTarget = "--";
-var btemp = "--";
-var btempTarget = "--";
-var tempCount = 1;
-var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
-var sortBy = "name";
-var sortRev = false;
-var fileTimeout = new Date().valueOf();
-var printerId;
-var heatedBed = false;
-var currentZ;
-var returnZ;
-var returnE;
-var watchLogFor = [];
-var watchForZ = [];
-var hotLoading = false;
-var maxZHeight = 0;
-var currentSpeed = 100;
-var pauseTimeout = 0;
-var pauseTemp = 0;
-var dt;
-var bah = 1;
+var printerStatus = "Checking...";
+var etemp = "--";          // Current Nozzel Temperature
+var etempTarget = "--";    // Current Nozzel Target Temperature
+var btemp = "--";          // Current Bed Temperature
+var btempTarget = "--";    // Current Bed Target Temperature
+var sortBy = "name";       // Sort Order
+var sortRev = false;       // Sort order reverse flag
+var printerId;             // Printer profile ID
+var heatedBed = false;     // Heated Bed Flag
+var currentZ;              // Current Z height
+var returnZ;               // Z height to return to after lifting head
+var returnE;               // Extruder position to return to after chaning filament
+var watchLogFor = [];      // Array of thing to watch the printer logs for
+var watchForZ = [];        // Array of Z heights to watch for
+var hotLoading = false;    // Flag for changing filament mid-print
+var maxZHeight = 0;        // Max printable Z height
+var currentSpeed = 100;    // Current speed (percentage) of print
+var pauseTimeout = 0;      // Time when current print job was paused
+var pauseTemp = 0;         // Extruder temp when print job was paused
+var dt;                    // fileList DataTables handle
 
+//Z height action test variables
 for(l = 0;l <= 20;l++){
   watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
 }
