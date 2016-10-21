@@ -13,7 +13,7 @@ var sortBy = "name";
 var sortRev = false;
 var fileTimeout = new Date().valueOf();
 var printerId;
-var headedBed = false;
+var heatedBed = false;
 var currentZ;
 var returnZ;
 var returnE;
@@ -607,7 +607,10 @@ function printCommand(command){
           type: "post",
           contentType:"application/json; charset=utf-8",
           data: c,
-          success: (function(){ setExtruderTemp(0); })
+          success: (function(){
+            setExtruderTemp(0);
+            if(heatedBed){ setBedTemp(0); }
+          })
         });
       }
     });
