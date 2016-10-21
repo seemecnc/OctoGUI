@@ -29,32 +29,38 @@ for(l = 0;l <= 20;l++){
   watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
 }
 
+// Calibration GCODE
 var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2", "M115" ];
 calibrateString['orion'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
 calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
 
+// GCODE to Load filament
 var loadFilamentString = [];
 loadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E530 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 loadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E560 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 loadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E750 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 
+// GCODE to unload filament
 var unloadFilamentString = [];
 unloadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 unloadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 unloadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-830", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 
+// GCODE to unload filament mid-print
 var hotUnloadString = [];
 hotUnloadString['eris'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
 hotUnloadString['orion'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
 hotUnloadString['rostock_max_v3'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-830", "G90", "G92 E0" ];
 
+// GCODE to load filament mid-print
 var hotLoadString = [];
 hotLoadString['eris'] = [ "G91", "G1 E530 F5000", "G1 E80 F150", "G90", "G92 E0" ];
 hotLoadString['orion'] = [ "G91", "G1 E560 F5000", "G1 E80 F150", "G90", "G92 E0" ];
 hotLoadString['rostock_max_v3'] = [ "G91", "G1 E750 F5000", "G1 E100 F150", "G90", "G92 E0" ];
 
 
+// SockJS info from Octoprint
 sock.onopen = function(){
   sock.send( JSON.stringify({"throttle": 2} ));
   if(typeof watchLogFor['filamentInfo'] == 'undefined' && printerStatus != "Closed" && printerStatus != "Connecting" && printerStatus != "Detecting serial port"){
@@ -81,6 +87,7 @@ sock.onmessage = function(e) {
     if (e.data.current.progress.completion !== null){ document.getElementById('currentPercent').innerHTML = e.data.current.progress.completion.toFixed(2); }
     document.getElementById('currentPrintTime').innerHTML = humanTime(e.data.current.progress.printTime);
     document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
+    //watch for Log actions
     if(watchLogFor.length > 0){
       for(var i in watchLogFor){
         for(var l in e.data.current.logs){
@@ -91,27 +98,29 @@ sock.onmessage = function(e) {
   }
 };
 
+// Actions to take when Z height is hit
 function spottedZ(action){
   console.log("We hit Z" + currentZ + "! Action: " + action);
 }
 
+// Actions to take when a given string is spotted in the log
 function spottedLog(key, log){
   log = log.replace(/Recv:\ /,'');
   switch(key){
 
-    case "E":
+    case "E": // Logging return extruder position
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
       break;
 
-    case "stateToPaused":
+    case "stateToPaused": // Hotunload trigger
       console.log("Printer is paused. Last E is " + returnE);
       if(returnE > 0) { document.getElementById('hotUnload').style.visibility = "visible"; }
       delete watchLogFor[key]; watchLogFor.length--;
       delete watchLogFor["E"]; watchLogFor.length--;
       break;
 
-    case "firmwareInfo":
+    case "firmwareInfo": // Use Firmware info to verify printer model
       var pId;
       var fw = log.replace(/FIRMWARE_NAME:/,'');
       var fwd = log.replace(/.*_DATE:/,'');
@@ -144,13 +153,13 @@ function spottedLog(key, log){
       delete watchLogFor[key]; watchLogFor.length--;
       break;
 
-    case "filamentInfo":
+    case "filamentInfo": // Update amount of filament used
       document.getElementById('filamentInfo').style.visibility = "visible";
       document.getElementById('filamentInfo').innerHTML = log;
       delete watchLogFor[key]; watchLogFor.length--;
       break;
 
-    case "hideOverlay":
+    case "hideOverlay": // Set the Overlay to hidden
       hideOverlay();
       delete watchLogFor[key]; watchLogFor.length--;
       break;
@@ -158,6 +167,7 @@ function spottedLog(key, log){
   }
 }
 
+// Find the current IP of the client and update it on screen
 function getClientIP() {
   window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
   var pc = new RTCPeerConnection({iceServers:[]}), noop = function(){};
@@ -172,6 +182,7 @@ function getClientIP() {
   };
 }
 
+// Sort an array by the given property
 function dynamicSort(property) {
   var sortOrder = 1;
   if(property[0] === "-") {
@@ -184,12 +195,14 @@ function dynamicSort(property) {
   }
 }
 
+// Basic on/off fan controll
 function fanControl(c){
   var gcode;
   if(c == "on"){ sendCommand("M106"); }
   else { sendCommand("M107"); }
 }
 
+// Send the Calibrate GCODE to the printer if it is configured and the printer is Operational
 function calibratePrinter(){
   if(printerStatus == "Operational"){
     if (typeof calibrateString[printerId] !== 'undefined'){
@@ -214,6 +227,7 @@ function calibratePrinter(){
   }
 }
 
+// Load filament if it is configured and the printer is Operational
 function loadFilament(){
   if(printerStatus == "Operational"){
     if (typeof loadFilamentString[printerId] !== 'undefined'){
@@ -239,6 +253,7 @@ function loadFilament(){
   }
 }
 
+// Unload filament if it is configured and the printer is Operational
 function unloadFilament(){
   if(printerStatus == "Operational"){
     if (typeof unloadFilamentString[printerId] !== 'undefined'){
@@ -264,6 +279,7 @@ function unloadFilament(){
   }
 }
 
+// Set the Nozzel temperature
 function setExtruderTemp(target){
   $.ajax({
     url: api+"printer/tool?apikey="+apikey,
@@ -276,6 +292,7 @@ function setExtruderTemp(target){
   document.getElementById('eTempInput').value = etempTarget;
 }
 
+// Set the Bed temperature
 function setBedTemp(target){
   $.ajax({
     url: api+"printer/bed?apikey="+apikey,
@@ -288,6 +305,7 @@ function setBedTemp(target){
   document.getElementById('bTempInput').value = btempTarget;
 }
 
+// Check and updated the current connection status for the printer
 function updateConnectionStatus(){
 
   $.ajax({
@@ -309,7 +327,6 @@ function updateConnectionStatus(){
         }
         printerStatus = jdata.current.state;
         if(printerStatus.includes("Error: Z-probe failed")){ connectPrinter("connect"); printerStatus = "Connecting"; }
-        if(printerStatus.includes("Failed to autodetect serial port")){ connectPrinterManual(); printerStatus = "Connecting"; }
       }else{
         printerStatus = "Unknown";
       }
@@ -317,6 +334,7 @@ function updateConnectionStatus(){
   });
 }
 
+// Update non SockJS fields on the user interface
 function updateStatus(){
 
   updateConnectionStatus();
@@ -363,6 +381,7 @@ function updateStatus(){
   document.getElementById('bTempInput').value = btempTarget;
 }
 
+// Updates the status fields for the current print job
 function updateJobStatus(){
   $.ajax({
     url: api+"job?apikey="+apikey,
@@ -382,6 +401,7 @@ function updateJobStatus(){
 
 }
 
+// Have Octoprint load the current file and prep it for printing. Sending a second argument (true) starts the print after loading
 function selectFile(file,print){
   print = print || 0;
   var c;
@@ -396,6 +416,7 @@ function selectFile(file,print){
   });
 }
 
+// Changes the File sort field
 function setSortBy(s){
   if(sortBy == s){
     if(sortRev){ sortRev = false; }
@@ -405,6 +426,7 @@ function setSortBy(s){
   updateFiles();
 }
 
+// Copies file from the USB stick to local storage
 function transferFile(file){
   var text;
   var currentPage = dt.page();
@@ -425,6 +447,7 @@ function transferFile(file){
   });
 }
 
+// Deletes a given file from the given locations
 function deleteFile(origin, file){
   var currentPage = dt.page();
   switch(origin){
@@ -471,6 +494,7 @@ function deleteFile(origin, file){
   }
 }
 
+// Refreshes the fileList table - keeps current page if provided
 function updateFiles(page){
   page = page || 0;
   $.ajax({
@@ -495,6 +519,7 @@ function updateFiles(page){
   });
 }
 
+// Converts seconds to human readable hours, minutes, seconds
 function humanTime(d) {
   d = Number(d);
   var h = Math.floor(d / 3600);
@@ -503,6 +528,7 @@ function humanTime(d) {
   return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
 }
 
+// Send given GCODE (single command or array of commands) to the printer via Octoprint
 function sendCommand(command){
   var c;
   if(command instanceof Array){ c = { "commands": command }; }
@@ -515,6 +541,7 @@ function sendCommand(command){
   });
 }
 
+// Home all Axis and disabled the stepper motors. TODO: Setup motor enable/disable fuctions/buttons
 function homePrinter(){
   if(printerStatus == "Printing"){
     bootbox.alert({
@@ -534,19 +561,7 @@ function homePrinter(){
   }
 }
 
-function connectPrinterManual(){
-  var c = { 'command': "connect","baudrate": 250000,"port":"/dev/ttyACM0" };
-  $.ajax({
-    url: api+"connection?apikey="+apikey,
-    type: "post",
-    contentType:"application/json; charset=utf-8",
-    data: JSON.stringify(c),
-    success: (function(){
-      updateStatus();
-    })
-  });
-}
-
+// Initiate connection to the printer
 function connectPrinter(com){
   var c;
   if(com == "connect"){
@@ -570,6 +585,7 @@ function connectPrinter(com){
   }
 }
 
+// Resume printing after pausing and changing filament
 function resumeHotLoad(){
   document.getElementById('hotUnload').style.visibility = "hidden";
   if(hotLoading){
@@ -580,8 +596,8 @@ function resumeHotLoad(){
   }
 }
 
+// Send basic print job command ( play, pause, cancel )
 function printCommand(command){
-
   var c;
   if(command == "pause"){
     c = JSON.stringify({ 'command': "pause", 'action': 'toggle' });
@@ -600,28 +616,15 @@ function printCommand(command){
   if(command == "cancel"){
     bootbox.confirm("Are you sure you want to cancel the current print job?.", function(result){
       if(result){
-        $.ajax({
-          url: api+"job?apikey="+apikey,
-          type: "post",
-          contentType:"application/json; charset=utf-8",
-          data: c,
-          success: (function(){
-            setExtruderTemp(0);
-            if(heatedBed){ setBedTemp(0); }
-          })
-        });
+        $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c, success: (function(){ setExtruderTemp(0); if(heatedBed){ setBedTemp(0); } }) });
       }
     });
   }else{
-    $.ajax({
-      url: api+"job?apikey="+apikey,
-      type: "post",
-      contentType:"application/json; charset=utf-8",
-      data: c
-    });
+    $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c });
   }
 }
 
+// Head Jog command pulling increment from the GUI
 function jogHead(axis,dir){
   var d; //jog distance
   jogI = $('input[name="jogIncrement"]:checked').val();
@@ -637,6 +640,7 @@ function jogHead(axis,dir){
   });
 }
 
+// Head Job command with specified axis and increment
 function moveHead(axis,distance){
   var c = {'command':'jog'};
   c[axis] = distance;
@@ -648,6 +652,7 @@ function moveHead(axis,distance){
   });
 }
 
+// Set a new default connection profile and disconnect. Prompt to notify and delay reconnect
 function setPrinterProfile(newPrinterId){
   connectPrinter("disconnect");
   $.ajax({
@@ -663,6 +668,7 @@ function setPrinterProfile(newPrinterId){
 
 }
 
+// Get the currently selected default printer profile and set global vars
 function getPrinterProfile(){
   $.ajax({
     url: api+"printerprofiles?apikey="+apikey,
@@ -699,6 +705,7 @@ function getPrinterProfile(){
   });
 }
 
+// whie paused, Raise print head and unload filament
 function pauseUnload(){
   if(printerStatus == "Paused" && typeof hotUnloadString[printerId] !== 'undefined' && currentZ < (maxZHeight - hotLoadZLift - 10)){
     if(returnE > 0){
@@ -714,6 +721,7 @@ function pauseUnload(){
   }
 }
 
+// Load filament after changing mid print, heating nozzel if necissary
 function playLoad(){
   var c = hotLoadString[printerId];
   if(printerStatus == "Paused" && typeof hotLoadString[printerId] !== 'undefined'){
@@ -727,11 +735,13 @@ function playLoad(){
   }
 }
 
+// Set the speed factor (percent)
 function setSpeedFactor(speed){
   console.log("Setting speed factor to: "+speed);
   sendCommand("M220 S" + speed);
 }
 
+// One off inits, tasks, etc to be done after page is loaded
 function startupTasks(){
   dt = $('#filesList').DataTable( {
     columns: [ { title: "L" }, { title: "Name" } ],
@@ -745,6 +755,7 @@ function startupTasks(){
     fnDrawCallback: function() { $("#filesList thead").remove(); }
   } );
 
+  // Onclick handlers for file list
   $('#filesList tbody').on( 'click', 'tr', function () {
     var origin = this.cells[0].innerHTML;
     var name = this.cells[1].innerHTML;
@@ -796,6 +807,8 @@ function startupTasks(){
   } );
 
   getClientIP();
+
+  //Init the different popup number pads
   $('#eTempInput').numpad({
     onKeypadClose: function(){ setExtruderTemp(Number(document.getElementById('eTempInput').value)); },
     hidePlusMinusButton: true,
@@ -811,27 +824,33 @@ function startupTasks(){
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
+
   document.getElementById('apiKey').innerHTML = apikey;
   document.getElementById('speedFactor').value = currentSpeed;
   getPrinterProfile();
   updateFiles();
 }
 
+// Set overlay to visible with given content
 function showOverlay(content){
   document.getElementById('overlayContent').innerHTML = content;
   document.getElementById('overlay').style.width = "100%";
 }
 
+// Hide the overlay and empty it's content
 function hideOverlay(){
   document.getElementById('overlay').style.width = "0";
   document.getElementById('overlayContent').innerHTML = "";
 }
 
+//Update status every second
 window.setInterval( function(){ updateStatus(); }, 1000);
 
+//Basic settings for all popup touchpads
 $.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width:80%"></table>';
 $.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
 $.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" />';
 $.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="width:75%"></button>';
 $.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="width:100%;"></button>';
 $.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');}
+
