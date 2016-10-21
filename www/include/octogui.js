@@ -597,7 +597,16 @@ function printCommand(command){
     if(printerStatus == "Paused") { resumeHotLoad(); }
   }else{
     if(command == "start" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); resumeHotLoad(); }
-    else{ c = JSON.stringify({ 'command': command }); }
+    else{
+      if(command == "cancel"){
+        bootbox.confirm("Are you sure you want to cancel the current print job?.", function(result){
+          if(result){
+            c = JSON.stringify({ 'command': command });
+          }else{ return; }
+        });
+        c = JSON.stringify({ 'command': command });
+      }
+    }
   }
   $.ajax({
     url: api+"job?apikey="+apikey,
