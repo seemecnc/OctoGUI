@@ -597,26 +597,28 @@ function printCommand(command){
     if(printerStatus == "Paused") { resumeHotLoad(); }
   }else{
     if(command == "start" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); resumeHotLoad(); }
-    else{
-      if(command == "cancel"){
-        bootbox.confirm("Are you sure you want to cancel the current print job?.", function(result){
-          if(result){
-            c = JSON.stringify({ 'command': command });
-          }else{ return; }
-        });
-        c = JSON.stringify({ 'command': command });
-      }
-    }
+    else{ c = JSON.stringify({ 'command': command }); }
   }
-  $.ajax({
-    url: api+"job?apikey="+apikey,
-    type: "post",
-    contentType:"application/json; charset=utf-8",
-    data: c,
-    success: (function(){
-      if(command == "cancel"){ setExtruderTemp(0); }
-    })
-  });
+  if(command == "cancel"){
+    bootbox.confirm("Are you sure you want to cancel the current print job?.", function(result){
+      if(result){
+        $.ajax({
+          url: api+"job?apikey="+apikey,
+          type: "post",
+          contentType:"application/json; charset=utf-8",
+          data: c,
+          success: (function(){ setExtruderTemp(0); })
+        });
+      }
+    });
+  }else{
+    $.ajax({
+      url: api+"job?apikey="+apikey,
+      type: "post",
+      contentType:"application/json; charset=utf-8",
+      data: c
+    });
+  }
 }
 
 function jogHead(axis,dir){
