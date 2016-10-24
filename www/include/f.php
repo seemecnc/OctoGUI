@@ -3,6 +3,19 @@
 $fdir = "/mnt/usb";
 $apikey = "ABAABABB";
 
+function copyToUsb($file){
+
+  $status = "ERROR";
+  $source = "/home/pi/.octoprint/uploads/$file";
+  $target = "/mnt/usb/$file";
+  if(usbIsMounted()){
+    if(file_exists($source)){
+      if(copy($source, $target)) $status = "{\"status\":1}";
+    }
+  }
+
+}
+
 function uploadFile($file){
 
   global $fdir, $apikey;
@@ -39,21 +52,30 @@ function listFiles(){
     unset($temp);
   }
 
-  if($usbfiles = array_diff(scandir($fdir), array('.', '..'))){
-    foreach($usbfiles as $f){
-      if(strtolower(substr($f, -6)) == ".gcode" || strtolower(substr($f, -4)) == ".stl"){
-        $temp["name"] = $f;
-        $temp["origin"] = "usb";
-        $temp["size"] = filesize($fdir."/".$f);
-        $temp["date"] = filemtime($fdir."/".$f);
-        if($flist[$f] != $temp["size"])
-          $files[] = $temp;
-        unset($temp);
+  if(usbIsMounted){
+    if($usbfiles = array_diff(scandir($fdir), array('.', '..'))){
+      foreach($usbfiles as $f){
+        if(strtolower(substr($f, -6)) == ".gcode" || strtolower(substr($f, -4)) == ".stl"){
+          $temp["name"] = $f;
+          $temp["origin"] = "usb";
+          $temp["size"] = filesize($fdir."/".$f);
+          $temp["date"] = filemtime($fdir."/".$f);
+          if($flist[$f] != $temp["size"])
+            $files[] = $temp;
+          unset($temp);
+        }
       }
     }
   }
-
   return($files);
+}
+
+function usbIsMounted(){
+
+  $check = shell_exec("df -h|grep '/mnt/usb'");
+  if(!(isset($check)) || $check == "") return false;
+  else return true;
+
 }
 
 function printerPort(){
@@ -80,6 +102,11 @@ switch($_REQUEST['c']){
   case "list":
     //List all files on local FS and USB FS if mounted
     echo json_encode(listFiles());
+    break;
+
+  case "copyToUsb":
+    //Copy file to local FS and select it
+    copyToUsb($_REQUEST['f']);
     break;
 
   case "copy":

@@ -63,7 +63,11 @@ hotLoadString['rostock_max_v3'] = [ "G91", "G1 E750 F5000", "G1 E100 F150", "G90
 
 // SockJS info from Octoprint
 sock.onopen = function(){
+
+  //Slow down the update frequency to 1hz
   sock.send( JSON.stringify({"throttle": 2} ));
+
+  //Ask for M115 info on status change
   if(typeof watchLogFor['filamentInfo'] == 'undefined' && printerStatus != "Closed" && printerStatus != "Connecting" && printerStatus != "Detecting serial port"){
     watchLogFor['firmwareInfo'] = "FIRMWARE";
     watchLogFor.length++;
@@ -71,9 +75,13 @@ sock.onopen = function(){
     watchLogFor.length++;
     sendCommand("M115");
   }
+
 }
 
+// SockJS message handling
 sock.onmessage = function(e) {
+
+  //Only process "current" messages
   if (typeof e.data.current !== 'undefined'){
     var t;
     //watch for Z height actions
@@ -109,7 +117,7 @@ function spottedLog(key, log){
   log = log.replace(/Recv:\ /,'');
   switch(key){
 
-    case "COMMERROR":
+    case "COMMERROR": // Connection error - usually happens after cancelling a print on a Rostock
       delete watchLogFor[key]; watchLogFor.length--;
       connectPrinter("disconnect");
       reconnect = true;
@@ -158,6 +166,8 @@ function spottedLog(key, log){
       }
       if(pId != printerId){ setPrinterProfile(pId); }
       delete watchLogFor[key]; watchLogFor.length--;
+
+      //Init trap for Comm Error if it's not alreay set
       if(typeof watchLogFor['COMMERROR'] == 'undefined'){ watchLogFor['COMMERROR'] = 'sufficient'; watchLogFor.length++; }
       break;
 
@@ -302,15 +312,19 @@ function setExtruderTemp(target){
 
 // Set the Bed temperature
 function setBedTemp(target){
-  $.ajax({
-    url: api+"printer/bed?apikey="+apikey,
-    type: "post",
-    contentType:"application/json; charset=utf-8",
-    data: JSON.stringify({"command":"target","target":target})
-  });
-  btempTarget = target;
-  document.getElementById('bedTempTarget').innerHTML = btempTarget;
-  document.getElementById('bTempInput').value = btempTarget;
+  if(heatedBed){
+    $.ajax({
+      url: api+"printer/bed?apikey="+apikey,
+      type: "post",
+      contentType:"application/json; charset=utf-8",
+      data: JSON.stringify({"command":"target","target":target})
+    });
+    btempTarget = target;
+    document.getElementById('bedTempTarget').innerHTML = btempTarget;
+    document.getElementById('bTempInput').value = btempTarget;
+  }else{
+    bootbox.alert({ message: "Cannot set bed temp.<br>No heated bed detected.", backdrop: true });
+  }
 }
 
 // Check and updated the current connection status for the printer
@@ -323,18 +337,26 @@ function updateConnectionStatus(){
     complete: (function(data,type){
       if(type == "success"){
         jdata = JSON.parse(data.responseText);
+
+        //Reconnect check when connection is closed
         if(printerStatus == "Closed" && reconnect){ reconnect = false; connectPrinter("connect"); }
+
+        //Clear Z events when a print job is completed or cancelled
         if(printerStatus == "Printing" && jdata.current.state != "Printing" && jdata.current.state != "Paused" && typeof watchForZ[0] !== 'undefined'){ watchForZ = []; console.log("Clearing Z events"); }
+
+        //Update filament and firmware info when printer enters Operational state
         if(printerStatus != "Operational" && jdata.current.state == "Operational" && typeof watchLogFor['filamentInfo'] == 'undefined'){
           watchLogFor['firmwareInfo'] = "FIRMWARE";
           watchLogFor.length++;
           watchLogFor['filamentInfo'] = "Printed filament";
           watchLogFor.length++;
           sendCommand("M115");
-        }else{
+        }else{ //In case the M115 command gets lost in the shuffle
           if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational"){ sendCommand("M115"); }
         }
         printerStatus = jdata.current.state;
+
+        //Automaticaly reconnect if Z-probe errors borks the connection
         if(printerStatus.includes("Error: Z-probe failed")){ connectPrinter("connect"); printerStatus = "Connecting"; }
       }else{
         printerStatus = "Unknown";
@@ -347,6 +369,8 @@ function updateConnectionStatus(){
 function updateStatus(){
 
   updateConnectionStatus();
+
+  //Shut down the hot end if paused too long
   if(printerStatus == "Paused" && pauseTimeout > 0){
     if(pauseTimeout + (5 * 60 * 1000) <= (new Date().valueOf())){
       console.log("Printer paused for too long. Shutting off hot end");
@@ -435,8 +459,25 @@ function setSortBy(s){
   updateFiles();
 }
 
+// Copies file from local storage to USB
+function copyToUsb(file){
+  var text;
+  var currentPage = dt.page();
+  $.ajax({
+    url: "include/f.php?c=copyToUsb&f=" + file,
+    type: "get",
+    contentType:"application/json; charset=utf-8",
+    complete: (function(data,type){
+      jdata = JSON.parse(data.responseText);
+      if(jdata.status){ text = "File " + file + " copied to USB storage"; }
+      else{ text = "Error copying " + file; }
+      bootbox.alert({ message: text, backdrop: true });
+    })
+  });
+}
+
 // Copies file from the USB stick to local storage
-function transferFile(file){
+function copyToLocal(file){
   var text;
   var currentPage = dt.page();
   $.ajax({
@@ -807,7 +848,7 @@ function startupTasks(){
             callback: function (result) {
               if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
                 switch(r){
-                  case "1": transferFile(name); break;
+                  case "1": copyToLocal(name); break;
                   case "2": deleteFile(origin, name); break;
                 }
               }); }
