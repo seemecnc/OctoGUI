@@ -23,6 +23,7 @@ var currentSpeed = 100;    // Current speed (percentage) of print
 var pauseTimeout = 0;      // Time when current print job was paused
 var pauseTemp = 0;         // Extruder temp when print job was paused
 var dt;                    // fileList DataTables handle
+var reconnect = false;     // variable to automatically reconnect to the printer when disconnected
 
 //Z height action test variables
 for(l = 0;l <= 20;l++){
@@ -113,14 +114,9 @@ function spottedLog(key, log){
       bootbox.confirm("Comm Error - Reconnect?", function(result){
         if(result){
           connectPrinter("disconnect");
-          watchLogFor["Reconnect"] = "Offline"; watchLogFor.length++;
+          reconnect = true;
         }
       });
-      break;
-
-    case "Reconnect":
-      delete watchLogFor[key]; watchLogFor.length--;
-      connectPrinter("connect");
       break;
 
     case "E": // Logging return extruder position
@@ -330,6 +326,7 @@ function updateConnectionStatus(){
     complete: (function(data,type){
       if(type == "success"){
         jdata = JSON.parse(data.responseText);
+        if(printerStatus == "Closed" && reconnect){ reconnect = false; connectPrinter("connect"); }
         if(printerStatus == "Printing" && jdata.current.state != "Printing" && jdata.current.state != "Paused" && typeof watchForZ[0] !== 'undefined'){ watchForZ = []; console.log("Clearing Z events"); }
         if(printerStatus != "Operational" && jdata.current.state == "Operational" && typeof watchLogFor['filamentInfo'] == 'undefined'){
           watchLogFor['firmwareInfo'] = "FIRMWARE";
