@@ -220,7 +220,7 @@ then
   echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmXQtGX/xnhexhPr/RLEIej5FhT5KDtxptAsZfRnPXkFtib8iwAsnhPRRQBy3olJFCnuSag/pGd9BHmJhDtQdS+JxzEh6S4aCT02ulQ2wAAIJWEWCrf8hDdkM8Nf27p83C07+k3LMEUjQN9VY+gIS2xAkoSnzaDjxUKdCmz4cx1OlUlKKCn2cvvW9YfaGtG/VymD2MyifAvH1PUWTyKxWQpCYChmPw7zrbMG1lrWIc2JYejQ1oc6iavovbE5lihqbasLP8FHSfuqJKDG0qy2IAoyfViHInPz/zsZ0IdNrrIAyQHgCQxK3SX60UmRVWc7nNqfeBzTrmdzq2EVC0scJB ryan@knowhere" >> /home/pi/.ssh/authorized_keys
 fi
 
-check=$(grep "alias refresh=/" /home/pi/.bashrc)
+check=$(grep "alias refresh='/" /home/pi/.bashrc)
 if [ -z "$check" ]
 then
   echo -e "\nalias refresh='/home/pi/refresh-chromium.sh" >> /home/pi/.bashrc
