@@ -5,7 +5,7 @@ $apikey = "ABAABABB";
 
 function copyToUsb($file){
 
-  $status = "ERROR";
+  $status = "{\"status\":0}";
   $source = "/home/pi/.octoprint/uploads/$file";
   $target = "/mnt/usb/$file";
   if(usbIsMounted()){
@@ -13,6 +13,7 @@ function copyToUsb($file){
       if(copy($source, $target)) $status = "{\"status\":1}";
     }
   }
+  echo $status;
 
 }
 
