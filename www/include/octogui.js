@@ -108,6 +108,21 @@ function spottedLog(key, log){
   log = log.replace(/Recv:\ /,'');
   switch(key){
 
+    case "COMMERROR":
+      delete watchLogFor[key]; watchLogFor.length--;
+      bootbox.confirm("Comm Error - Reconnect?", function(result){
+        if(result){
+          connectPrinter("disconnect");
+          watchLogFor["Reconnect"] = "Offline"; watchLogFor.length++;
+        }
+      });
+      break;
+
+    case "Reconnect":
+      delete watchLogFor[key]; watchLogFor.length--;
+      connectPrinter("connect");
+      break;
+
     case "E": // Logging return extruder position
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
@@ -809,6 +824,7 @@ function startupTasks(){
   } );
 
   getClientIP();
+  watchLogFor['COMMERROR'] = 'sufficient'; watchLogFor.length++;
 
   //Init the different popup number pads
   $('#eTempInput').numpad({
