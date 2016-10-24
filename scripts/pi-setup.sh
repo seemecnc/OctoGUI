@@ -223,7 +223,7 @@ fi
 check=$(grep "alias refresh='/" /home/pi/.bashrc)
 if [ -z "$check" ]
 then
-  echo -e "\nalias refresh='/home/pi/refresh-chromium.sh" >> /home/pi/.bashrc
+  echo -e "\nalias refresh='/home/pi/refresh-chromium.sh'" >> /home/pi/.bashrc
 fi
 
 #Fix permissions
