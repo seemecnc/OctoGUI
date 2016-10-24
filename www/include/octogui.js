@@ -819,7 +819,8 @@ function startupTasks(){
           inputOptions: [
             { text: 'Load ' + name + ' for printing', value: '1' },
             { text: 'Print ' + name + ' now', value: '2' },
-            { text: 'Delete ' + name, value: '3' }],
+            { text: 'Copy ' + name + ' to USB', value: '3' },
+            { text: 'Delete ' + name, value: '4' }],
             callback: function (result) {
               if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
                 switch(r){
@@ -829,7 +830,8 @@ function startupTasks(){
                     watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
                     showOverlay("Preparing to Print:\n" + name);
                     break;
-                  case "3": deleteFile(origin, name); break;
+                  case "3": copyToUsb(name); break;
+                  case "4": deleteFile(origin, name); break;
                 }
               }); }
             }
