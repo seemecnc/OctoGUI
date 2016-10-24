@@ -66,7 +66,7 @@ fi
 #Setup chromium refresh file
 cat > /home/pi/refresh-chromium.sh << EOF
 #!/bin/bash
-OK=1
+OK=0
 res=\$(curl -s http://localhost/api/printer?apikey=ABAABABB)
 if [ "\$res" == "Printer is not operational" ]; then OK=1;
 else
