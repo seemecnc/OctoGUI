@@ -111,12 +111,8 @@ function spottedLog(key, log){
 
     case "COMMERROR":
       delete watchLogFor[key]; watchLogFor.length--;
-      bootbox.confirm("Comm Error - Reconnect?", function(result){
-        if(result){
-          connectPrinter("disconnect");
-          reconnect = true;
-        }
-      });
+      connectPrinter("disconnect");
+      reconnect = true;
       break;
 
     case "E": // Logging return extruder position
