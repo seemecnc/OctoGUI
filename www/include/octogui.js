@@ -162,6 +162,7 @@ function spottedLog(key, log){
       }
       if(pId != printerId){ setPrinterProfile(pId); }
       delete watchLogFor[key]; watchLogFor.length--;
+      if(typeof watchLogFor['COMMERROR'] == 'undefined'){ watchLogFor['COMMERROR'] = 'sufficient'; watchLogFor.length++; }
       break;
 
     case "filamentInfo": // Update amount of filament used
@@ -821,7 +822,6 @@ function startupTasks(){
   } );
 
   getClientIP();
-  watchLogFor['COMMERROR'] = 'sufficient'; watchLogFor.length++;
 
   //Init the different popup number pads
   $('#eTempInput').numpad({
