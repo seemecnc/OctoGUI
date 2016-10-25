@@ -73,7 +73,12 @@ else
   status=\$(echo "\$res"|jq .state.text|sed -e 's/"//g');
   if [ "\$status" != "Printing" -a "\$status" != "Paused" ]; then OK=1; fi
 fi
-if [ "\$OK" == "1" ]; then DISPLAY=:0.0 /usr/bin/xdotool key ctrl+F5; fi
+if [ "\$OK" == "1" ]; then echo "Refreshing Chromium"; DISPLAY=:0.0 /usr/bin/xdotool key ctrl+F5
+else
+  echo "Print job in progress. Not refreshing. Feel free to do it yourself:"
+  echo "DISPLAY=:0.0 /usr/bin/xdotool key ctrl+F5"
+  echo
+fi
 EOF
 
 #Setup uptime check file
