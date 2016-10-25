@@ -554,16 +554,19 @@ function updateFiles(page){
     complete: (function(data,type){
       if(type == "success"){
         jdata = JSON.parse(data.responseText);
-        var sortString;
-        if(sortRev){ sortString = "-" + sortBy; }
-        else{ sortString = sortBy; }
-        var files = jdata.sort(dynamicSort(sortString));
         dt.clear();
-        files.forEach(function(f){ dt.row.add([ f.origin, f.name ]); });
-        if(page > 0){
-          if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
-          dt.page(page).draw(false);
-        }else { dt.draw(); }
+        if(jdata == null){ dt.draw(); }
+        else{
+          var sortString;
+          if(sortRev){ sortString = "-" + sortBy; }
+          else{ sortString = sortBy; }
+          var files = jdata.sort(dynamicSort(sortString));
+          files.forEach(function(f){ dt.row.add([ f.origin, f.name ]); });
+          if(page > 0){
+            if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
+            dt.page(page).draw(false);
+          }else { dt.draw(); }
+        }
       }
     })
   });
