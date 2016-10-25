@@ -227,8 +227,8 @@ then
 fi
 
 #Fix permissions
-chmod 755 /home/pi/start.sh /home/pi/ucheck.sh /home/pi/.config/autostart/chromium.desktop
-chown -R pi:pi /home/pi/.config /home/pi/*sh /home/pi/.ssh /home/pi/.bashrc /var/www/html
+chmod 755 /home/pi/*.sh /home/pi/.config/autostart/chromium.desktop
+chown -R pi:pi /home/pi/.config /home/pi/*.sh /home/pi/.ssh /home/pi/.bashrc /var/www/html
 
 #make /tmp a ramdisk
 check=$(grep "tmp tmpfs" /etc/fstab)
