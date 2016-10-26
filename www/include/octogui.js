@@ -17,6 +17,7 @@ var returnZ;               // Z height to return to after lifting head
 var returnE;               // Extruder position to return to after chaning filament
 var watchLogFor = [];      // Array of thing to watch the printer logs for
 var watchForZ = [];        // Array of Z heights to watch for
+var zdt;                   // Z Menu DataTable handle
 var zEventList = [];       // Array for handing entry of Z events
 var hotLoading = false;    // Flag for changing filament mid-print
 var maxZHeight = 0;        // Max printable Z height
@@ -895,6 +896,7 @@ function startupTasks(){
     fnDrawCallback: function() { $("#filesList thead").remove(); }
   } );
 
+  addZMenuRow();
   document.getElementById('apiKey').innerHTML = apikey;
   document.getElementById('speedFactor').value = currentSpeed;
   getPrinterProfile();
@@ -907,9 +909,10 @@ function addZMenuRow(){
   var zIndex = 0;
   if(typeof watchForZ[0] !== 'undefined'){ zIndex = watchForZ.length; }
   var h = "<input type=text size=3 id='zh" + zIndex + "'>";
-  var e = "<input type=select";
-  var a = "";
-  //dt.row.add([ f.origin, f.name ])
+  var e = "<select id='ze" + zIndex + "'><option value=1>Test!</option></select>";
+  var a = "<input type=text size=3 id='za" + zIndex + "'>";
+  zdt.row.add([ h, e, a ]).draw();
+
 }
 
 // Show zMenu
