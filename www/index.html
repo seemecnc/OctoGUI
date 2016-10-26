@@ -23,6 +23,8 @@
   <body onload='startupTasks();'>
     <div id="overlay" class="overlay"><a class="closebtn" onclick="hideOverlay()">&times;</a>
     <div id="overlayContent" class="overlay-content"></div></div>
+    <div id="zMenu" class="overlay"><a class="closebtn" onclick="hideZMenu()">&times;</a>
+      <div id="zMenuContent" class="overlay-content"></div><a>SAVE</a> - <a>CANCEL</a><br><table id='zMenuTable'></table></div>
     <br><div align=center><table border=1><tr><td align=left valign=top width="20%">
     Status: <div id="currentStatus" style="display:inline-block">Checking...</div><br>
     Printer: <div id="printerModel" style="display:inline-block"></div><br>
@@ -48,7 +50,7 @@
       Print Time: <div style="display:inline-block" id="currentPrintTime"></div><br>
       Print Time Left: <div style="display:inline-block" id="currentPrintTimeLeft"></div><br>
       Current Z: <div style="display:inline-block" id="currentZ"></div><br><br>
-      Speed: <input type=text size=3 id="speedFactor">
+      Speed: <input type=text size=3 id="speedFactor"> - <a onclick="showZMenu()">Z Menu</span>
     </td></tr><tr>
     <td colspan=3 align=center><div style="display:inline-block;visibility:hidden" id="filamentInfo"></div></td>
       </tr></table><br>

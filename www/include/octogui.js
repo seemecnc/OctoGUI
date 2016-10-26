@@ -17,6 +17,7 @@ var returnZ;               // Z height to return to after lifting head
 var returnE;               // Extruder position to return to after chaning filament
 var watchLogFor = [];      // Array of thing to watch the printer logs for
 var watchForZ = [];        // Array of Z heights to watch for
+var zEventList = [];       // Array for handing entry of Z events
 var hotLoading = false;    // Flag for changing filament mid-print
 var maxZHeight = 0;        // Max printable Z height
 var currentSpeed = 100;    // Current speed (percentage) of print
@@ -88,7 +89,6 @@ sock.onmessage = function(e) {
     if(typeof watchForZ[0] !== 'undefined'){
       if(printerStatus == "Printing" && currentZ == e.data.current.currentZ && currentZ >= watchForZ[0]['height'] && currentZ != null){
         spottedZ(watchForZ[0]['action']);
-        watchForZ.splice(0,1);
       }
     }
     currentZ = e.data.current.currentZ;
@@ -110,6 +110,7 @@ sock.onmessage = function(e) {
 // Actions to take when Z height is hit
 function spottedZ(action){
   console.log("We hit Z" + currentZ + "! Action: " + action);
+  watchForZ.splice(0,1);
 }
 
 // Actions to take when a given string is spotted in the log
@@ -882,11 +883,40 @@ function startupTasks(){
     hideDecimalButton: true
   });
 
+  //Init zMenu
+  zdt = $('#zMenuTable').DataTable( {
+    columns: [ { title: "Height" }, { title: "Event" }, { title: "Arg" } ],
+    searching: false,
+    fixedHeader: false,
+    ordering: false,
+    info: false,
+    pageLength: 5,
+    lengthChange: false,
+    fnDrawCallback: function() { $("#filesList thead").remove(); }
+  } );
+
   document.getElementById('apiKey').innerHTML = apikey;
   document.getElementById('speedFactor').value = currentSpeed;
   getPrinterProfile();
   updateFiles();
 }
+
+// add new Blank row to Z Menu
+function addZMenuRow(){
+
+  var zIndex = 0;
+  if(typeof watchForZ[0] !== 'undefined'){ zIndex = watchForZ.length; }
+  var h = "<input type=text size=3 id='zh" + zIndex + "'>";
+  var e = "<input type=select";
+  var a = "";
+  //dt.row.add([ f.origin, f.name ])
+}
+
+// Show zMenu
+function showZMenu(content){ document.getElementById('overlay').style.width = "100%"; }
+
+// Hide zMenu
+function hideZMenu(){ document.getElementById('overlay').style.width = "0"; }
 
 // Set overlay to visible with given content
 function showOverlay(content){
