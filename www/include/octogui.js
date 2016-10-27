@@ -896,6 +896,11 @@ function startupTasks(){
     lengthChange: false,
     fnDrawCallback: function() { $("#zMenuTable thead").remove(); }
   } );
+  
+  $('#zMenuTable tbody').on( 'click', 'div.zdelete', function () {
+    zdt.row( $(this).parents('tr') ).remove().draw();
+    zIndex--;
+   } );
 
   addZMenuRow();
   document.getElementById('apiKey').innerHTML = apikey;
@@ -910,12 +915,15 @@ function addZMenuRow(){
   var h = "<input type=text size=3 id='zh" + zIndex + "'>";
   var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='Change Filament'>Change Filament</option></select>";
   var a = "<input type=text size=3 id='za" + zIndex + "'>";
-  zdt.row.add([h, e, a, "&times"]).draw();
+  zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
   $('#zh'+zIndex).numpad({ hidePlusMinusButton: true });
   $('#za'+zIndex).numpad({ hidePlusMinusButton: true });
   zIndex++;
 
 }
+
+// Show zMenu
+function showZMenu(content){ document.getElementById('zMenu').style.width = "100%"; }
 
 // Hide zMenu
 function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; }
