@@ -911,8 +911,11 @@ function addZMenuRow(){
   var h = "<input type=text size=3 id='zh" + zIndex + "'>";
   var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='Change Filament'>Change Filament</option></select>";
   var a = "<input type=text size=3 id='za" + zIndex + "'>";
-  zdt.row.add([h, e, a]);
-  zdt.draw();
+  zdt.row.add([h, e, a]).draw();
+  $('#zh'+zIndex).numpad({
+    //onKeypadClose: function(){ setSpeedFactor(Number(document.getElementById('speedFactor').value)); },
+    hidePlusMinusButton: true
+  });
 
 }
 
