@@ -941,7 +941,20 @@ function saveZMenu(){
     console.log(watchForZ);
     bootbox.alert({ message: "Z Events Saved", backdrop: true });
     hideZMenu();
+    rebuildZMenu();
   }
+
+}
+
+function rebuildZMenu(){
+
+  zdt.clear();
+  if(typeof watchForZ[0] !== 'undefined' && watchForZ[0] != null){
+    watchForZ.forEach(function(f){
+      zdt.row.add([ f.height, f.action, f.arg, "<div class='zdelete'>X</div>" ]);
+    });
+    zdt.draw();
+  }else{ addZMenuRow(); }
 
 }
 
