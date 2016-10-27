@@ -18,6 +18,7 @@ var returnE;               // Extruder position to return to after chaning filam
 var watchLogFor = [];      // Array of thing to watch the printer logs for
 var watchForZ = [];        // Array of Z heights to watch for
 var zdt;                   // Z Menu DataTable handle
+var zIndex = 0;            // Z Menu build number
 var zEventList = [];       // Array for handing entry of Z events
 var hotLoading = false;    // Flag for changing filament mid-print
 var maxZHeight = 0;        // Max printable Z height
@@ -886,7 +887,7 @@ function startupTasks(){
 
   //Init zMenu
   zdt = $('#zMenuTable').DataTable( {
-    columns: [ { title: "Height" }, { title: "Event" }, { title: "Arg" } ],
+    columns: [ { title: "Height" }, { title: "Event" }, { title: "Arg" }, { title: "Remove" } ],
     searching: false,
     fixedHeader: false,
     ordering: false,
@@ -903,25 +904,18 @@ function startupTasks(){
   updateFiles();
 }
 
-var zIndex = 0;
-
 // add new Blank row to Z Menu
 function addZMenuRow(){
 
-  //var zIndex = 0;
-  //if(typeof watchForZ[0] !== 'undefined'){ zIndex = watchForZ.length; }
   var h = "<input type=text size=3 id='zh" + zIndex + "'>";
   var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='Change Filament'>Change Filament</option></select>";
   var a = "<input type=text size=3 id='za" + zIndex + "'>";
-  zdt.row.add([h, e, a]).draw();
+  zdt.row.add([h, e, a, "&times"]).draw();
   $('#zh'+zIndex).numpad({ hidePlusMinusButton: true });
   $('#za'+zIndex).numpad({ hidePlusMinusButton: true });
   zIndex++;
 
 }
-
-// Show zMenu
-function showZMenu(content){ document.getElementById('zMenu').style.width = "100%"; }
 
 // Hide zMenu
 function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; }
