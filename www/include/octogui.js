@@ -981,7 +981,7 @@ function addZMenuRow(){
     var h = "<input type=text size=3 id='zh" + zIndex + "'>";
     var e = "<select id='ze" + zIndex + "'>";
     e = e + "<option value='Speed'>Change Speed</option><option value='Filament'>Change Filament</option>";
-    e = e + "<option value='ExtruderTemp'>Extruder Temperature</option></select>";
+    e = e + "<option value='ExtruderTemp'>Extruder Temperature</option>";
     e = e + "<option value='BedTemp'>Bed Temperature</option>";
     e = e + "</select>";
     var a = "<input type=text size=3 id='za" + zIndex + "'>";
