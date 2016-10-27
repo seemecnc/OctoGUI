@@ -909,17 +909,18 @@ function addZMenuRow(){
   var zIndex = 0;
   if(typeof watchForZ[0] !== 'undefined'){ zIndex = watchForZ.length; }
   var h = "<input type=text size=3 id='zh" + zIndex + "'>";
-  var e = "<select id='ze" + zIndex + "'><option value=1>Test!</option></select>";
+  var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='Change Filament'>Change Filament</option></select>";
   var a = "<input type=text size=3 id='za" + zIndex + "'>";
-  zdt.row.add([ h, e, a ]).draw();
+  zdt.row.add([h, e, a]);
+  zdt.draw();
 
 }
 
 // Show zMenu
-function showZMenu(content){ document.getElementById('overlay').style.width = "100%"; }
+function showZMenu(content){ document.getElementById('zMenu').style.width = "100%"; }
 
 // Hide zMenu
-function hideZMenu(){ document.getElementById('overlay').style.width = "0"; }
+function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; }
 
 // Set overlay to visible with given content
 function showOverlay(content){
