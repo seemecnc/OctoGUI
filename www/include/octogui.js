@@ -912,14 +912,12 @@ function saveZMenu(){
     while(zCurrent < zIndex){
       zNum = document.getElementById('zh'+zCurrent).value;
       if($.isNumeric(zNum)){
-        watchForZ[zCurrent] = { 'height': document.getElementById('zh'+zCurrent).value, 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
+        watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
       }
       zCurrent++;
     }
   }
-  console.log(watchForZ);
-  watchForZ = watchForZ.sort(dynamicSort("height"));
-  console.log(watchForZ);
+  watchForZ.sort(dynamicSort("height"));
 }
 
 // add new Blank row to Z Menu
@@ -936,10 +934,13 @@ function addZMenuRow(){
 }
 
 // Show zMenu
-function showZMenu(content){ document.getElementById('zMenu').style.width = "100%"; }
+function showZMenu(){ 
+  if(zIndex == 0){ addZMenuRow(); }
+  document.getElementById('zMenu').style.width = "100%";
+}
 
 // Hide zMenu
-function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; }
+function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; zdt.clear().draw(); }
 
 // Set overlay to visible with given content
 function showOverlay(content){
