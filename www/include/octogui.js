@@ -926,16 +926,18 @@ function saveZMenu(){
     }
   }
   watchForZ.sort(dynamicSort("height"));
+  console.log(watchForZ);
+
 }
 
 // add new Blank row to Z Menu
 function addZMenuRow(){
 
   var h = "<input type=text size=3 id='zh" + zIndex + "'>";
-  var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='Change Filament'>Change Filament</option></select>";
+  var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='filament'>Change Filament</option></select>";
   var a = "<input type=text size=3 id='za" + zIndex + "'>";
   zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
-  $('#zh'+zIndex).numpad({ hidePlusMinusButton: true });
+  $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
   $('#za'+zIndex).numpad({ hidePlusMinusButton: true });
   zIndex++;
 
