@@ -903,19 +903,20 @@ function startupTasks(){
   updateFiles();
 }
 
+var zIndex = 0;
+
 // add new Blank row to Z Menu
 function addZMenuRow(){
 
-  var zIndex = 0;
-  if(typeof watchForZ[0] !== 'undefined'){ zIndex = watchForZ.length; }
+  //var zIndex = 0;
+  //if(typeof watchForZ[0] !== 'undefined'){ zIndex = watchForZ.length; }
   var h = "<input type=text size=3 id='zh" + zIndex + "'>";
   var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='Change Filament'>Change Filament</option></select>";
   var a = "<input type=text size=3 id='za" + zIndex + "'>";
   zdt.row.add([h, e, a]).draw();
-  $('#zh'+zIndex).numpad({
-    //onKeypadClose: function(){ setSpeedFactor(Number(document.getElementById('speedFactor').value)); },
-    hidePlusMinusButton: true
-  });
+  $('#zh'+zIndex).numpad({ hidePlusMinusButton: true });
+  $('#za'+zIndex).numpad({ hidePlusMinusButton: true });
+  zIndex++;
 
 }
 
