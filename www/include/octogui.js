@@ -28,11 +28,6 @@ var pauseTemp = 0;         // Extruder temp when print job was paused
 var dt;                    // fileList DataTables handle
 var reconnect = false;     // variable to automatically reconnect to the printer when disconnected
 
-//Z height action test variables
-for(l = 0;l <= 20;l++){
-  watchForZ[l] = { 'height': (l * 5), 'action' : "Yay, " + (l * 5) };
-}
-
 // Calibration GCODE
 var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2", "M115" ];
@@ -907,6 +902,23 @@ function startupTasks(){
   document.getElementById('speedFactor').value = currentSpeed;
   getPrinterProfile();
   updateFiles();
+}
+
+function saveZMenu(){
+
+  if(zIndex > 0){
+    var zCurrent = 0;
+    var zNum;
+    while(zCurrent < zIndex){
+      zNum = document.getElementById('zh'+zCurrent).value;
+      if($.isNumeric(zNum)){
+        watchForZ[zCurrent] = { 'height': document.getElementById('zh'+zCurrent).value, 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
+      }
+    }
+  }
+  console.log(watchForZ);
+  watchForZ = watchForZ.sort(dynamicSort("height"));
+  console.log(watchForZ);
 }
 
 // add new Blank row to Z Menu
