@@ -914,6 +914,7 @@ function saveZMenu(){
       if($.isNumeric(zNum)){
         watchForZ[zCurrent] = { 'height': document.getElementById('zh'+zCurrent).value, 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
       }
+      zCurrent++;
     }
   }
   console.log(watchForZ);
