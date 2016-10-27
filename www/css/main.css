@@ -29,3 +29,12 @@
     color: red;
     font-size: 30px;
 }
+.zmenucontent {
+    position: relative;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    color: while;
+    font-size: 20px;
+}

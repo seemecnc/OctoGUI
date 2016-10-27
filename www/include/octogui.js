@@ -893,7 +893,7 @@ function startupTasks(){
     info: false,
     pageLength: 5,
     lengthChange: false,
-    fnDrawCallback: function() { $("#filesList thead").remove(); }
+    fnDrawCallback: function() { $("#zMenuTable thead").remove(); }
   } );
 
   addZMenuRow();
