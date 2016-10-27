@@ -923,20 +923,25 @@ function startupTasks(){
 
 function saveZMenu(){
 
-  if(zIndex > 0){
-    var zCurrent = 0;
-    var zNum;
-    while(zCurrent < zIndex){
-      zNum = document.getElementById('zh'+zCurrent).value;
-      if($.isNumeric(zNum)){
-        watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
+  if(printerStatus == "Printing" || printerStatus == "Paused"){
+    bootbox.alert({ message: "You cannot modify Z events while printing", backdrop: true });
+  }else{
+    if(zIndex > 0){
+      var zCurrent = 0;
+      var zNum;
+      while(zCurrent < zIndex){
+        zNum = document.getElementById('zh'+zCurrent).value;
+        if($.isNumeric(zNum)){
+          watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
+        }
+        zCurrent++;
       }
-      zCurrent++;
     }
+    watchForZ.sort(dynamicSort("height"));
+    console.log(watchForZ);
+    bootbox.alert({ message: "Z Events Saved", backdrop: true });
+    hideZMenu();
   }
-  watchForZ.sort(dynamicSort("height"));
-  console.log(watchForZ);
-  bootbox.alert({ message: "Z Events Saved", backdrop: true });
 
 }
 
