@@ -21,6 +21,7 @@ var zdt;                   // Z Menu DataTable handle
 var zIndex = 0;            // Z Menu build number
 var zEventList = [];       // Array for handing entry of Z events
 var hotLoading = false;    // Flag for changing filament mid-print
+var liftOnPause = false;   // Flag for automatically lifting the print head and retracting filament on pause
 var maxZHeight = 0;        // Max printable Z height
 var currentSpeed = 100;    // Current speed (percentage) of print
 var pauseTimeout = 0;      // Time when current print job was paused
@@ -112,10 +113,13 @@ function spottedZ(action,arg){
 
     case "speed":
       console.log("Setting speed to " + arg + " at z: " + currentZ);
+      setSpeedFactor(arg);
       break;
 
     case "filament":
       console.log("Changing Filament at z: " + currentZ);
+      printCommand("pause");
+      liftOnPause = true;
       break;
 
   }
@@ -140,7 +144,10 @@ function spottedLog(key, log){
 
     case "stateToPaused": // Hotunload trigger
       console.log("Printer is paused. Last E is " + returnE);
-      if(returnE > 0) { document.getElementById('hotUnload').style.visibility = "visible"; }
+      if(returnE > 0) {
+        document.getElementById('hotUnload').style.visibility = "visible";
+        if(liftOnPause){ pauseUnload(); }
+      }
       delete watchLogFor[key]; watchLogFor.length--;
       delete watchLogFor["E"]; watchLogFor.length--;
       break;
@@ -804,6 +811,8 @@ function playLoad(){
 function setSpeedFactor(speed){
   console.log("Setting speed factor to: "+speed);
   sendCommand("M220 S" + speed);
+  currentSpeed = speed;
+  document.getElementById('speedFactor').value = currentSpeed;
 }
 
 // One off inits, tasks, etc to be done after page is loaded
@@ -927,6 +936,7 @@ function saveZMenu(){
   }
   watchForZ.sort(dynamicSort("height"));
   console.log(watchForZ);
+  bootbox.alert({ message: "Z Events Saved", backdrop: true });
 
 }
 
@@ -950,7 +960,7 @@ function showZMenu(){
 }
 
 // Hide zMenu
-function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; zdt.clear().draw(); }
+function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; }
 
 // Set overlay to visible with given content
 function showOverlay(content){
