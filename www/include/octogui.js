@@ -85,7 +85,8 @@ sock.onmessage = function(e) {
     //watch for Z height actions
     if(typeof watchForZ[0] !== 'undefined'){
       if(printerStatus == "Printing" && currentZ == e.data.current.currentZ && currentZ >= watchForZ[0]['height'] && currentZ != null){
-        spottedZ(watchForZ[0]['action']);
+        spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
+        watchForZ.splice(0,1);
       }
     }
     currentZ = e.data.current.currentZ;
@@ -105,9 +106,20 @@ sock.onmessage = function(e) {
 };
 
 // Actions to take when Z height is hit
-function spottedZ(action){
-  console.log("We hit Z" + currentZ + "! Action: " + action);
-  watchForZ.splice(0,1);
+function spottedZ(action,arg){
+
+  switch(action){
+
+    case "speed":
+      console.log("Setting speed to " + arg + " at z: " + currentZ);
+      break;
+
+    case "filament":
+      console.log("Changing Filament at z: " + currentZ);
+      break;
+
+  }
+
 }
 
 // Actions to take when a given string is spotted in the log
@@ -891,11 +903,7 @@ function startupTasks(){
     lengthChange: false,
     fnDrawCallback: function() { $("#zMenuTable thead").remove(); }
   } );
-  
-  $('#zMenuTable tbody').on( 'click', 'div.zdelete', function () {
-    zdt.row( $(this).parents('tr') ).remove().draw();
-    zIndex--;
-   } );
+  $('#zMenuTable tbody').on( 'click', 'div.zdelete', function (){ zdt.row( $(this).parents('tr') ).remove().draw(); zIndex--; } );
 
   addZMenuRow();
   document.getElementById('apiKey').innerHTML = apikey;
@@ -934,7 +942,7 @@ function addZMenuRow(){
 }
 
 // Show zMenu
-function showZMenu(){ 
+function showZMenu(){
   if(zIndex == 0){ addZMenuRow(); }
   document.getElementById('zMenu').style.width = "100%";
 }
