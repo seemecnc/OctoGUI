@@ -13,7 +13,9 @@ var sortRev = false;       // Sort order reverse flag
 var printerId;             // Printer profile ID
 var heatedBed = false;     // Heated Bed Flag
 var currentZ;              // Current Z height
-var returnZ;               // Z height to return to after lifting head
+var returnX = null;        // X pos to return to after lifting head
+var returnY = null;        // Y pos to return to after lifting head
+var returnZ;               // Z pos to return to after lifting head
 var returnE;               // Extruder position to return to after chaning filament
 var watchLogFor = [];      // Array of thing to watch the printer logs for
 var watchForZ = [];        // Array of Z heights to watch for
@@ -150,6 +152,8 @@ function spottedLog(key, log){
     case "E": // Logging return extruder position
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
+      if(log.includes("X")){ returnX = log.replace(/.*\ X/,''); returnX = returnX.replace(/\*.*/,''); }
+      if(log.includes("Y")){ returnY = log.replace(/.*\ Y/,''); returnY = returnY.replace(/\*.*/,''); }
       break;
 
     case "stateToPaused": // Hotunload trigger
@@ -160,6 +164,7 @@ function spottedLog(key, log){
       }
       delete watchLogFor[key]; watchLogFor.length--;
       delete watchLogFor["E"]; watchLogFor.length--;
+      console.log("Return XY: " + returnX + "/" + returnY);
       break;
 
     case "firmwareInfo": // Use Firmware info to verify printer model
@@ -669,10 +674,14 @@ function connectPrinter(com){
 function resumeHotLoad(){
   document.getElementById('hotUnload').style.visibility = "hidden";
   if(hotLoading){
-    sendCommand( ["90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
+    if(returnX != null and returnY != null){
+      sendCommand( ["90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
+    }else{ sendCommand( ["90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
     returnE = 0;
+    returnX = null;
+    returnY = null;
   }
 }
 
@@ -793,8 +802,9 @@ function pauseUnload(){
     if(returnE > 0){
       hotLoading = true;
       returnZ = currentZ;
-      if(hotLoadZLift > 0){ moveHead('z',hotLoadZLift); }
-      else{ moveHead('z',(maxZHeight - 15)); }
+      //if(hotLoadZLift > 0){ moveHead('z',hotLoadZLift); }
+      //else{ moveHead('z',(maxZHeight - 15)); }
+      sendCommand("G28");
       sendCommand(hotUnloadString[printerId]);
       document.getElementById('hotUnload').style.visibility = "hidden";
       document.getElementById('hotLoad').style.visibility = "visible";
