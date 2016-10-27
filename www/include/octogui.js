@@ -941,6 +941,7 @@ function saveZMenu(){
     bootbox.alert({ message: "You cannot modify Z events while printing", backdrop: true });
   }else{
     if(zIndex > 0){
+      watchForZ = [];
       var zCurrent = 0;
       var zNum;
       while(zCurrent < zIndex){
