@@ -111,15 +111,25 @@ function spottedZ(action,arg){
 
   switch(action){
 
-    case "speed":
+    case "Speed":
       console.log("Setting speed to " + arg + " at z: " + currentZ);
       setSpeedFactor(arg);
       break;
 
-    case "filament":
+    case "Filament":
       console.log("Changing Filament at z: " + currentZ);
       printCommand("pause");
       liftOnPause = true;
+      break;
+
+    case "ExtruderTemp":
+      console.log("Setting Extruder Temp to " + arg + " at z: " + currentZ);
+      setExtruderTemp(arg);
+      break;
+
+    case "BedTemp":
+      console.log("Setting Bed Temp to " + arg + " at z: " + currentZ);
+      setBedTemp(arg);
       break;
 
   }
@@ -912,7 +922,11 @@ function startupTasks(){
     lengthChange: false,
     fnDrawCallback: function() { $("#zMenuTable thead").remove(); }
   } );
-  $('#zMenuTable tbody').on( 'click', 'div.zdelete', function (){ zdt.row( $(this).parents('tr') ).remove().draw(); zIndex--; } );
+  $('#zMenuTable tbody').on( 'click', 'div.zdelete', function (){
+    zdt.row( $(this).parents('tr') ).remove().draw();
+    zIndex--;
+    if(zIndex == 0){ addZMenuRow(); }
+  } );
 
   addZMenuRow();
   document.getElementById('apiKey').innerHTML = apikey;
@@ -965,7 +979,11 @@ function addZMenuRow(){
     bootbox.alert({ message: "You cannot modify Z events while printing", backdrop: true });
   }else{
     var h = "<input type=text size=3 id='zh" + zIndex + "'>";
-    var e = "<select id='ze" + zIndex + "'><option value='speed'>Change Speed</option><option value='filament'>Change Filament</option></select>";
+    var e = "<select id='ze" + zIndex + "'>";
+    e = e + "<option value='Speed'>Change Speed</option><option value='Filament'>Change Filament</option>";
+    e = e + "<option value='ExtruderTemp'>Extruder Temperature</option></select>";
+    e = e + "<option value='BedTemp'>Bed Temperature</option>";
+    e = e + "</select>";
     var a = "<input type=text size=3 id='za" + zIndex + "'>";
     zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
     $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
