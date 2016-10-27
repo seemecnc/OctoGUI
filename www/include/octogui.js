@@ -675,8 +675,8 @@ function resumeHotLoad(){
   document.getElementById('hotUnload').style.visibility = "hidden";
   if(hotLoading){
     if(returnX != null and returnY != null){
-      sendCommand( ["90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
-    }else{ sendCommand( ["90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
+      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
+    }else{ sendCommand( [ "G28" "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
     returnE = 0;
