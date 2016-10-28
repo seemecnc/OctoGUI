@@ -21,6 +21,7 @@ var watchLogFor = [];      // Array of thing to watch the printer logs for
 var watchForZ = [];        // Array of Z heights to watch for
 var zdt;                   // Z Menu DataTable handle
 var zIndex = 0;            // Z Menu build number
+var zNum = 0;              // Z Menu item count
 var zEventList = [];       // Array for handing entry of Z events
 var hotLoading = false;    // Flag for changing filament mid-print
 var liftOnPause = false;   // Flag for automatically lifting the print head and retracting filament on pause
@@ -928,14 +929,14 @@ function startupTasks(){
     fixedHeader: false,
     ordering: false,
     info: false,
-    pageLength: 5,
+    pageLength: 6,
     lengthChange: false,
     fnDrawCallback: function() { $("#zMenuTable thead").remove(); }
   } );
   $('#zMenuTable tbody').on( 'click', 'div.zdelete', function (){
     zdt.row( $(this).parents('tr') ).remove().draw();
-    zIndex--;
-    if(zIndex == 0){ addZMenuRow(); }
+    zNum--;
+    if(zNum == 0){ addZMenuRow(); }
   } );
 
   addZMenuRow();
@@ -950,13 +951,12 @@ function saveZMenu(){
   if(printerStatus == "Printing" || printerStatus == "Paused"){
     bootbox.alert({ message: "You cannot modify Z events while printing", backdrop: true });
   }else{
-    if(zIndex > 0){
+    if(zNum > 0){
       watchForZ = [];
       var zCurrent = 0;
-      var zNum;
+      var zVal;
       while(zCurrent < zIndex){
-        zNum = document.getElementById('zh'+zCurrent).value;
-        if($.isNumeric(zNum)){
+        if($.isNumeric(document.getElementById('zh'+zCurrent).value)){
           watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
         }
         zCurrent++;
@@ -999,7 +999,7 @@ function addZMenuRow(){
     zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
     $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
     $('#za'+zIndex).numpad({ hidePlusMinusButton: true });
-    zIndex++;
+    zIndex++; zNum++;
   }
 
 }
