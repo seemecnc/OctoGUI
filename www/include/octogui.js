@@ -34,10 +34,10 @@ var reconnect = false;     // variable to automatically reconnect to the printer
 
 // Z Events
 var zEvents = [];
-var zEvents.push({ "command":"Filament", "label":"Change Filament" });
-var zEvents.push({ "command":"Speed", "label":"Change Speed" });
-var zEvents.push({ "command":"ExtruderTemp", "label":"Extruder Temperature" });
-var zEvents.push({ "command":"BedTemp", "label":"Bed Temperature" });
+zEvents.push({ "command":"Filament", "label":"Change Filament" });
+zEvents.push({ "command":"Speed", "label":"Change Speed" });
+zEvents.push({ "command":"ExtruderTemp", "label":"Extruder Temperature" });
+zEvents.push({ "command":"BedTemp", "label":"Bed Temperature" });
 
 // Calibration GCODE
 var calibrateString = [];
@@ -998,7 +998,7 @@ function addZMenuRow(){
   }else{
     var h = "<input type=text size=3 id='zh" + zIndex + "'>";
     var e = "<select id='ze" + zIndex + "'>";
-    zEvents.foreach(function(z){ e = e + "<option value='" + z.command + "'>" + z.label + "</option>"; });
+    zEvents.forEach(function(z){ e = e + "<option value='" + z.command + "'>" + z.label + "</option>"; });
     e = e + "</select>";
     var a = "<input type=text size=3 id='za" + zIndex + "'>";
     zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
