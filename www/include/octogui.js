@@ -982,10 +982,24 @@ function rebuildZMenu(){
 
   zdt.clear();
   if(typeof watchForZ[0] !== 'undefined' && watchForZ[0] != null){
+    zIndex = 0; zNum = 0;
+    var h e a;
     watchForZ.forEach(function(f){
-      zdt.row.add([ f.height, f.action, f.arg, "<div class='zdelete'>X</div>" ]);
+      h = "<input type=text size=3 id='zh" + zIndex + "' value='" + f.height + "'>";
+      e = "<select id='ze" + zIndex + "'>";
+      zEvents.forEach(function(z){
+        e = e + "<option value='" + z.command + "'";
+        if(f.action == z.command){ e = e + " selected=true"; }
+        e = e +">" + z.label + "</option>";
+      });
+      e = e + "</select>";
+      a = "<input type=text size=3 id='za" + zIndex + "' value = '" + f.arg + "'>";
+      zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
+      zdt.page('last').draw('page');
+      $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
+      $('#za'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
+      zIndex++; zNum++;
     });
-    zdt.draw();
   }else{ addZMenuRow(); }
 
 }
