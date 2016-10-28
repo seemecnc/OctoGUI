@@ -998,7 +998,7 @@ function addZMenuRow(){
     var a = "<input type=text size=3 id='za" + zIndex + "'>";
     zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
     $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
-    $('#za'+zIndex).numpad({ hidePlusMinusButton: true });
+    $('#za'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
     zIndex++; zNum++;
   }
 
