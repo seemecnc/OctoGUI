@@ -996,7 +996,8 @@ function addZMenuRow(){
     e = e + "<option value='BedTemp'>Bed Temperature</option>";
     e = e + "</select>";
     var a = "<input type=text size=3 id='za" + zIndex + "'>";
-    zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
+    zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]);
+    zdt.page('last').draw(false);
     $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
     $('#za'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
     zIndex++; zNum++;
