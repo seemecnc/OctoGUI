@@ -32,6 +32,13 @@ var pauseTemp = 0;         // Extruder temp when print job was paused
 var dt;                    // fileList DataTables handle
 var reconnect = false;     // variable to automatically reconnect to the printer when disconnected
 
+// Z Events
+var zEvents = [];
+var zEvents.push({ "command":"Filament", "label":"Change Filament" });
+var zEvents.push({ "command":"Speed", "label":"Change Speed" });
+var zEvents.push({ "command":"ExtruderTemp", "label":"Extruder Temperature" });
+var zEvents.push({ "command":"BedTemp", "label":"Bed Temperature" });
+
 // Calibration GCODE
 var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2", "M115" ];
@@ -991,9 +998,7 @@ function addZMenuRow(){
   }else{
     var h = "<input type=text size=3 id='zh" + zIndex + "'>";
     var e = "<select id='ze" + zIndex + "'>";
-    e = e + "<option value='Speed'>Change Speed</option><option value='Filament'>Change Filament</option>";
-    e = e + "<option value='ExtruderTemp'>Extruder Temperature</option>";
-    e = e + "<option value='BedTemp'>Bed Temperature</option>";
+    zEvents.foreach(function(z){ e = e + "<option value='" + z.command + "'>" + z.label + "</option>"; });
     e = e + "</select>";
     var a = "<input type=text size=3 id='za" + zIndex + "'>";
     zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
