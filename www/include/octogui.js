@@ -1,5 +1,3 @@
-var hotLoadZLift = 0;      // Specify how high to lift the head when changing filament
-
 var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
 var api = "http://" + window.location.host + "/api/";
 var apikey = "ABAABABB";
@@ -715,7 +713,7 @@ function printCommand(command){
   var c;
   if(command == "pause"){
     c = JSON.stringify({ 'command': "pause", 'action': 'toggle' });
-    if(printerStatus == "Printing" && currentZ < (maxZHeight - hotLoadZLift - 10)) {
+    if(printerStatus == "Printing" && currentZ < (maxZHeight - 10)) {
       console.log("Printing paused at " + currentZ);
       watchLogFor['E'] = ' E';
       watchLogFor.length++;
@@ -815,12 +813,10 @@ function getPrinterProfile(){
 
 // whie paused, Raise print head and unload filament
 function pauseUnload(){
-  if(printerStatus == "Paused" && typeof hotUnloadString[printerId] !== 'undefined' && currentZ < (maxZHeight - hotLoadZLift - 10)){
+  if(printerStatus == "Paused" && typeof hotUnloadString[printerId] !== 'undefined' && currentZ < (maxZHeight - 10)){
     if(returnE > 0){
       hotLoading = true;
       returnZ = currentZ;
-      //if(hotLoadZLift > 0){ moveHead('z',hotLoadZLift); }
-      //else{ moveHead('z',(maxZHeight - 15)); }
       sendCommand("G28");
       sendCommand(hotUnloadString[printerId]);
       document.getElementById('hotUnload').style.visibility = "hidden";
