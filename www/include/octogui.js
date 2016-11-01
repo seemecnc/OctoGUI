@@ -159,8 +159,8 @@ function spottedLog(key, log){
     case "E": // Logging return extruder position
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
-      if(log.includes("X")){ returnX = log.replace(/.*\ X/,''); returnX = returnX.replace(/\*.*/,''); }
-      if(log.includes("Y")){ returnY = log.replace(/.*\ Y/,''); returnY = returnY.replace(/\*.*/,''); }
+      if(log.includes("X")){ returnX = log.replace(/.*\ X/,''); returnX = returnX.replace(/\ *.*/,''); }
+      if(log.includes("Y")){ returnY = log.replace(/.*\ Y/,''); returnY = returnY.replace(/\ *.*/,''); }
       break;
 
     case "stateToPaused": // Hotunload trigger
