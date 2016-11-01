@@ -172,6 +172,7 @@ function spottedLog(key, log){
       delete watchLogFor[key]; watchLogFor.length--;
       delete watchLogFor["E"]; watchLogFor.length--;
       console.log("Return XY: " + returnX + "/" + returnY);
+      if(returnX == null || returnY == null){ alert("Return coordinates not available. Resume print and try again"); }
       break;
 
     case "firmwareInfo": // Use Firmware info to verify printer model
@@ -385,6 +386,9 @@ function updateConnectionStatus(){
 
         if(jdata.current.state == "Operational"){
           if(printerStatus != "Operational"){
+            hotLoading = false;
+            liftOnly = false;
+            liftOnPause = false;
             if(typeof calibrateString[printerId] !== 'undefined'){ document.getElementById('calibratePrinter').style.visibility = "visible"; }
             else { document.getElementById('calibratePrinter').style.visibility = "hidden"; }
             if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
@@ -698,12 +702,18 @@ function connectPrinter(com){
 function resumeHotLoad(){
   document.getElementById('hotUnload').style.visibility = "hidden";
   if(hotLoading){
+    if(liftOnly){
+    if(returnX != null && returnY != null){
+      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2" ] );
+    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2" ] ); }
+    }else{
     if(returnX != null && returnY != null){
       sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
     }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
+    }
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
-    lifeOnly = false;
+    liftOnly = false;
     returnE = 0;
     returnX = null;
     returnY = null;
@@ -715,6 +725,8 @@ function pauseAndLift(){
     liftOnly = true;
     liftOnPause = true;
     printCommand("pause");
+  }else{
+    if(printerStatus == "Paused"){ printCommand("pause"); }
   }
 }
 
