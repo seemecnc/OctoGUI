@@ -22,6 +22,7 @@ var zIndex = 0;            // Z Menu build number
 var zNum = 0;              // Z Menu item count
 var zEventList = [];       // Array for handing entry of Z events
 var hotLoading = false;    // Flag for changing filament mid-print
+var liftOnly = false;      // Variable to use hotload scripts to lift head on pause without changing filament
 var liftOnPause = false;   // Flag for automatically lifting the print head and retracting filament on pause
 var maxZHeight = 0;        // Max printable Z height
 var currentSpeed = 100;    // Current speed (percentage) of print
@@ -702,9 +703,18 @@ function resumeHotLoad(){
     }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
+    lifeOnly = false;
     returnE = 0;
     returnX = null;
     returnY = null;
+  }
+}
+
+function pauseAndLift(){
+  if(printerStatus == "Printing"){
+    liftOnly = true;
+    liftOnPause = true;
+    printCommand("pause");
   }
 }
 
@@ -818,7 +828,7 @@ function pauseUnload(){
       hotLoading = true;
       returnZ = currentZ;
       sendCommand("G28");
-      sendCommand(hotUnloadString[printerId]);
+      if(!(liftOnly)){ sendCommand(hotUnloadString[printerId]); }
       document.getElementById('hotUnload').style.visibility = "hidden";
       document.getElementById('hotLoad').style.visibility = "visible";
       pauseTimeout = new Date().valueOf();
