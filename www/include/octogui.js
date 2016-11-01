@@ -703,13 +703,13 @@ function resumeHotLoad(){
   document.getElementById('hotUnload').style.visibility = "hidden";
   if(hotLoading){
     if(liftOnly){
-    if(returnX != null && returnY != null){
-      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2" ] );
-    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2" ] ); }
+      if(returnX != null && returnY != null){
+        sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2" ] );
+      }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2" ] ); }
     }else{
-    if(returnX != null && returnY != null){
-      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
-    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
+      if(returnX != null && returnY != null){
+        sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
+      }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
     }
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
