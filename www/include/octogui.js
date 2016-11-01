@@ -204,7 +204,7 @@ function spottedLog(key, log){
           console.log("Printer ("+fwp+") not supported!");
           break;
       }
-      if(pId != printerId){ setPrinterProfile(pId); }
+      if(pId != printerId && printerStatus != "Printing" && printerStatus != "Paused" ){ setPrinterProfile(pId); }
       delete watchLogFor[key]; watchLogFor.length--;
 
       //Init trap for Comm Error if it's not alreay set
@@ -383,6 +383,23 @@ function updateConnectionStatus(){
 
         //Clear Z events when a print job is completed or cancelled
         if(printerStatus == "Printing" && jdata.current.state != "Printing" && jdata.current.state != "Paused" && typeof watchForZ[0] !== 'undefined'){ watchForZ = []; console.log("Clearing Z events"); }
+
+        if(jdata.current.state == "Operational"){
+          if(printerStatus != "Operational"){
+            if(typeof calibrateString[printerId] !== 'undefined'){ document.getElementById('calibratePrinter').style.visibility = "visible"; }
+            else { document.getElementById('calibratePrinter').style.visibility = "hidden"; }
+            if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
+            else { document.getElementById('loadFilament').style.visibility = "hidden"; }
+            if(typeof unloadFilamentString[printerId] !== 'undefined'){ document.getElementById('unloadFilament').style.visibility = "visible"; }
+            else { document.getElementById('unloadFilament').style.visibility = "hidden"; }
+          }
+        }else{
+          if(jdata.current.state != printerStatus){
+            document.getElementById('calibratePrinter').style.visibility = "hidden";
+            document.getElementById('loadFilament').style.visibility = "hidden";
+            document.getElementById('unloadFilament').style.visibility = "hidden";
+          }
+        }
 
         //Update filament and firmware info when printer enters Operational state
         if(printerStatus != "Operational" && jdata.current.state == "Operational" && typeof watchLogFor['filamentInfo'] == 'undefined'){
@@ -788,14 +805,6 @@ function getPrinterProfile(){
             document.getElementById('bedTempDisplay').style.visibility = "hidden";
             document.getElementById('bedTempSet').style.visibility = "hidden";
           }
-          if(typeof calibrateString[printerId] !== 'undefined'){ document.getElementById('calibratePrinter').style.visibility = "visible"; }
-          else { document.getElementById('calibratePrinter').style.visibility = "hidden"; }
-          if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
-          else { document.getElementById('loadFilament').style.visibility = "hidden"; }
-          if(typeof unloadFilamentString[printerId] !== 'undefined'){ document.getElementById('unloadFilament').style.visibility = "visible"; }
-          else { document.getElementById('unloadFilament').style.visibility = "hidden"; }
-          if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
-          else { document.getElementById('loadFilament').style.visibility = "hidden"; }
           if(printerId == 'eris'){ document.getElementById('fanControl').style.visibility = "hidden"; }
           else { document.getElementById('fanControl').style.visibility = "visible"; }
         }
