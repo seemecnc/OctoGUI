@@ -165,6 +165,7 @@ function spottedLog(key, log){
 
     case "stateToPaused": // Hotunload trigger
       console.log("Printer is paused. Last E is " + returnE);
+      printerStatus = "Paused";
       if(returnE > 0) {
         document.getElementById('hotUnload').style.visibility = "visible";
         if(liftOnPause){ pauseUnload(); }
@@ -646,7 +647,6 @@ function sendCommand(command){
   var c;
   if(command instanceof Array){ c = { "commands": command }; }
   else{ c = { "command": command }; }
-  console.log(c);
   $.ajax({
     url: api+"printer/command?apikey="+apikey,
     type: "post",
@@ -717,9 +717,7 @@ function resumeHotLoad(){
 }
 
 function pauseAndLift(){
-  console.log("Pause and Lift Clicked");
   if(printerStatus == "Printing"){
-    console.log("Pausing and Lifting");
     liftOnly = true;
     liftOnPause = true;
     printCommand("pause");
@@ -998,7 +996,6 @@ function saveZMenu(){
       }
     }
     watchForZ.sort(dynamicSort("height"));
-    console.log(watchForZ);
     bootbox.alert({ message: "Z Events Saved", backdrop: true });
     rebuildZMenu();
   }
