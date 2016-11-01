@@ -159,8 +159,8 @@ function spottedLog(key, log){
     case "E": // Logging return extruder position
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
-      if(log.includes("X")){ returnX = log.replace(/.*\ X/,''); returnX = returnX.replace(/\ *.*/,''); }
-      if(log.includes("Y")){ returnY = log.replace(/.*\ Y/,''); returnY = returnY.replace(/\ *.*/,''); }
+      if(log.includes("X")){ returnX = log.replace(/.*\ X/,''); returnX = returnX.replace(/\ Y*.*/,''); }
+      if(log.includes("Y")){ returnY = log.replace(/.*\ Y/,''); returnY = returnY.replace(/\ E*.*/,''); }
       break;
 
     case "stateToPaused": // Hotunload trigger
@@ -646,6 +646,7 @@ function sendCommand(command){
   var c;
   if(command instanceof Array){ c = { "commands": command }; }
   else{ c = { "command": command }; }
+  console.log(c);
   $.ajax({
     url: api+"printer/command?apikey="+apikey,
     type: "post",
@@ -704,8 +705,8 @@ function resumeHotLoad(){
   if(hotLoading){
     if(liftOnly){
       if(returnX != null && returnY != null){
-        sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2" ] );
-      }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2" ] ); }
+        sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ ] );
+      }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ ] ); }
     }else{
       if(returnX != null && returnY != null){
         sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
@@ -721,7 +722,9 @@ function resumeHotLoad(){
 }
 
 function pauseAndLift(){
+  console.log("Pause and Lift Clicked");
   if(printerStatus == "Printing"){
+    console.log("Pausing and Lifting");
     liftOnly = true;
     liftOnPause = true;
     printCommand("pause");
