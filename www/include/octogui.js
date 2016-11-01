@@ -171,7 +171,7 @@ function spottedLog(key, log){
       }
       delete watchLogFor[key]; watchLogFor.length--;
       delete watchLogFor["E"]; watchLogFor.length--;
-      console.log("Return XY: " + returnX + "/" + returnY);
+      console.log("Return E: " + returnE + " - Return XY: " + returnX + "/" + returnY);
       if(returnX == null || returnY == null){ alert("Return coordinates not available. Resume print and try again"); }
       break;
 
@@ -703,15 +703,10 @@ function connectPrinter(com){
 function resumeHotLoad(){
   document.getElementById('hotUnload').style.visibility = "hidden";
   if(hotLoading){
-    if(liftOnly){
-      if(returnX != null && returnY != null){
-        sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ ] );
-      }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ ] ); }
-    }else{
-      if(returnX != null && returnY != null){
-        sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
-      }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
-    }
+    if(liftOnly){ sendCommand("G92 E0"); }
+    if(returnX != null && returnY != null){
+      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
+    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
     liftOnly = false;
