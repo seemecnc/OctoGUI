@@ -102,6 +102,7 @@ sock.onmessage = function(e) {
       if(printerStatus == "Printing" && currentZ == e.data.current.currentZ && currentZ >= watchForZ[0]['height'] && currentZ != null){
         spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
         watchForZ.splice(0,1);
+        document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
       }
     }
     currentZ = e.data.current.currentZ;
@@ -410,7 +411,7 @@ function updateConnectionStatus(){
         if(printerStatus == "Printing" && jdata.current.state != "Printing" && jdata.current.state != "Paused" && typeof watchForZ[0] !== 'undefined'){
           watchForZ = [];
           console.log("Clearing Z events");
-          document.getElementById('zMenu').innerHTML = "0 Z Events";
+          document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
         }
 
         if(jdata.current.state == "Operational"){
@@ -1049,7 +1050,7 @@ function saveZMenu(){
     }
     watchForZ.sort(dynamicSort("height"));
     bootbox.alert({ message: "Z Events Saved", backdrop: true });
-    document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Z Events";
+    document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
     rebuildZMenu();
   }
 
