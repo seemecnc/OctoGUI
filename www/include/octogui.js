@@ -1043,7 +1043,7 @@ function saveZMenu(){
       while(zCurrent < zIndex){
         if(zCurrent % 6 == 0 && zCurrent > 0){ zdt.page('next').draw('page'); }
         if(document.getElementById('zh'+zCurrent) != null && $.isNumeric(document.getElementById('zh'+zCurrent).value)){
-          watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': document.getElementById('za'+zCurrent).value };
+          watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': Number(document.getElementById('za'+zCurrent).value) };
         }
         zCurrent++;
       }
