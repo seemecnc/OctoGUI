@@ -806,6 +806,7 @@ function moveHead(axis,distance){
 
 // Set a new default connection profile and disconnect. Prompt to notify and delay reconnect
 function setPrinterProfile(newPrinterId){
+  reconnect = true;
   connectPrinter("disconnect");
   $.ajax({
     url: api+"printerprofiles/" + newPrinterId + "?apikey="+apikey,
@@ -814,7 +815,8 @@ function setPrinterProfile(newPrinterId){
     data: JSON.stringify({"profile":{"default":1}}),
     success: (function(){
       getPrinterProfile();
-      bootbox.alert("New printer detected. Press OK to reconnect", function(){ connectPrinter("connect"); });
+      showOverlay("New printer detected.<br><br>Changing profile and reconnecting.");
+      watchLogFor['hideOverlay'] = "Operational"; watchLogFor.length++;
     })
   });
 
