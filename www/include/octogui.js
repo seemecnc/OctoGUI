@@ -1013,6 +1013,7 @@ function startupTasks(){
   addZMenuRow();
   document.getElementById('apiKey').innerHTML = apikey;
   document.getElementById('speedFactor').value = currentSpeed;
+  document.getElementById('flowFactor').value = currentFlow;
   getPrinterProfile();
   updateFiles();
 }
