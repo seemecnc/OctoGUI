@@ -890,7 +890,7 @@ function setFlowFactor(flow){
     success: (function(){
       currentFlow = flow;
       document.getElementById('flowFactor').value = currentFlow;
-    });
+    })
   });
 }
 
