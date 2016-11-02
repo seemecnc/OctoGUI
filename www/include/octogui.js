@@ -1,3 +1,5 @@
+var minOverlayTime = 2000; // Minimum time to show the Overlay w/ message
+
 var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
 var api = "http://" + window.location.host + "/api/";
 var apikey = "ABAABABB";
@@ -31,6 +33,7 @@ var pauseTimeout = 0;      // Time when current print job was paused
 var pauseTemp = 0;         // Extruder temp when print job was paused
 var dt;                    // fileList DataTables handle
 var reconnect = false;     // variable to automatically reconnect to the printer when disconnected
+var overlayShowTime = 0;   // Time that the overlay was shown on screen.
 
 // Z Events
 var zEvents = [];
@@ -226,10 +229,11 @@ function spottedLog(key, log){
       break;
 
     case "hideOverlay": // Set the Overlay to hidden
-      hideOverlay();
+      var curTime = new Date().valueOf();
+      if(overlayShowTime > 0 && (overlayShowTime + minOverlayTime >= curTime)){ setTimeout(hideOverlay, overlayShowTime + minOverlayTime - curTime); }
+      else{ hideOverlay(); }
       delete watchLogFor[key]; watchLogFor.length--;
       break;
-
   }
 }
 
@@ -1107,12 +1111,14 @@ function hideZMenu(){ document.getElementById('zMenu').style.width = "0"; }
 function showOverlay(content){
   document.getElementById('overlayContent').innerHTML = content;
   document.getElementById('overlay').style.width = "100%";
+  overlayShowTime = new Date().valueOf();
 }
 
 // Hide the overlay and empty it's content
 function hideOverlay(){
   document.getElementById('overlay').style.width = "0";
   document.getElementById('overlayContent').innerHTML = "";
+  overlayShowTime = 0;
 }
 
 //Update status every second
