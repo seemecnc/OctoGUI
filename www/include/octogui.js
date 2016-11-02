@@ -1079,7 +1079,7 @@ function rebuildZMenu(){
       zIndex++; zNum++;
     });
   }else{ addZMenuRow(); }
-  document.getElementById("zMenu").innerHTML = zNum + " Z Events";
+  document.getElementById("zMenuButton").innerHTML = zNum + " Z Events";
 
 }
 
