@@ -37,6 +37,7 @@ zEvents.push({ "command":"Filament", "label":"Change Filament" });
 zEvents.push({ "command":"Speed", "label":"Change Speed" });
 zEvents.push({ "command":"ExtruderTemp", "label":"Extruder Temperature" });
 zEvents.push({ "command":"BedTemp", "label":"Bed Temperature" });
+zEvents.push({ "command":"FanSpeed", "label":"Fan Speed" });
 
 // Calibration GCODE
 var calibrateString = [];
@@ -139,6 +140,11 @@ function spottedZ(action,arg){
     case "BedTemp":
       console.log("Setting Bed Temp to " + arg + " at z: " + currentZ);
       setBedTemp(arg);
+      break;
+
+    case "FanSpeed":
+      console.log("Setting Fan Speed to " + arg + " at z: " + currentZ);
+      fanSpeed(arg);
       break;
 
   }
@@ -254,11 +260,24 @@ function dynamicSort(property) {
   }
 }
 
-// Basic on/off fan controll
-function fanControl(c){
-  var gcode;
-  if(c == "on"){ sendCommand("M106"); }
-  else { sendCommand("M107"); }
+function fanSpeed(speed){
+  var c = null;
+  switch(speed){
+    case "on":
+      c = "M106";
+      break;
+    case "off":
+      c = "M107";
+      break;
+    default:
+      if($.isNumeric(speed)){
+        if(speed > 100) { speed = 100; }
+        if(speed == 0 || speed < 0){ c = "M107"; }
+        else{ c = "M106 S" + Math.round(speed * 2.55); }
+      }else{ console.log("Error - fan speed not recognized"); return; }
+      break;
+  }
+  if(c != null){ sendCommand(c); }
 }
 
 // Send the Calibrate GCODE to the printer if it is configured and the printer is Operational
