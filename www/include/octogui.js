@@ -407,7 +407,11 @@ function updateConnectionStatus(){
         if(printerStatus == "Closed" && reconnect){ reconnect = false; connectPrinter("connect"); }
 
         //Clear Z events when a print job is completed or cancelled
-        if(printerStatus == "Printing" && jdata.current.state != "Printing" && jdata.current.state != "Paused" && typeof watchForZ[0] !== 'undefined'){ watchForZ = []; console.log("Clearing Z events"); }
+        if(printerStatus == "Printing" && jdata.current.state != "Printing" && jdata.current.state != "Paused" && typeof watchForZ[0] !== 'undefined'){
+          watchForZ = [];
+          console.log("Clearing Z events");
+          document.getElementById('zMenu').innerHTML = "0 Z Events";
+        }
 
         if(jdata.current.state == "Operational"){
           if(printerStatus != "Operational"){
@@ -1075,6 +1079,7 @@ function rebuildZMenu(){
       zIndex++; zNum++;
     });
   }else{ addZMenuRow(); }
+  document.getElementById("zMenu").innerHTML = zNum + " Z Events";
 
 }
 
