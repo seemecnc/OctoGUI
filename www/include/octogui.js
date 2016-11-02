@@ -1,4 +1,4 @@
-var minOverlayTime = 2000; // Minimum time to show the Overlay w/ message
+var minOverlayTime = 3000; // Minimum time to show the Overlay w/ message
 
 var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
 var api = "http://" + window.location.host + "/api/";
