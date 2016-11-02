@@ -26,6 +26,7 @@ var liftOnly = false;      // Variable to use hotload scripts to lift head on pa
 var liftOnPause = false;   // Flag for automatically lifting the print head and retracting filament on pause
 var maxZHeight = 0;        // Max printable Z height
 var currentSpeed = 100;    // Current speed (percentage) of print
+var currentFlow = 100;     // Current flow (percentage) of print
 var pauseTimeout = 0;      // Time when current print job was paused
 var pauseTemp = 0;         // Extruder temp when print job was paused
 var dt;                    // fileList DataTables handle
@@ -877,6 +878,22 @@ function playLoad(){
   }
 }
 
+// Set the flow factor (percent)
+function setFlowFactor(flow){
+  console.log("Setting flow factor to: "+flow);
+  var c = { "command":"feedrate", "factor":flow};
+  $.ajax({
+    url: api+"printer/printhead?apikey="+apikey,
+    type: "post",
+    contentType:"application/json; charset=utf-8",
+    data: JSON.stringify(c),
+    success: (function(){
+      currentFlow = flow;
+      document.getElementById('flowFactor').value = currentFlow;
+    });
+  });
+}
+
 // Set the speed factor (percent)
 function setSpeedFactor(speed){
   console.log("Setting speed factor to: "+speed);
@@ -967,6 +984,11 @@ function startupTasks(){
   });
   $('#speedFactor').numpad({
     onKeypadClose: function(){ setSpeedFactor(Number(document.getElementById('speedFactor').value)); },
+    hidePlusMinusButton: true,
+    hideDecimalButton: true
+  });
+  $('#flowFactor').numpad({
+    onKeypadClose: function(){ setFactor(Number(document.getElementById('flowFactor').value)); },
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
