@@ -852,8 +852,8 @@ function getPrinterProfile(){
             document.getElementById('bedTempDisplay').style.visibility = "hidden";
             document.getElementById('bedTempSet').style.visibility = "hidden";
           }
-          //if(printerId == 'eris'){ document.getElementById('fanControl').style.visibility = "hidden"; }
-          //else { document.getElementById('fanControl').style.visibility = "visible"; }
+          if(printerId == 'eris'){ document.getElementById('fanControl').style.visibility = "hidden"; }
+          else { document.getElementById('fanControl').style.visibility = "visible"; }
         }
       }
     })
