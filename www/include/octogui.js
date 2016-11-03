@@ -245,7 +245,10 @@ function getClientIP() {
   pc.createDataChannel("");
   pc.createOffer(pc.setLocalDescription.bind(pc), noop);
   pc.onicecandidate = function(ice){
-    if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
+    if(!ice || !ice.candidate || !ice.candidate.candidate){
+      document.getElementById("clientIP").innerHTML = "<a onclick='getClientIP()'>Check for IP</a>";
+      return;
+    }
     var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
     window.clientIP = myIP;
     document.getElementById("clientIP").innerHTML = myIP;
