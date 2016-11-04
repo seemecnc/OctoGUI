@@ -216,7 +216,7 @@ function spottedLog(key, log){
           console.log("Printer ("+fwp+") not supported!");
           break;
       }
-      if(pId != printerId && printerStatus != "Printing" && printerStatus != "Paused" ){ setPrinterProfile(pId); }
+      if(pId != printerId && printerStatus != "Printing" && printerStatus != "Printing from SD" && printerStatus != "Paused" ){ setPrinterProfile(pId); }
       delete watchLogFor[key]; watchLogFor.length--;
 
       //Init trap for Comm Error if it's not alreay set
@@ -689,7 +689,7 @@ function sendCommand(command){
 
 // Home all Axis and disabled the stepper motors. TODO: Setup motor enable/disable fuctions/buttons
 function homePrinter(){
-  if(printerStatus == "Printing"){
+  if(printerStatus == "Printing" || printerStatus == "Printing from SD"){
     bootbox.alert({
       message: "Print job in progress. Cancel the job if you really want to home the print head.",
       backdrop: true
