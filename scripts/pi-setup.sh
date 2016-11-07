@@ -239,7 +239,7 @@ chown -R pi:pi /home/pi/.config /home/pi/*.sh /home/pi/.ssh /home/pi/.bashrc /va
 check=$(grep "tmp tmpfs" /etc/fstab)
 if [ -z "$check" ]
 then
-  echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100m 0 0" >> /etc/fstab
+  echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=300m 0 0" >> /etc/fstab
 fi
 
 #Install OctoGUI from git if it's not already there
@@ -254,6 +254,13 @@ ln -nsf /var/www/html/OctoGUI/www/fonts /var/www/html/fonts
 ln -nsf /var/www/html/OctoGUI/www/css /var/www/html/css
 ln -nsf /var/www/html/OctoGUI/www/images /var/www/html/images
 ln -nsf /var/www/html/OctoGUI/www/index.html /var/www/html/index.html
+
+#disable voltage warning
+check=$(grep "^avoid_warnings" /boot/config.txt)
+if [ -z "$check" ]
+then
+  echo -e "\navoid_warnings=1" >> /boot/config.txt
+fi
 
 #uncork the usb power bus
 check=$(grep "max_usb_current" /boot/config.txt)
