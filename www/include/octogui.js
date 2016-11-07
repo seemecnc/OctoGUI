@@ -780,7 +780,11 @@ function printCommand(command){
       if(result){
         showOverlay("Canceling print job");
         watchLogFor["hideOverlay"] = "Operational"; watchLogFor.length++;
-        $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c, success: (function(){ setExtruderTemp(0); if(heatedBed){ setBedTemp(0); } }) });
+        $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c, success: (function(){
+          sendCommand("G28");
+          setExtruderTemp(0);
+          if(heatedBed){ setBedTemp(0);
+        } }) });
       }
     });
   }else{
