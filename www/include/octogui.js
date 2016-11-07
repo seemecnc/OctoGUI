@@ -422,6 +422,10 @@ function updateConnectionStatus(){
             hotLoading = false;
             liftOnly = false;
             liftOnPause = false;
+            currentSpeed = 100;
+            document.getElementById('speedFactor').value = currentSpeed;
+            currentFlow = 100;
+            document.getElementById('speedFactor').value = currentFlow;
             if(typeof calibrateString[printerId] !== 'undefined'){ document.getElementById('calibratePrinter').style.visibility = "visible"; }
             else { document.getElementById('calibratePrinter').style.visibility = "hidden"; }
             if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
