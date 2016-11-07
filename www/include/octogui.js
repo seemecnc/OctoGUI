@@ -8,8 +8,8 @@ var etemp = "--";          // Current Nozzel Temperature
 var etempTarget = "--";    // Current Nozzel Target Temperature
 var btemp = "--";          // Current Bed Temperature
 var btempTarget = "--";    // Current Bed Target Temperature
-var sortBy = "name";       // Sort Order
-var sortRev = false;       // Sort order reverse flag
+var sortBy = "date";       // Sort Order
+var sortRev = true;        // Sort order reverse flag
 var printerId;             // Printer profile ID
 var heatedBed = false;     // Heated Bed Flag
 var currentZ;              // Current Z height
