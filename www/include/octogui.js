@@ -1039,27 +1039,33 @@ function startupTasks(){
 function saveZMenu(){
 
   hideZMenu();
-  if(printerStatus == "Printing" || printerStatus == "Paused"){
-    bootbox.alert({ message: "You cannot modify Z events while printing", backdrop: true });
-  }else{
-    if(zNum > 0){
-      watchForZ = [];
-      var zCurrent = 0;
-      var zVal;
-      zdt.page('first').draw('page');
-      while(zCurrent < zIndex){
-        if(zCurrent % 6 == 0 && zCurrent > 0){ zdt.page('next').draw('page'); }
-        if(document.getElementById('zh'+zCurrent) != null && $.isNumeric(document.getElementById('zh'+zCurrent).value)){
+  if(zNum > 0){
+    watchForZ = [];
+    var zCurrent = 0;
+    var zSkip = 0;
+    var zVal;
+    zdt.page('first').draw('page');
+    while(zCurrent < zIndex){
+      if(zCurrent % 6 == 0 && zCurrent > 0){ zdt.page('next').draw('page'); }
+      if(document.getElementById('zh'+zCurrent) != null && $.isNumeric(document.getElementById('zh'+zCurrent).value)){
+        if(printerStatus == "Printing" || printerStatus == "Paused"){
+          if(Number(document.getElementById('zh'+zCurrent).value) >= currentZ){
+            watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': Number(document.getElementById('za'+zCurrent).value) };
+            zSkip++;
+          }
+        }else{
           watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': Number(document.getElementById('za'+zCurrent).value) };
         }
-        zCurrent++;
       }
+      zCurrent++;
     }
-    watchForZ.sort(dynamicSort("height"));
-    bootbox.alert({ message: "Z Events Saved", backdrop: true });
-    document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
-    rebuildZMenu();
   }
+  watchForZ.sort(dynamicSort("height"));
+  var zMessage = "Z Events Saved";
+  if(zSkip > 0){ zMessage = zMessage + "\n" + zSkip + " zEvents skipped."; }
+  bootbox.alert({ message: zMessage, backdrop: true });
+  document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+  rebuildZMenu();
 
 }
 
