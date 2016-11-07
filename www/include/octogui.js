@@ -63,9 +63,9 @@ unloadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E30 F7
 
 // GCODE to unload filament mid-print
 var hotUnloadString = [];
-hotUnloadString['eris'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
-hotUnloadString['orion'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
-hotUnloadString['rostock_max_v3'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-830", "G90", "G92 E0" ];
+hotUnloadString['eris'] = [ "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
+hotUnloadString['orion'] = [ "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
+hotUnloadString['rostock_max_v3'] = [ "G92 E0", "G4 S3", "G91", "G1 E-830", "G90", "G92 E0" ];
 
 // GCODE to load filament mid-print
 var hotLoadString = [];
@@ -873,7 +873,7 @@ function pauseUnload(){
     if(returnE > 0){
       hotLoading = true;
       returnZ = currentZ;
-      sendCommand("G28");
+      sendCommand("G91", "G1 E-75 F5000", "G90", "G28");
       if(!(liftOnly)){ sendCommand(hotUnloadString[printerId]); }
       document.getElementById('hotUnload').style.visibility = "hidden";
       document.getElementById('hotLoad').style.visibility = "visible";
