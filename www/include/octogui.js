@@ -13,6 +13,8 @@ var sortRev = true;        // Sort order reverse flag
 var printerId;             // Printer profile ID
 var heatedBed = false;     // Heated Bed Flag
 var currentZ;              // Current Z height
+var currentZCount = 0;     // Number of sequential updates with the same Z height
+var zHopCheck = 3;         // Number of checks to make sure we avoid Z hop triggering watchForZ events
 var returnX = null;        // X pos to return to after lifting head
 var returnY = null;        // Y pos to return to after lifting head
 var returnZ;               // Z pos to return to after lifting head
@@ -97,9 +99,11 @@ sock.onmessage = function(e) {
   //Only process "current" messages
   if (typeof e.data.current !== 'undefined'){
     var t;
+    if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
+    else{ currentZCount = 0; }
     //watch for Z height actions
     if(typeof watchForZ[0] !== 'undefined'){
-      if(printerStatus == "Printing" && currentZ == e.data.current.currentZ && currentZ >= watchForZ[0]['height'] && currentZ != null){
+      if(printerStatus == "Printing" && currentZCount >= zHopCheck && currentZ >= watchForZ[0]['height'] && currentZ != null){
         spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
         watchForZ.splice(0,1);
         document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
@@ -1010,7 +1014,7 @@ function startupTasks(){
     hideDecimalButton: true
   });
   $('#flowFactor').numpad({
-    onKeypadClose: function(){ setFactor(Number(document.getElementById('flowFactor').value)); },
+    onKeypadClose: function(){ setFlowFactor(Number(document.getElementById('flowFactor').value)); },
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
