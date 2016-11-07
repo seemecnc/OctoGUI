@@ -1055,8 +1055,7 @@ function saveZMenu(){
         if(printerStatus == "Printing" || printerStatus == "Paused"){
           if(Number(document.getElementById('zh'+zCurrent).value) >= currentZ){
             watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': Number(document.getElementById('za'+zCurrent).value) };
-            zSkip++;
-          }
+          }else{ zSkip++; }
         }else{
           watchForZ[zCurrent] = { 'height': Number(document.getElementById('zh'+zCurrent).value), 'action': document.getElementById('ze'+zCurrent).value, 'arg': Number(document.getElementById('za'+zCurrent).value) };
         }
@@ -1066,7 +1065,7 @@ function saveZMenu(){
   }
   watchForZ.sort(dynamicSort("height"));
   var zMessage = "Z Events Saved";
-  if(zSkip > 0){ zMessage = zMessage + "\n" + zSkip + " zEvents skipped."; }
+  if(zSkip > 0){ zMessage = zMessage + ". " + zSkip + " zEvents skipped."; }
   bootbox.alert({ message: zMessage, backdrop: true });
   document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
   rebuildZMenu();
@@ -1104,20 +1103,16 @@ function rebuildZMenu(){
 // add new Blank row to Z Menu
 function addZMenuRow(){
 
-  if(printerStatus == "Printing" || printerStatus == "Paused"){
-    bootbox.alert({ message: "You cannot modify Z events while printing", backdrop: true });
-  }else{
-    var h = "<input type=text size=3 id='zh" + zIndex + "'>";
-    var e = "<select id='ze" + zIndex + "'>";
-    zEvents.forEach(function(z){ e = e + "<option value='" + z.command + "'>" + z.label + "</option>"; });
-    e = e + "</select>";
-    var a = "<input type=text size=3 id='za" + zIndex + "'>";
-    zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
-    zdt.page('last').draw('page');
-    $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
-    $('#za'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
-    zIndex++; zNum++;
-  }
+  var h = "<input type=text size=3 id='zh" + zIndex + "'>";
+  var e = "<select id='ze" + zIndex + "'>";
+  zEvents.forEach(function(z){ e = e + "<option value='" + z.command + "'>" + z.label + "</option>"; });
+  e = e + "</select>";
+  var a = "<input type=text size=3 id='za" + zIndex + "'>";
+  zdt.row.add([h, e, a, "<div class='zdelete'>X</div>"]).draw();
+  zdt.page('last').draw('page');
+  $('#zh'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
+  $('#za'+zIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
+  zIndex++; zNum++;
 
 }
 
