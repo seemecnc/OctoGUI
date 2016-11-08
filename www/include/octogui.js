@@ -1018,6 +1018,11 @@ function startupTasks(){
     hidePlusMinusButton: true,
     hideDecimalButton: true
   });
+  $('#zHopChecks').numpad({
+    onKeypadClose: function(){ zHopCheck = Number(document.getElementById('zHopChecks').value); },
+    hidePlusMinusButton: true,
+    hideDecimalButton: true
+  });
 
   //Init zMenu
   zdt = $('#zMenuTable').DataTable( {
@@ -1040,6 +1045,7 @@ function startupTasks(){
   document.getElementById('apiKey').innerHTML = apikey;
   document.getElementById('speedFactor').value = currentSpeed;
   document.getElementById('flowFactor').value = currentFlow;
+  document.getElementById('zHopChecks').value = zHopCheck;
   getPrinterProfile();
   updateFiles();
 }
