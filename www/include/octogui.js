@@ -745,8 +745,8 @@ function resumeHotLoad(){
   if(hotLoading){
     if(liftOnly){ sendCommand("G92 E0"); }
     if(returnX != null && returnY != null){
-      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E2", "G92 E" + returnE ] );
-    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E2", "G92 E" + returnE ] ); }
+      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E4", "G92 E" + returnE ] );
+    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E4", "G92 E" + returnE ] ); }
     document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
     liftOnly = false;
