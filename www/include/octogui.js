@@ -442,6 +442,7 @@ function updateConnectionStatus(){
             document.getElementById('calibratePrinter').style.visibility = "hidden";
             document.getElementById('loadFilament').style.visibility = "hidden";
             document.getElementById('unloadFilament').style.visibility = "hidden";
+            document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
           }
         }
 
