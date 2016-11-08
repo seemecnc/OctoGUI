@@ -907,17 +907,9 @@ function playLoad(){
 // Set the flow factor (percent)
 function setFlowFactor(flow){
   console.log("Setting flow factor to: "+flow);
-  var c = { "command":"feedrate", "factor":flow};
-  $.ajax({
-    url: api+"printer/printhead?apikey="+apikey,
-    type: "post",
-    contentType:"application/json; charset=utf-8",
-    data: JSON.stringify(c),
-    success: (function(){
-      currentFlow = flow;
-      document.getElementById('flowFactor').value = currentFlow;
-    })
-  });
+  sendCommand("M221 S"+flow);
+  currentFlow = flow;
+  document.getElementById('flowFactor').value = currentFlow;
 }
 
 // Set the speed factor (percent)
