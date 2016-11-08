@@ -1067,9 +1067,9 @@ function saveZMenu(){
     }
   }
   watchForZ.sort(dynamicSort("height"));
-  var zMessage = "Z Events Saved";
-  if(zSkip > 0){ zMessage = zMessage + ". " + zSkip + " zEvents skipped."; }
-  bootbox.alert({ message: zMessage, backdrop: true });
+//  var zMessage = "Z Events Saved";
+//  if(zSkip > 0){ zMessage = zMessage + ". " + zSkip + " zEvents skipped."; }
+//  bootbox.alert({ message: zMessage, backdrop: true });
   document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
   rebuildZMenu();
 
