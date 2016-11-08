@@ -779,7 +779,14 @@ function printCommand(command){
       watchLogFor['stateToPaused'] = 'Paused';
       watchLogFor.length++;
     }
-    if(printerStatus == "Paused") { resumeHotLoad(); }
+    if(printerStatus == "Paused") {
+      if(pauseTemp > 0){
+        console.log("Heating extruder before loading filament");
+        c.unshift("M109 S"+pauseTemp);
+        pauseTemp = 0;
+      }
+      resumeHotLoad();
+    }
   }else{
     if(command == "start" && printerStatus == "Paused"){ c = JSON.stringify({ 'command': "pause", 'action': 'toggle' }); resumeHotLoad(); }
     else{ c = JSON.stringify({ 'command': command }); }
