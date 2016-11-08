@@ -429,7 +429,7 @@ function updateConnectionStatus(){
             currentSpeed = 100;
             document.getElementById('speedFactor').value = currentSpeed;
             currentFlow = 100;
-            document.getElementById('speedFactor').value = currentFlow;
+            document.getElementById('flowFactor').value = currentFlow;
             if(typeof calibrateString[printerId] !== 'undefined'){ document.getElementById('calibratePrinter').style.visibility = "visible"; }
             else { document.getElementById('calibratePrinter').style.visibility = "hidden"; }
             if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
@@ -887,7 +887,7 @@ function pauseUnload(){
       document.getElementById('hotLoad').style.visibility = "visible";
       pauseTimeout = new Date().valueOf();
     }else{ alert("Error. Last extruder position not found. Please Resume your print, then pause to try again."); }
-  }
+  }else{ alert("pauseUnload criteria not met! " + printerStatus + " Z:" + currentZ + "/" + maxZHeight); }
 }
 
 // Load filament after changing mid print, heating nozzel if necissary
