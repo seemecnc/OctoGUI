@@ -248,6 +248,7 @@ then
   cd /var/www/html
   git clone https://github.com/seemecnc/OctoGUI
 fi
+chown -R pi:pi /var/www/html/OctoGUI
 
 ln -nsf /var/www/html/OctoGUI/www/include /var/www/html/include
 ln -nsf /var/www/html/OctoGUI/www/fonts /var/www/html/fonts
