@@ -14,7 +14,7 @@ var printerId;             // Printer profile ID
 var heatedBed = false;     // Heated Bed Flag
 var currentZ;              // Current Z height
 var currentZCount = 0;     // Number of sequential updates with the same Z height
-var zHopCheck = 3;         // Number of checks to make sure we avoid Z hop triggering watchForZ events
+var zHopCheck = 4;         // Number of checks to make sure we avoid Z hop triggering watchForZ events
 var returnX = null;        // X pos to return to after lifting head
 var returnY = null;        // Y pos to return to after lifting head
 var returnZ;               // Z pos to return to after lifting head
