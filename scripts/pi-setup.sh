@@ -40,7 +40,7 @@ then
 fi
 
 #Install Required Packages
-apt-get install -y raspberrypi-ui-mods lightdm xinit lxterminal lxde-core joe chromium-browser usbmount unclutter nginx php5-fpm php-apc php5-curl xdotool jq
+apt-get install -y raspberrypi-ui-mods lightdm xinit lxterminal lxde-core joe chromium-browser usbmount unclutter nginx php5-fpm php-apc php5-curl xdotool jq avrdude
 
 if [ -f /home/pi/chromium.tar.gz ]
 then
