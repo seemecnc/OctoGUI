@@ -1,0 +1,19 @@
+server {
+  listen 81 default_server;
+  listen [::]:81 default_server;
+  root /var/www/html;
+  index index.html index.htm;
+  server_name _;
+  location / {
+    try_files $uri $uri/ =404;
+  }
+  location ~\.php$ {
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param HTTPS off;
+    try_files $uri =404;
+    include fastcgi_params;
+  }
+}
