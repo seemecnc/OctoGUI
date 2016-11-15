@@ -63,159 +63,6 @@ then
   sed /home/pi/.config/openbox/lxde-pi-rc.xml -i -e 's/<keyboard>/<keyboard>\n<keybind key=\"C-A-t\"><action name=\"Execute\"><command>lxterminal<\/command><\/action>\n<\/keybind>/'
 fi
 
-#Setup chromium refresh file
-cat > /home/pi/refresh-chromium.sh << EOF
-#!/bin/bash
-OK=0
-res=\$(curl -s http://localhost/api/printer?apikey=ABAABABB)
-if [ "\$res" == "Printer is not operational" ]; then OK=1;
-else
-  status=\$(echo "\$res"|jq .state.text|sed -e 's/"//g');
-  if [ "\$status" != "Printing" -a "\$status" != "Paused" ]; then OK=1; fi
-fi
-if [ "\$OK" == "1" ]; then echo "Refreshing Chromium"; DISPLAY=:0.0 /usr/bin/xdotool key ctrl+F5
-else
-  echo "Print job in progress. Not refreshing. Feel free to do it yourself:"
-  echo "DISPLAY=:0.0 /usr/bin/xdotool key ctrl+F5"
-  echo
-fi
-EOF
-
-#Setup uptime check file
-cat > /home/pi/ucheck.sh << EOF
-#!/bin/bash
-let maxuptime=\$(( 24 * 3600))
-problem="null"
-utime=\$(cat /proc/uptime|cut -f1 -d'.')
-if [ \$utime -lt \$maxuptime ]; then echo "Uptime not long enough - \$utime"; problem="uptime"; fi
-
-res=\$(curl -s http://localhost/api/printer?apikey=ABAABABB)
-if [ "\$res" != "Printer is not operational" ]; then status=\$(echo "\$res"|jq .state.text|sed -e 's/"//g'); check=\$(echo "\$status"|grep -i Error)
-  if [ "\$status" != "Operational" -a -z "\$check" ]; then problem="Status: \$status"; fi
-fi
-
-if [ "\$problem" == "null" ]; then sudo /sbin/shutdown -r now; fi
-EOF
-
-#Setup crontab
-cat > /home/pi/crontab << EOF
-1 3 * * * /home/pi/ucheck.sh
-
-EOF
-crontab -u pi /home/pi/crontab
-
-#Setup nginx config
-cat > /etc/nginx/sites-available/default << EOF
-server {
-  listen 81 default_server;
-  listen [::]:81 default_server;
-  root /var/www/html;
-  index index.html index.htm;
-  server_name _;
-  location / {
-    try_files \$uri \$uri/ =404;
-  }
-  location ~\\.php$ {
-    fastcgi_pass unix:/var/run/php5-fpm.sock;
-    fastcgi_split_path_info ^(.+\\.php)(/.*)$;
-    fastcgi_index index.php;
-    fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-    fastcgi_param HTTPS off;
-    try_files \$uri =404;
-    include fastcgi_params;
-  }
-}
-EOF
-
-#Create startup file
-cat > /home/pi/start.sh << EOF
-#!/bin/bash
-if [ -f /home/pi/chromium.tar.gz -a ! -d /tmp/chromium ]
-then
-  rm -rf /home/pi/.config/chromium
-  tar -xzf /home/pi/chromium.tar.gz -C /tmp
-  ln -nsf /tmp/chromium /home/pi/.config/chromium
-fi
-DISPLAY=:0.0 /usr/bin/xset s off
-DISPLAY=:0.0 /usr/bin/xset -dpms
-DISPLAY=:0.0 /usr/bin/xset s noblank
-DISPLAY=:0.0 /usr/bin/unclutter -idle 0.1 &
-DISPLAY=:0.0 /usr/bin/chromium-browser --kiosk http://localhost/seeme/ --fullscreen 2> /dev/null &
-cd /var/www/html/OctoGUI
-git pull
-sleep 15
-DISPLAY=:0.0 xdotool key ctrl+F5
-EOF
-
-#Create autostart dir and link startup file
-mkdir -p /home/pi/.config/autostart
-cat > /home/pi/.config/autostart/chromium.desktop << EOF
-[Desktop Entry]
-Encoding=UTF-8
-Name=Startup
-Comment=
-Icon=
-Exec=/home/pi/start.sh
-Terminal=false
-Type=Application
-Categories=
-EOF
-
-#Configure USB automount the way we want it
-cat > /etc/usbmount/usbmount.conf << EOF
-ENABLED=1
-MOUNTPOINTS="/mnt/usb"
-FILESYSTEMS="vfat ext2 ext3 ext4 hfsplus"
-MOUNTOPTIONS="sync,noexec,nodev,noatime,nodiratime,uid=www-data"
-FS_MOUNTOPTIONS=""
-VERBOSE=no
-EOF
-
-#Overwrite the haproxy config file to redirect /seeme/* to out nginx dir
-cat > /etc/haproxy/haproxy.cfg << EOF
-global
-maxconn 4096
-user haproxy
-group haproxy
-log 127.0.0.1 local1 debug
-
-defaults
-log     global
-mode    http
-option  httplog
-option  dontlognull
-retries 3
-option redispatch
-option http-server-close
-option forwardfor
-maxconn 2000
-timeout connect 5s
-timeout client  15min
-timeout server  15min
-
-frontend public
-bind *:80
-bind 0.0.0.0:443 ssl crt /etc/ssl/snakeoil.pem
-use_backend webcam if { path_beg /webcam/ }
-use_backend seeme if { path_beg /seeme/ }
-default_backend octoprint
-errorfile 503 /etc/haproxy/errors/503-no-octoprint.http
-
-backend octoprint
-reqrep ^([^\ :]*)\ /(.*) \1\ /\2
-reqadd X-Scheme:\ https if { ssl_fc }
-option forwardfor
-server octoprint1 127.0.0.1:5000
-
-backend webcam
-reqrep ^([^\ :]*)\ /webcam/(.*)     \1\ /\2
-server webcam1  127.0.0.1:8080
-
-backend seeme
-reqrep ^([^\ :]*)\ /seeme/(.*)     \1\ /\2
-server seeme1  127.0.0.1:81
-EOF
-
 mkdir -p /home/pi/.ssh /mnt/usb
 
 #Temporary: SSH key for quick access
@@ -231,10 +78,6 @@ then
   echo -e "\nalias refresh='/home/pi/refresh-chromium.sh'" >> /home/pi/.bashrc
 fi
 
-#Fix permissions
-chmod 755 /home/pi/*.sh /home/pi/.config/autostart/chromium.desktop
-chown -R pi:pi /home/pi/.config /home/pi/*.sh /home/pi/.ssh /home/pi/.bashrc /var/www/html
-
 #make /tmp a ramdisk
 check=$(grep "tmp tmpfs" /etc/fstab)
 if [ -z "$check" ]
@@ -249,6 +92,26 @@ then
   git clone https://github.com/seemecnc/OctoGUI
 fi
 chown -R pi:pi /var/www/html/OctoGUI
+
+osfiles="refresh-chromium.sh:/home/pi/refresh-chromium.sh ucheck.sh:/home/pi/ucheck.sh default:/etc/nginx/sites-available/default start.sh:/home/pi/start.sh"
+osfiles="$osfiles chromium.desktop:/home/pi/.config/autostart/chromium.desktop usbmount.conf:/etc/usbmount/usbmount.conf haproxy.cfg:/etc/haproxy/haproxy.cfg"
+
+for $osfiles as $o
+do
+  gfile="/var/www/html/OctoGUI/scripts/"$(echo "$o"|cut -f1 -d':')
+  ofile=$(echo "$o"|cut -f2 -d':')
+  check=$(diff "$ofile" "$gfile")
+  if [ -n "$check" -o ! -f "$ofile" ]
+  then
+    cp -fv "$gfile" "$ofile"
+  fi
+done
+
+#Fix permissions
+chmod 755 /home/pi/*.sh /home/pi/.config/autostart/chromium.desktop
+chown -R pi:pi /home/pi/.config /home/pi/*.sh /home/pi/.ssh /home/pi/.bashrc /var/www/html
+
+crontab -u pi /var/www/html/OctoGUI/scripts/CRONTAB
 
 ln -nsf /var/www/html/OctoGUI/www/include /var/www/html/include
 ln -nsf /var/www/html/OctoGUI/www/fonts /var/www/html/fonts
