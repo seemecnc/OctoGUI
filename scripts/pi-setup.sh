@@ -96,7 +96,7 @@ chown -R pi:pi /var/www/html/OctoGUI
 osfiles="refresh-chromium.sh:/home/pi/refresh-chromium.sh ucheck.sh:/home/pi/ucheck.sh default:/etc/nginx/sites-available/default start.sh:/home/pi/start.sh"
 osfiles="$osfiles chromium.desktop:/home/pi/.config/autostart/chromium.desktop usbmount.conf:/etc/usbmount/usbmount.conf haproxy.cfg:/etc/haproxy/haproxy.cfg"
 
-for $osfiles as $o
+for o in $osfiles
 do
   gfile="/var/www/html/OctoGUI/scripts/"$(echo "$o"|cut -f1 -d':')
   ofile=$(echo "$o"|cut -f2 -d':')
