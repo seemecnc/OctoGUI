@@ -8,13 +8,13 @@ fi
 problem="null"
 eclear="/var/www/html/OctoGUI/scripts/eeprom_clear.hex"
 
-res=$(curl -s http://localhost/api/printer?apikey=ABAABABB)
-if [ "$res" != "Printer is not operational" ]
+status=$(curl -s http://localhost/api/printer?apikey=ABAABABB)
+if [ "$status" != "Printer is not operational" ]
 then
   check=$(echo "$status"|grep -i Error)
   if [ "$status" != "Operational" -a -z "$check" ]
   then
-    problem="Status: $status"
+    problem="$status"
   else
     curl -H "Content-Type: application/json" -X POST -d '{"command":"disconnect"}' http://localhost/api/connection?apikey=ABAABABB
   fi
@@ -28,7 +28,19 @@ fi
 
 if [ "$problem" == "null" ]
 then
+  echo -n "Cycling USB bus ... "
+  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 0
+  sleep 2
+  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
+  echo "DONE"
+  sleep 2
   avrdude -v -p m2560 -c stk500v2 -P /dev/ttyACM0 -b 115200 -D -U flash:w:$eclear:i
+  sleep 2
+  echo -n "Cycling USB bus ... "
+  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 0
+  sleep 2
+  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
+  echo "DONE"
   sleep 2
   avrdude -v -p m2560 -c stk500v2 -P /dev/ttyACM0 -b 115200 -D -U flash:w:$1:i
   sleep 15
