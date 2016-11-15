@@ -937,6 +937,7 @@ function startupTasks(){
     ordering: false,
     info: false,
     pageLength: 4,
+    pagingType: "full",
     lengthChange: false,
     select: { items: "row", single: true},
     fnDrawCallback: function() { $("#filesList thead").remove(); }
