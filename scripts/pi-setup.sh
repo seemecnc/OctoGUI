@@ -94,7 +94,7 @@ fi
 chown -R pi:pi /var/www/html/OctoGUI
 
 osfiles="refresh-chromium.sh:/home/pi/refresh-chromium.sh ucheck.sh:/home/pi/ucheck.sh default:/etc/nginx/sites-available/default start.sh:/home/pi/start.sh firmware-update.sh:/home/pi/firmware-update.sh"
-osfiles="$osfiles chromium.desktop:/home/pi/.config/autostart/chromium.desktop usbmount.conf:/etc/usbmount/usbmount.conf haproxy.cfg:/etc/haproxy/haproxy.cfg"
+osfiles="$osfiles chromium.desktop:/home/pi/.config/autostart/chromium.desktop usbmount.conf:/etc/usbmount/usbmount.conf haproxy.cfg:/etc/haproxy/haproxy.cfg hub-ctrl:/usr/local/bin/hub-ctrl"
 
 for o in $osfiles
 do
@@ -109,7 +109,7 @@ done
 
 #Fix permissions
 chmod 755 /home/pi/*.sh /home/pi/.config/autostart/chromium.desktop
-chown -R pi:pi /home/pi/.config /home/pi/*.sh /home/pi/.ssh /home/pi/.bashrc /var/www/html
+chown -R pi:pi /home/pi/.config /home/pi/*.sh /home/pi/.ssh /home/pi/.bashrc /var/www/html /usr/local/bin/hub-ctrl
 
 crontab -u pi /var/www/html/OctoGUI/scripts/CRONTAB
 
