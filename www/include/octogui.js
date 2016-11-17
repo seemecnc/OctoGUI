@@ -696,6 +696,17 @@ function sendCommand(command){
   });
 }
 
+function disableSteppers(){
+  if(printerStatus == "Printing" || printerStatus == "Printing from SD"){
+    bootbox.alert({
+      message: "Print job in progress. Cancel the job if you really want to disable the stepper motors.",
+      backdrop: true
+    });
+  }else{
+    sendCommand("M84");
+  }
+}
+
 // Home all Axis and disabled the stepper motors. TODO: Setup motor enable/disable fuctions/buttons
 function homePrinter(){
   if(printerStatus == "Printing" || printerStatus == "Printing from SD"){
@@ -708,10 +719,7 @@ function homePrinter(){
       url: api+"printer/printhead?apikey="+apikey,
       type: "post",
       contentType:"application/json; charset=utf-8",
-      data: JSON.stringify({ 'command': "home", 'axes': [ 'x', 'y', 'z' ] }),
-      success: (function(){
-        sendCommand("M84");
-      })
+      data: JSON.stringify({ 'command': "home", 'axes': [ 'x', 'y', 'z' ] })
     });
   }
 }
