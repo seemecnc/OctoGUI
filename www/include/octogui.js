@@ -171,6 +171,14 @@ function spottedLog(key, log){
       reconnect = true;
       break;
 
+    case "X": // Logging return extruder position
+      if(! log.includes("E")){
+        returnX = log.replace(/.*\ X/,'');
+        returnX = returnX.replace(/\ Y*.*/,'');
+        returnY = log.replace(/.*\ Y/,'');
+      }
+      break;
+
     case "E": // Logging return extruder position
       returnE = log.replace(/.*\ E/,'');
       returnE = returnE.replace(/\*.*/,'');
@@ -187,6 +195,7 @@ function spottedLog(key, log){
       }
       delete watchLogFor[key]; watchLogFor.length--;
       delete watchLogFor["E"]; watchLogFor.length--;
+      delete watchLogFor["X"]; watchLogFor.length--;
       console.log("Return E: " + returnE + " - Return XY: " + returnX + "/" + returnY);
       if(returnX == null || returnY == null){ alert("Return coordinates not available. Resume print and try again"); }
       break;
@@ -783,6 +792,8 @@ function printCommand(command){
     if(printerStatus == "Printing" && currentZ < (maxZHeight - 10)) {
       console.log("Printing paused at " + currentZ);
       watchLogFor['E'] = ' E';
+      watchLogFor.length++;
+      watchLogFor['X'] = ' X';
       watchLogFor.length++;
       watchLogFor['stateToPaused'] = 'Paused';
       watchLogFor.length++;
