@@ -36,6 +36,7 @@ var pauseTemp = 0;         // Extruder temp when print job was paused
 var dt;                    // fileList DataTables handle
 var reconnect = false;     // variable to automatically reconnect to the printer when disconnected
 var overlayShowTime = 0;   // Time that the overlay was shown on screen.
+var firmwareDate = 0;      // Release date of the current firmware
 
 // Z Events
 var zEvents = [];
@@ -206,11 +207,11 @@ function spottedLog(key, log){
       var fwd = log.replace(/.*_DATE:/,'');
       var fwp = log.replace(/.*MACHINE_TYPE:/,'');
       fw = fw.replace(/\ .*/,'');
-      fwd = fwd.replace(/\ .*/,'');
+      firmwareDate = Number(fwd.replace(/\ .*/,''));
       document.getElementById('firmwareInfo').style.visibility = "visible";
       document.getElementById('firmwareInfo').innerHTML = fw;
       document.getElementById('firmwareDate').style.visibility = "visible";
-      document.getElementById('firmwareDate').innerHTML = fwd;
+      document.getElementById('firmwareDate').innerHTML = firmwareDate;
       switch(fwp){
         case "ERIS Delta":
           pId = "eris";
@@ -305,10 +306,11 @@ function fanSpeed(speed){
 // Send the Calibrate GCODE to the printer if it is configured and the printer is Operational
 function calibratePrinter(){
   if(printerStatus == "Operational"){
-    if (typeof calibrateString[printerId] !== 'undefined'){
+    if (typeof calibrateString[printerId] !== 'undefined' || firmwareDate >= 20161118){
       bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
         if(result){
-          sendCommand(calibrateString[printerId]);
+          if(firmwareDate >= 20161118){ sendCommand("G29"); }
+          else{ sendCommand(calibrateString[printerId]); }
           watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
           showOverlay("Printer is Calibrating");
         }
@@ -462,9 +464,10 @@ function updateConnectionStatus(){
           watchLogFor['filamentInfo'] = "Printed filament";
           watchLogFor.length++;
           sendCommand("M115");
-        }else{ //In case the M115 command gets lost in the shuffle
-          if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational"){ sendCommand("M115"); }
         }
+        //else{ //In case the M115 command gets lost in the shuffle
+        //  if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational"){ sendCommand("M115"); }
+        //}
         printerStatus = jdata.current.state;
 
         //Automaticaly reconnect if Z-probe errors borks the connection
