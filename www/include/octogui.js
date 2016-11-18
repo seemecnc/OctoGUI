@@ -309,7 +309,7 @@ function calibratePrinter(){
     if (typeof calibrateString[printerId] !== 'undefined' || firmwareDate >= 20161118){
       bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
         if(result){
-          if(firmwareDate >= 20161118){ sendCommand("G29"); }
+          if(firmwareDate >= 20161118){ sendCommand(["G29", "M115"]); }
           else{ sendCommand(calibrateString[printerId]); }
           watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
           showOverlay("Printer is Calibrating");
