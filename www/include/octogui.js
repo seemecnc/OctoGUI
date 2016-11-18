@@ -112,7 +112,10 @@ sock.onmessage = function(e) {
     }
     currentZ = e.data.current.currentZ;
     document.getElementById('currentZ').innerHTML = currentZ;
-    if (e.data.current.progress.completion !== null){ document.getElementById('currentPercent').innerHTML = e.data.current.progress.completion.toFixed(2); }
+    if (e.data.current.progress.completion !== null){
+      document.getElementById('progressBar').style.width = e.data.current.progress.completion.toFixed()+'%';
+      document.getElementById('progressText').innerHTML = e.data.current.progress.completion.toFixed(2)+'% Complete';
+    }
     document.getElementById('currentPrintTime').innerHTML = humanTime(e.data.current.progress.printTime);
     document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
     //watch for Log actions
