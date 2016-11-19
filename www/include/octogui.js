@@ -179,7 +179,9 @@ function spottedLog(key, log){
       if(! log.includes("E")){
         returnX = log.replace(/.*\ X/,'');
         returnX = returnX.replace(/\ Y*.*/,'');
+        returnX = returnX.replace(/\*.*/,'');
         returnY = log.replace(/.*\ Y/,'');
+        returnY = returnY.replace(/\*.*/,'');
       }
       break;
 
