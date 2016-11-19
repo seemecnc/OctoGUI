@@ -233,7 +233,7 @@ function spottedLog(key, log){
           console.log("Printer ("+fwp+") not supported!");
           break;
       }
-      if(pId != printerId && printerStatus != "Printing" && printerStatus != "Printing from SD" && printerStatus != "Paused" ){ setPrinterProfile(pId); }
+      if(pId != printerId && printerStatus == "Operational" ){ setPrinterProfile(pId); }
       delete watchLogFor[key]; watchLogFor.length--;
 
       //Init trap for Comm Error if it's not alreay set
