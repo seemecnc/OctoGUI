@@ -13,6 +13,7 @@ function getPort {
     then
       port=/dev/ttyACM$p
     fi
+    let p+=1
   done
   if [ -n "$port" ]
   then
