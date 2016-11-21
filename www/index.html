@@ -75,11 +75,10 @@
         API Key: <div style="display:inline-block" id="apiKey"></div><br>
         Set Extruder Temp <input type=text size=3 id="eTempInput"><br>
         <div style="display:inline-block;visibility:hidden" id="bedTempSet">Set Bed Temp <input type=text size=3 id="bTempInput"></div><br>
-        <a onclick="disableSteppers()">Disable Steppers</a><br>
         <div style="display:inline-block;visibility:hidden" id="hotUnload"><a onclick="pauseUnload()">Change Filament</a></div><br>
         <div style="display:inline-block;visibility:hidden" id="hotLoad"><a onclick="playLoad()">Load Filament</a></div>
       </td><td width=30% valign=top>
-        <span id="fanControl"><a onclick="fanSpeed('on')">Fan On</a> - - <a onclick="fanSpeed('off')">Fan Off</a><br></span><br>
+        <span id="fanControl"><a onclick="fanSpeed('on')">Fan On</a> - - <a onclick="fanSpeed('off')">Fan Off</a><br></span> - - <a onclick="disableSteppers()">Disable Steppers</a><br><br>
         <span style="visibility:hidden" id="calibratePrinter"><a onclick="calibratePrinter()">Calibrate</a><br></span><br>
         <span style="visibility:hidden" id="loadFilament"><a onclick="loadFilament()">Load Filament</a><br></span><br>
         <span style="visibility:hidden" id="unloadFilament"><a onclick="unloadFilament()">Unload Filament</a></span>
