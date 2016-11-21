@@ -51,7 +51,9 @@ then
   sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
   echo "DONE"
   sleep 2
-  avrdude -v -p m2560 -c stk500v2 -P $(getPort) -b 115200 -D -U flash:w:$eclear:i
+  fport=$(getPort)
+  echo "Flashing on $fport"
+  avrdude -v -p m2560 -c stk500v2 -P $fport -b 115200 -D -U flash:w:$eclear:i
   sleep 2
   echo -n "Cycling USB bus ... "
   sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 0
@@ -59,7 +61,9 @@ then
   sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
   echo "DONE"
   sleep 2
-  avrdude -v -p m2560 -c stk500v2 -P $(getPort) -b 115200 -D -U flash:w:$1:i
+  fport=$(getPort)
+  echo "Flashing on $fport"
+  avrdude -v -p m2560 -c stk500v2 -P $fport -b 115200 -D -U flash:w:$1:i
   sleep 15
   curl -H "Content-Type: application/json" -X POST -d "{\"command\":\"connect\",\"port\":\"$(getPort)\"}" http://localhost/api/connection?apikey=ABAABABB
 else
