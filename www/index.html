@@ -60,7 +60,7 @@
     </td></tr><tr>
     <td colspan=3 align=center><div style="display:inline-block;visibility:hidden" id="filamentInfo"></div></td>
       </tr></table><br>
-      <table><tr><td width=35%>
+      <table><tr><td width=30%>
       <table cellpadding=5 cellspacing=5 border=1>
         <tr><td align=center>&nbsp;</td><td align=center onclick="jogHead('y','+')"><span class="glyphicon glyphicon-arrow-up"></span></td><td align=center>&nbsp;</td><td align=center onclick="jogHead('z','+')"><span class="glyphicon glyphicon-arrow-up"></span></td></tr>
         <tr><td align=center onclick="jogHead('x','-')"><span class="glyphicon glyphicon-arrow-left"></span></td><td align=center onclick='homePrinter()'><span class="glyphicon glyphicon-home"></span></td><td align=center onclick="jogHead('x','+')"><span class="glyphicon glyphicon-arrow-right"></span></td><td align=center valign=center style="font-size:40px">Z</td></tr>
@@ -77,8 +77,8 @@
         <div style="display:inline-block;visibility:hidden" id="bedTempSet">Set Bed Temp <input type=text size=3 id="bTempInput"></div><br>
         <div style="display:inline-block;visibility:hidden" id="hotUnload"><a onclick="pauseUnload()">Change Filament</a></div><br>
         <div style="display:inline-block;visibility:hidden" id="hotLoad"><a onclick="playLoad()">Load Filament</a></div>
-      </td><td width=30% valign=top>
-        <span id="fanControl"><a onclick="fanSpeed('on')">Fan On</a> - - <a onclick="fanSpeed('off')">Fan Off</a><br></span> - - <a onclick="disableSteppers()">Disable Steppers</a><br><br>
+      </td><td width=35% valign=top>
+        <span id="fanControl"><a onclick="fanSpeed('on')">Fan On</a> -- <a onclick="fanSpeed('off')">Fan Off</a></span> -- <a onclick="disableSteppers()">Steppers</a><br><br>
         <span style="visibility:hidden" id="calibratePrinter"><a onclick="calibratePrinter()">Calibrate</a><br></span><br>
         <span style="visibility:hidden" id="loadFilament"><a onclick="loadFilament()">Load Filament</a><br></span><br>
         <span style="visibility:hidden" id="unloadFilament"><a onclick="unloadFilament()">Unload Filament</a></span>
