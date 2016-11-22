@@ -37,6 +37,7 @@ var dt;                    // fileList DataTables handle
 var reconnect = false;     // variable to automatically reconnect to the printer when disconnected
 var overlayShowTime = 0;   // Time that the overlay was shown on screen.
 var firmwareDate = 0;      // Release date of the current firmware
+var missingFW = 0;
 
 // Z Events
 var zEvents = [];
@@ -211,6 +212,7 @@ function spottedLog(key, log){
       var fw = log.replace(/FIRMWARE_NAME:/,'');
       var fwd = log.replace(/.*_DATE:/,'');
       var fwp = log.replace(/.*MACHINE_TYPE:/,'');
+      missingFW = 0;
       fw = fw.replace(/\ .*/,'');
       firmwareDate = Number(fwd.replace(/\ .*/,''));
       document.getElementById('firmwareInfo').style.visibility = "visible";
@@ -243,6 +245,7 @@ function spottedLog(key, log){
       break;
 
     case "filamentInfo": // Update amount of filament used
+      missingFW = 0;
       document.getElementById('filamentInfo').style.visibility = "visible";
       document.getElementById('filamentInfo').innerHTML = log;
       delete watchLogFor[key]; watchLogFor.length--;
@@ -470,9 +473,12 @@ function updateConnectionStatus(){
           watchLogFor.length++;
           sendCommand("M115");
         }
-        //else{ //In case the M115 command gets lost in the shuffle
-        //  if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational"){ sendCommand("M115"); }
-        //}
+        else{ //In case the M115 command gets lost in the shuffle
+          if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational" && missingFW < 3){
+            sendCommand("M115");
+            missingFW++;
+          }
+        }
         printerStatus = jdata.current.state;
 
         //Automaticaly reconnect if Z-probe errors borks the connection
