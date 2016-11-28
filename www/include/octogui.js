@@ -90,6 +90,7 @@ sock.onopen = function(){
     watchLogFor.length++;
     watchLogFor['filamentInfo'] = "Printed filament";
     watchLogFor.length++;
+    missingFW = 0;
     sendCommand("M115");
   }
 
@@ -317,7 +318,10 @@ function calibratePrinter(){
     if (typeof calibrateString[printerId] !== 'undefined' || firmwareDate >= 20161118){
       bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
         if(result){
-          if(firmwareDate >= 20161118){ sendCommand(["G29", "M115"]); }
+          if(firmwareDate >= 20161118){
+            missingFW = 0;
+            sendCommand(["G29", "M115"]);
+          }
           else{ sendCommand(calibrateString[printerId]); }
           watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
           showOverlay("Printer is Calibrating");
@@ -343,6 +347,7 @@ function loadFilament(){
     if (typeof loadFilamentString[printerId] !== 'undefined'){
       bootbox.confirm("You are about to LOAD filament. Make sure that it is 1 inch past the end of the extruder.", function(result){
         if(result){
+          missingFW = 0;
           sendCommand(loadFilamentString[printerId]);
           watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
           showOverlay("Heating nozzel and<br>Loading Filament");
@@ -369,6 +374,7 @@ function unloadFilament(){
     if (typeof unloadFilamentString[printerId] !== 'undefined'){
       bootbox.confirm("You are about to UNLOAD filament. Please Confirm this is what you want to do.", function(result){
         if(result){
+          missingFW = 0;
           sendCommand(unloadFilamentString[printerId]);
           watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
           showOverlay("Heating nozzel and<br>Retracting Filament");
@@ -472,6 +478,7 @@ function updateConnectionStatus(){
           watchLogFor['filamentInfo'] = "Printed filament";
           watchLogFor.length++;
           sendCommand("M115");
+          missingFW = 0;
         }
         else{ //In case the M115 command gets lost in the shuffle
           if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational" && missingFW < 3){
