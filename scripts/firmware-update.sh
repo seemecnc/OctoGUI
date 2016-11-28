@@ -9,9 +9,10 @@ function getPort {
   let p=0
   while [ $p -lt 9 -a -z "$port" ]
   do
-    if [ -e /dev/ttyACM$p ]
+    pc="/dev/ttyACM$p"
+    if [ -e $pc ]
     then
-      port=/dev/ttyACM$p
+      port=$pc
     fi
     let p+=1
   done
@@ -53,6 +54,7 @@ then
   echo "DONE"
   sleep 2
   fport=$(getPort)
+  if [ -z "$fport" ]; then echo "Error detecting port"; exit 1; fi
   echo "Flashing on $fport"
   avrdude -v -p m2560 -c stk500v2 -P $fport -b 115200 -D -U flash:w:$eclear:i
   sleep 2
@@ -61,11 +63,19 @@ then
   sleep 2
   sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
   echo "DONE"
-  sleep 2
+  sleep 3
   fport=$(getPort)
+  if [ -z "$fport" ]; then echo "Error detecting port"; exit 1; fi
   echo "Flashing on $fport"
   avrdude -v -p m2560 -c stk500v2 -P $fport -b 115200 -D -U flash:w:$1:i
-  sleep 15
+  echo -n "Waiting for board to init "
+  for i in `seq 1 15`
+  do
+    echo -n "."
+    sleep 1
+  done
+  echo " DONE"
+  echo "Reconnecting"
   curl -H "Content-Type: application/json" -X POST -d "{\"command\":\"connect\",\"port\":\"$(getPort)\"}" http://localhost/api/connection?apikey=ABAABABB
 else
   echo "Cannot flash firmware when printer is $problem"
