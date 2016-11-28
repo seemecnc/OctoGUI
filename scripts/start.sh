@@ -11,6 +11,11 @@ DISPLAY=:0.0 /usr/bin/xset s noblank
 DISPLAY=:0.0 /usr/bin/unclutter -idle 0.1 &
 DISPLAY=:0.0 /usr/bin/chromium-browser --kiosk http://localhost/seeme/ --fullscreen 2> /dev/null &
 cd /var/www/html/OctoGUI
-git pull
+res=$(git pull)
+check=$(echo "$res"|grep "up-to-date" -i)
+if [ -z "$check" ]
+then
+    sudo bash /var/www/html/OctoGUI/scripts/pi-setup.sh
+fi
 sleep 15
 DISPLAY=:0.0 xdotool key ctrl+F5
