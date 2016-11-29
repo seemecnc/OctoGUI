@@ -971,9 +971,8 @@ function setSpeedFactor(speed){
 // One off inits, tasks, etc to be done after page is loaded
 function startupTasks(){
 
-  $('#wifiNetworkName').keyboard({
-    layout       : 'qwerty'
-  });
+  $('#wifiNetworkName').keyboard({});
+  $('#wifiNetworkPassword').keyboard({});
 
   dt = $('#filesList').DataTable( {
     columns: [ { title: "L" }, { title: "Name" } ],
