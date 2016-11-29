@@ -461,6 +461,7 @@ function updateConnectionStatus(){
             else { document.getElementById('loadFilament').style.visibility = "hidden"; }
             if(typeof unloadFilamentString[printerId] !== 'undefined'){ document.getElementById('unloadFilament').style.visibility = "visible"; }
             else { document.getElementById('unloadFilament').style.visibility = "hidden"; }
+            updateFiles();
           }
         }else{
           if(jdata.current.state != printerStatus){
