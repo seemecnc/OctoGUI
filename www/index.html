@@ -12,22 +12,24 @@
       <script src="include/sockjs.min.js"></script>
       <script src="include/bootstrap.min.js"></script>
       <script src="include/bootbox.min.js"></script>
-      <script src="include/jquery.keyboard.js"></script>
+      <link href="css/jquery-ui.css" rel="stylesheet">      
       <link rel="stylesheet" href="css/main.css">
       <link rel="stylesheet" href="css/progress.css">
+      <link rel="stylesheet" href="css/keyboard.css">
       <link rel="stylesheet" href="css/jquery.numpad.css">
       <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
       <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
       <script type="text/javascript" src="include/datatables.min.js"></script>
       <script type="text/javascript" src="include/jquery.numpad.js"></script>
+      <script type="text/javascript" src="include/jquery.keyboard.js"></script>
       <script>document.write('<script src="include/octogui.js?dev=' + Math.floor(Math.random() * 1000) + '"\><\/script>');</script>
   </head>
   <body onload='startupTasks();'>
     <div id="overlay" class="overlay"><a class="closebtn" onclick="hideOverlay()">&times;</a>
     <div id="overlayContent" class="overlay-content"></div></div>
     <div id="networkMenu" class="overlay"><a class="closebtn" onclick="hideNetworkMenu()">&times;</a>
-      <div id="networkMenuContent" class="networkmenucontent">Save - Cancel<br><br>
-        Wifi Network: <input type=text id="wifiNetworkName"><br>
+      <div id="networkMenuContent" class="networkmenucontent">Save - <span onclick="hideNetworkMenu()">Cancel</span><br><br>
+        Wifi Network: <input type=text id="wifiNetworkName"><br><br>
         Password: <input type=text id="wifiNetworkPassword">
       </div></div>
     <div id="zMenu" class="overlay"><a class="addbtn" onclick="addZMenuRow()">Add Z Event</a>
