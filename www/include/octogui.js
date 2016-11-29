@@ -970,6 +970,11 @@ function setSpeedFactor(speed){
 
 // One off inits, tasks, etc to be done after page is loaded
 function startupTasks(){
+
+  $('#wifiNetworkName').keyboard({
+    layout       : 'qwerty'
+  });
+
   dt = $('#filesList').DataTable( {
     columns: [ { title: "L" }, { title: "Name" } ],
     searching: false,
@@ -1166,6 +1171,14 @@ function addZMenuRow(){
   zIndex++; zNum++;
 
 }
+
+// Show networkMenu
+function showNetworkMenu(){
+  document.getElementById('networkMenu').style.width = "100%";
+}
+
+// Hide zMenu
+function hideNetworkMenu(){ document.getElementById('networkMenu').style.width = "0"; }
 
 // Show zMenu
 function showZMenu(){
