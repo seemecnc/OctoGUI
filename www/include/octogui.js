@@ -1175,13 +1175,15 @@ function addZMenuRow(){
 //update network settings
 function saveNetworkSettings(){
   hideNetworkMenu();
-  showOverylay("Saving network settings");
+  showOverlay("Saving network settings");
+  alert(document.getElementById("wifiNetworkPassword").value);
   $.ajax({
     url: "include/f.php?c=network",
     type: "post",
-    data: { "ssid" : document.getElementByID("wifiNetworkName").value, "pw" : document.getElementByID("wifiNetworkPassword").value },
+    data: { "ssid" : document.getElementById("wifiNetworkName").value, "pw" : document.getElementById("wifiNetworkPassword").value },
     complete: (function(data,type){
-      hideOverylay();
+      console.log(data.responseText);
+      hideOverlay();
     })
   });
 }
