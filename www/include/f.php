@@ -92,6 +92,15 @@ function printerPort(){
 
 }
 
+function changeNetworkSettings($ssid, $pw){
+
+  if(isset($pw) && $pw != "") $c = "sudo bash /var/www/html/OctoGUI/scripts/network-setup.sh \"$ssid\" \"$pw\"";
+  else $c = "sudo bash /var/www/html/OctoGUI/scripts/network-setup.sh \"$ssid\"";
+
+  shell_exec($c);
+
+}
+
 switch($_REQUEST['c']){
 
   case "port":
@@ -118,6 +127,11 @@ switch($_REQUEST['c']){
       echo "{\"status\":1}";
     else
       echo "{\"status\":0}";
+    break;
+
+  case "network":
+    changeNetworkSettings($_REQUEST["ssid"],$REQUEST["pw"]);
+    echo "{\"status\":1}";
     break;
 
 }

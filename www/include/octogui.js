@@ -1172,6 +1172,20 @@ function addZMenuRow(){
 
 }
 
+//update network settings
+function saveNetworkSettings(){
+  hideNetworkMenu();
+  showOverylay("Saving network settings");
+  $.ajax({
+    url: "include/f.php?c=network",
+    type: "post",
+    data: { "ssid" : document.getElementByID("wifiNetworkName").value, "pw" : document.getElementByID("wifiNetworkPassword").value },
+    complete: (function(data,type){
+      hideOverylay();
+    })
+  });
+}
+
 // Show networkMenu
 function showNetworkMenu(){
   document.getElementById('networkMenu').style.width = "100%";

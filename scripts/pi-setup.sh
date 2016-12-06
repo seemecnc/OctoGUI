@@ -95,6 +95,7 @@ chown -R pi:pi /var/www/html/OctoGUI
 
 osfiles="refresh-chromium.sh:/home/pi/refresh-chromium.sh ucheck.sh:/home/pi/ucheck.sh default:/etc/nginx/sites-available/default start.sh:/home/pi/start.sh firmware-update.sh:/home/pi/firmware-update.sh"
 osfiles="$osfiles chromium.desktop:/home/pi/.config/autostart/chromium.desktop usbmount.conf:/etc/usbmount/usbmount.conf haproxy.cfg:/etc/haproxy/haproxy.cfg hub-ctrl:/usr/local/bin/hub-ctrl"
+osfiles="$osfile sudo-octogui:/etc/sudoers.d/octogui"
 
 for o in $osfiles
 do
