@@ -18,5 +18,5 @@ else
   fi
 fi
 
-/usr/sbin/service networking restart
-
+/bin/sync
+/sbin/shutdown -r now
