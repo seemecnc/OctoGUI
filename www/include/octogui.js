@@ -38,6 +38,7 @@ var reconnect = false;     // variable to automatically reconnect to the printer
 var overlayShowTime = 0;   // Time that the overlay was shown on screen.
 var firmwareDate = 0;      // Release date of the current firmware
 var missingFW = 0;
+var EEProm;
 
 // Z Events
 var zEvents = [];
@@ -258,7 +259,25 @@ function spottedLog(key, log){
       else{ hideOverlay(); }
       delete watchLogFor[key]; watchLogFor.length--;
       break;
+
+    case "EEProm":
+      console.log(log);
+      var bits = log.split(" ");
+      var tline = bits[0].replace(/EPR:/,'') + " " + bits[1] + " " + bits[2] + " " + log.substring(log.indexOf(bits[3]));
+      console.log(tline);
+      if(log.includes("EPR:3 246")){
+        delete watchLogFor[key]; watchLogFor.length--;
+        console.log(EEProm);
+      }
+      break;
   }
+}
+
+function loadEEProm(){
+  EEProm = [];
+  watchLogFor["EEProm"] = "Recv: EPR:"; watchLogFor.length--;
+  sendCommand("M205");
+  //showEEProm();
 }
 
 // Find the current IP of the client and update it on screen

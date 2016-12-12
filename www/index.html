@@ -27,6 +27,8 @@
   <body onload='startupTasks();'>
     <div id="overlay" class="overlay"><a class="closebtn" onclick="hideOverlay()">&times;</a>
     <div id="overlayContent" class="overlay-content"></div></div>
+    <div id="eepromWindow" class="overlay"><a class="closebtn" onclick="hideEEProm()">&times;</a>
+      <div id="eepromContent" class="overlay-content"></div><table id="eepromTable"></table></div>
     <div id="networkMenu" class="overlay"><a class="closebtn" onclick="hideNetworkMenu()">&times;</a>
       <div id="networkMenuContent" class="networkmenucontent"><span onclick="saveNetworkSettings()">Save</span> - <span onclick="hideNetworkMenu()">Cancel</span><br><br>
         Wifi Network: <input type=text id="wifiNetworkName"><br><br>
