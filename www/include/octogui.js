@@ -263,13 +263,25 @@ function spottedLog(key, log){
     case "EEProm":
       var bits = log.split(" ");
       var tline = bits[0].replace(/EPR:/,'') + " " + bits[1] + " " + bits[2] + " " + log.substring(log.indexOf(bits[3]));
+      var eIndex = "e" + bits[0].replace(/EPR:/,'') + bits[1];
+      edt.row.add([log.substring(log.indexOf(bits[3])),"<input type=text id=" + eIndex +" value='" + bits[2] + "'" ]).draw();
+      edt.page('last').draw('page');
+      $(eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
       console.log(tline);
       if(log.includes("EPR:3 246")){
+        edt.page('first').draw('page');
         delete watchLogFor[key]; watchLogFor.length--;
         console.log(EEProm);
       }
       break;
   }
+}
+
+function showEEProm(){
+
+  document.getElementById("eepromContent").innerHTML = "Loading EEProm Values<br>";
+  document.getElementById("eepromOverlay").width = "100%";
+
 }
 
 function loadEEProm(){
@@ -1103,6 +1115,18 @@ function startupTasks(){
     zdt.row( $(this).parents('tr') ).remove().draw();
     zNum--;
     if(zNum == 0){ addZMenuRow(); }
+  } );
+
+  //Init eeprom table
+  edt = $('#eepromTable').DataTable( {
+    columns: [ { title: "Desc" }, { title: "Value" } ],
+    searching: false,
+    fixedHeader: false,
+    ordering: false,
+    info: false,
+    pageLength: 6,
+    lengthChange: false,
+    fnDrawCallback: function() { $("#eepromTable thead").remove(); }
   } );
 
   addZMenuRow();
