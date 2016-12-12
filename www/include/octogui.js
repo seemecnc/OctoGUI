@@ -268,7 +268,7 @@ function spottedLog(key, log){
       var bits = log.split(" ");
       var t = bits[0].replace(/EPR:/,'');
       var eIndex = "e" + t + bits[1];
-      edt.row.add([log.substring(log.indexOf(bits[3])),"<input type=text id=" + eIndex +" value='" + bits[2] + "'>" ]).draw();
+      edt.row.add([log.substring(log.indexOf(bits[3])),"<input type=text id=" + eIndex +" value='" + bits[2] + "' size=10>" ]).draw();
       edt.page('last').draw('page');
       if(isFloat(bits[2])){
         $('#'+eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.', onKeypadClose: function(){ updateEEProm(t,bits[1],'X',eIndex); } });
@@ -1147,7 +1147,7 @@ function startupTasks(){
     fixedHeader: false,
     ordering: false,
     info: false,
-    pageLength: 6,
+    pageLength: 8,
     lengthChange: false,
     fnDrawCallback: function() { $("#eepromTable thead").remove(); }
   } );

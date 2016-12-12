@@ -13,6 +13,7 @@
     background-color: rgba(0,0,0, 0.9);
     overflow-x: hidden;
     transition: 0.25s;
+    font-size: 15px;
 }
 .overlay .closebtn {
     position: absolute;
