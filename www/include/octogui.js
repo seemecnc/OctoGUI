@@ -264,11 +264,12 @@ function spottedLog(key, log){
       var bits = log.split(" ");
       var tline = bits[0].replace(/EPR:/,'') + " " + bits[1] + " " + bits[2] + " " + log.substring(log.indexOf(bits[3]));
       var eIndex = "e" + bits[0].replace(/EPR:/,'') + bits[1];
-      edt.row.add([log.substring(log.indexOf(bits[3])),"<input type=text id=" + eIndex +" value='" + bits[2] + "'" ]).draw();
+      edt.row.add([log.substring(log.indexOf(bits[3])),"<input type=text id=" + eIndex +" value='" + bits[2] + "'>" ]).draw();
       edt.page('last').draw('page');
       $(eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
       console.log(tline);
       if(log.includes("EPR:3 246")){
+        document.getElementById("eepromContent").innerHTML = "";
         edt.page('first').draw('page');
         delete watchLogFor[key]; watchLogFor.length--;
         console.log(EEProm);
@@ -277,10 +278,18 @@ function spottedLog(key, log){
   }
 }
 
+function hideEEProm(){
+
+  document.getElementById("eepromWindow").style.width = 0;
+  edt.clear().draw();
+
+}
+
 function showEEProm(){
 
   document.getElementById("eepromContent").innerHTML = "Loading EEProm Values<br>";
-  document.getElementById("eepromOverlay").width = "100%";
+  document.getElementById("eepromWindow").style.width = "100%";
+  console.log("Showing eeprom");
 
 }
 
@@ -288,7 +297,7 @@ function loadEEProm(){
   EEProm = [];
   watchLogFor["EEProm"] = "Recv: EPR:"; watchLogFor.length++;
   sendCommand("M205");
-  //showEEProm();
+  showEEProm();
 }
 
 // Find the current IP of the client and update it on screen
