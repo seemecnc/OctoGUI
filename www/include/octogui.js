@@ -261,7 +261,6 @@ function spottedLog(key, log){
       break;
 
     case "EEProm":
-      console.log(log);
       var bits = log.split(" ");
       var tline = bits[0].replace(/EPR:/,'') + " " + bits[1] + " " + bits[2] + " " + log.substring(log.indexOf(bits[3]));
       console.log(tline);
@@ -275,7 +274,7 @@ function spottedLog(key, log){
 
 function loadEEProm(){
   EEProm = [];
-  watchLogFor["EEProm"] = "Recv: EPR:"; watchLogFor.length--;
+  watchLogFor["EEProm"] = "Recv: EPR:"; watchLogFor.length++;
   sendCommand("M205");
   //showEEProm();
 }
