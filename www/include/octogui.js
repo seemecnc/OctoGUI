@@ -288,7 +288,7 @@ function updateEEProm(t, p, f, eIndex){
 
   var val = document.getElementById(eIndex).value;
   sendCommand("M206 T" + t + " P" + p + " " + f + val);
-  console.log(c);
+  console.log("M206 T" + t + " P" + p + " " + f + val);
 
 }
 
