@@ -78,6 +78,10 @@ hotLoadString['eris'] = [ "G91", "G1 E530 F5000", "G1 E80 F150", "G90", "G92 E0"
 hotLoadString['orion'] = [ "G91", "G1 E560 F5000", "G1 E80 F150", "G90", "G92 E0" ];
 hotLoadString['rostock_max_v3'] = [ "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0" ];
 
+function isFloat(n){
+  return n.contains('.');
+  //return Number(n) === n && n % 1 !== 0;
+}
 
 // SockJS info from Octoprint
 sock.onopen = function(){
@@ -266,7 +270,11 @@ function spottedLog(key, log){
       var eIndex = "e" + bits[0].replace(/EPR:/,'') + bits[1];
       edt.row.add([log.substring(log.indexOf(bits[3])),"<input type=text id=" + eIndex +" value='" + bits[2] + "'>" ]).draw();
       edt.page('last').draw('page');
-      $(eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.' });
+      if(isFloat(bits[2])){
+        $('#'+eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.', onKeypadClose: function(){ updateEEProm(bits[0],bits[1],$('#'+eIndex).value); } });
+      }else{
+        $('#'+eIndex).numpad({ hidePlusMinusButton: true, hideDecimalButton });
+      }
       console.log(tline);
       if(log.includes("EPR:3 246")){
         document.getElementById("eepromContent").innerHTML = "";
@@ -276,6 +284,19 @@ function spottedLog(key, log){
       }
       break;
   }
+}
+
+function updateEEProm(t, p, val){
+
+  var c;
+  if(isFloat(val)){
+    c = "M206 T" + t + " P" + p + " X" + val;
+  }else{
+    c = "M206 T" + t + " P" + p + " S" + val;
+  }
+  //sendCommand(c);
+  console.log(c);
+
 }
 
 function hideEEProm(){
