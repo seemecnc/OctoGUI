@@ -142,28 +142,23 @@ function spottedZ(action,arg){
   switch(action){
 
     case "Speed":
-      console.log("Setting speed to " + arg + " at z: " + currentZ);
       setSpeedFactor(arg);
       break;
 
     case "Filament":
-      console.log("Changing Filament at z: " + currentZ);
       printCommand("pause");
       liftOnPause = true;
       break;
 
     case "ExtruderTemp":
-      console.log("Setting Extruder Temp to " + arg + " at z: " + currentZ);
       setExtruderTemp(arg);
       break;
 
     case "BedTemp":
-      console.log("Setting Bed Temp to " + arg + " at z: " + currentZ);
       setBedTemp(arg);
       break;
 
     case "FanSpeed":
-      console.log("Setting Fan Speed to " + arg + " at z: " + currentZ);
       fanSpeed(arg);
       break;
 
@@ -288,7 +283,6 @@ function updateEEProm(t, p, f, eIndex){
 
   var val = document.getElementById(eIndex).value;
   sendCommand("M206 T" + t + " P" + p + " " + f + val);
-  console.log("M206 T" + t + " P" + p + " " + f + val);
 
 }
 
@@ -303,7 +297,6 @@ function showEEProm(){
 
   document.getElementById("eepromContent").innerHTML = "Loading EEProm Values<br>";
   document.getElementById("eepromWindow").style.width = "100%";
-  console.log("Showing eeprom");
 
 }
 
@@ -1008,7 +1001,6 @@ function playLoad(){
 
 // Set the flow factor (percent)
 function setFlowFactor(flow){
-  console.log("Setting flow factor to: "+flow);
   sendCommand("M221 S"+flow);
   currentFlow = flow;
   document.getElementById('flowFactor').value = currentFlow;
@@ -1016,7 +1008,6 @@ function setFlowFactor(flow){
 
 // Set the speed factor (percent)
 function setSpeedFactor(speed){
-  console.log("Setting speed factor to: "+speed);
   sendCommand("M220 S" + speed);
   currentSpeed = speed;
   document.getElementById('speedFactor').value = currentSpeed;
