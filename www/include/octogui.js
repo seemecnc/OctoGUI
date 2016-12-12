@@ -271,9 +271,9 @@ function spottedLog(key, log){
       edt.row.add([log.substring(log.indexOf(bits[3])),"<input type=text id=" + eIndex +" value='" + bits[2] + "'>" ]).draw();
       edt.page('last').draw('page');
       if(isFloat(bits[2])){
-        $('#'+eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.', onKeypadClose: function(){ updateEEProm(t,bits[1],eIndex); } });
+        $('#'+eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.', onKeypadClose: function(){ updateEEProm(t,bits[1],'X',eIndex); } });
       }else{
-        $('#'+eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.', hideDecimalButton: true, onKeypadClose: function(){ updateEEProm(t,bits[1],eIndex); } });
+        $('#'+eIndex).numpad({ hidePlusMinusButton: true, decimalSeparator: '.', hideDecimalButton: true, onKeypadClose: function(){ updateEEProm(t,bits[1],'S',eIndex); } });
       }
       if(log.includes("EPR:3 246")){
         document.getElementById("eepromContent").innerHTML = "";
@@ -284,16 +284,10 @@ function spottedLog(key, log){
   }
 }
 
-function updateEEProm(t, p, eIndex){
+function updateEEProm(t, p, f, eIndex){
 
   var val = document.getElementById(eIndex).value;
-  var c;
-  if(isFloat(val)){
-    c = "M206 T" + t + " P" + p + " X" + val;
-  }else{
-    c = "M206 T" + t + " P" + p + " S" + val;
-  }
-  sendCommand(c);
+  sendCommand("M206 T" + t + " P" + p + " " + f + val);
   console.log(c);
 
 }
