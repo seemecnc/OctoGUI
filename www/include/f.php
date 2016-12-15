@@ -100,6 +100,33 @@ function changeNetworkSettings($ssid, $pw){
 
 }
 
+function backupCalibration($commands){
+
+  global $apikey;
+  $tmpfile = "/tmp/calibration-backup.gcode";
+  if(file_exists($tmpfile)) unlink($tmpfile);
+  foreach($commands as $c)
+    file_put_contents($tmpfile, $c."\n", FILE_APPEND);
+  $saneFile = "calibration-backup.gcode";
+  $post = array('file' => new CURLFile($tmpfile,'application/octet-stream',$saneFile), 'select' => false, 'print' => 0, 'apikey' => $apikey);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_URL,'http://'.$_SERVER['SERVER_ADDR'].'/api/files/local');
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  $result = json_decode(curl_exec($ch));
+  if($result->{"done"}) echo "{\"status\":1}";
+  else echo "{\"status\":0}";
+  curl_close ($ch);
+
+}
+
+$test[] = "g28";
+$test[] = "g29";
+$test[] = "g28";
+backupCalibration($test);
+echo "DONE\n";
+
 switch($_REQUEST['c']){
 
   case "port":

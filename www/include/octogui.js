@@ -322,6 +322,21 @@ function spottedLog(key, log){
         case "3246": // Last EEProm value
           EEProm.push("M500");
           EEProm.push("M117 Calibration Restored");
+          deleteFile("local","calibration-backup.gcode");
+          $.ajax({
+            url: "f.php?c=backupcalibration",
+            type: "post",
+            contentType:"application/json; charset=utf-8",
+            data: { "eeprom": EEprom },
+            complete: (function(data,type){
+              if(type == "success"){
+                jdata = JSON.parse(data.responseText);
+                console.log(jdata);
+              }else{
+                alert("Error backing up EEprom");
+              }
+            });
+          });
           console.log(EEProm);
           delete watchLogFor[key]; watchLogFor.length--;
           break;
