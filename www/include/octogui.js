@@ -336,6 +336,7 @@ function spottedLog(key, log){
                     message: "Calibration saved as calibration-backup.gcode",
                     backdrop: true
                   });
+                  updateFiles();
                 }else{
                   bootbox.alert({
                     message: "Error backing up calibration<br>Please consult your manual",
@@ -361,7 +362,7 @@ function spottedLog(key, log){
 
 function backupCalibration(){
 
-  showOverlay("Backing up current calibration");
+  showOverlay("Backing up EEProm (calibration)");
   EEProm = [];
   watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
   sendCommand("M205");
