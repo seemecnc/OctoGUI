@@ -259,7 +259,7 @@ function spottedLog(key, log){
       delete watchLogFor[key]; watchLogFor.length--;
       break;
 
-    case "EEProm":
+    case "editEEProm":
       var bits = log.split(" ");
       var t = bits[0].replace(/EPR:/,'');
       var eIndex = "e" + t + bits[1];
@@ -276,7 +276,33 @@ function spottedLog(key, log){
         delete watchLogFor[key]; watchLogFor.length--;
       }
       break;
+
+    case "backupEEProm":
+      var bits = log.split(" ");
+      var t = bits[0].replace(/EPR:/,'');
+      switch(t+bits[1]){
+
+        case "1893": // X endstop
+          console.log("206 T1 P893 S" + bits[2]);
+          break;
+
+        case "3246": // Last EEProm value
+          console.log("DONE");
+          delete watchLogFor[key]; watchLogFor.length--;
+          break;
+
+      }
+      break;
   }
+}
+
+function backupCalibration(){
+
+  console.log("Backup up eeprom");
+  EEProm = [];
+  watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
+  sendCommand("M205");
+
 }
 
 function updateEEProm(t, p, f, eIndex){
@@ -301,8 +327,7 @@ function showEEProm(){
 }
 
 function loadEEProm(){
-  EEProm = [];
-  watchLogFor["EEProm"] = "Recv: EPR:"; watchLogFor.length++;
+  watchLogFor["editEEProm"] = "Recv: EPR:"; watchLogFor.length++;
   sendCommand("M205");
   showEEProm();
 }
