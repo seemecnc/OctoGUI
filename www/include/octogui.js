@@ -39,6 +39,7 @@ var overlayShowTime = 0;   // Time that the overlay was shown on screen.
 var firmwareDate = 0;      // Release date of the current firmware
 var missingFW = 0;
 var EEProm;
+var backupCalibrationPresent = false;
 
 // Z Events
 var zEvents = [];
@@ -322,7 +323,7 @@ function spottedLog(key, log){
         case "3246": // Last EEProm value
           EEProm.push("M500");
           EEProm.push("M117 Calibration Restored");
-//          deleteFile("local","calibration-backup.gcode");
+          if(backupCalibrationPresent){ deleteFile("local","calibration-backup.gcode"); }
           $.ajax({
             url: "include/f.php?c=backupcalibration",
             type: "post",
@@ -808,6 +809,7 @@ function updateFiles(page){
     contentType:"application/json; charset=utf-8",
     complete: (function(data,type){
       if(type == "success"){
+        backupCalibrationPresent = false;
         jdata = JSON.parse(data.responseText);
         dt.clear();
         if(jdata == null){ dt.draw(); }
@@ -816,7 +818,10 @@ function updateFiles(page){
           if(sortRev){ sortString = "-" + sortBy; }
           else{ sortString = sortBy; }
           var files = jdata.sort(dynamicSort(sortString));
-          files.forEach(function(f){ dt.row.add([ f.origin, f.name ]); });
+          files.forEach(function(f){
+            dt.row.add([ f.origin, f.name ]);
+            if(f.origin == "local" && f.name = "backup-calibration.gcode"){ backupCalibrationPresent = true; }
+          });
           if(page > 0){
             if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
             dt.page(page).draw(false);
