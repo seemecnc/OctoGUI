@@ -121,13 +121,11 @@ function backupCalibration($commands){
 
 }
 
-$test[] = "g28";
-$test[] = "g29";
-$test[] = "g28";
-backupCalibration($test);
-echo "DONE\n";
-
 switch($_REQUEST['c']){
+
+  case "backupcalibration":
+    backupCalibration(json_decode($_POST["data"]));
+    break;
 
   case "port":
     echo "{\"port\":\"".printerPort()."\"}";

@@ -283,61 +283,63 @@ function spottedLog(key, log){
       switch(t+bits[1]){
 
         case "1893": // X endstop
-          EEProm.push("206 T1 P893 S" + bits[2]);
+          EEProm.push("M206 T1 P893 S" + bits[2]);
           break;
 
         case "1895": // Y endstop
-          EEProm.push("206 T1 P895 S" + bits[2]);
+          EEProm.push("M206 T1 P895 S" + bits[2]);
           break;
 
         case "1897": // X endstop
-          EEProm.push("206 T1 P897 S" + bits[2]);
+          EEProm.push("M206 T1 P897 S" + bits[2]);
           break;
 
         case "3901": // Alpha A
-          EEProm.push("206 T3 P901 X" + bits[2]);
+          EEProm.push("M206 T3 P901 X" + bits[2]);
           break;
 
         case "3905": // Alpha B
-          EEProm.push("206 T3 P905 X" + bits[2]);
+          EEProm.push("M206 T3 P905 X" + bits[2]);
           break;
 
         case "3909": // Alpha C
-          EEProm.push("206 T3 P909 X" + bits[2]);
+          EEProm.push("M206 T3 P909 X" + bits[2]);
           break;
 
         case "3881": // Diagonal Rod Length
-          EEProm.push("206 T3 P881 X" + bits[2]);
+          EEProm.push("M206 T3 P881 X" + bits[2]);
           break;
 
         case "3885": // Horizontal Radius
-          EEProm.push("206 T3 P885 X" + bits[2]);
+          EEProm.push("M206 T3 P885 X" + bits[2]);
           break;
 
         case "3153": // Z Max Length
-          EEProm.push("206 T3 P153 X" + bits[2]);
+          EEProm.push("M206 T3 P153 X" + bits[2]);
           break;
 
 
         case "3246": // Last EEProm value
           EEProm.push("M500");
           EEProm.push("M117 Calibration Restored");
-          deleteFile("local","calibration-backup.gcode");
+//          deleteFile("local","calibration-backup.gcode");
           $.ajax({
-            url: "f.php?c=backupcalibration",
+            url: "include/f.php?c=backupcalibration",
             type: "post",
-            contentType:"application/json; charset=utf-8",
-            data: { "eeprom": EEprom },
+            data: {"data": JSON.stringify(EEProm)},
             complete: (function(data,type){
               if(type == "success"){
                 jdata = JSON.parse(data.responseText);
-                console.log(jdata);
+                if(jdata.status == 1){
+                  console.log("EEPROM BACKED UP");
+                }else{
+                  alert("Error backing up EEprom");
+                }
               }else{
                 alert("Error backing up EEprom");
               }
-            });
+            })
           });
-          console.log(EEProm);
           delete watchLogFor[key]; watchLogFor.length--;
           break;
 
