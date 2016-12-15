@@ -820,7 +820,7 @@ function updateFiles(page){
           var files = jdata.sort(dynamicSort(sortString));
           files.forEach(function(f){
             dt.row.add([ f.origin, f.name ]);
-            if(f.origin == "local" && f.name = "backup-calibration.gcode"){ backupCalibrationPresent = true; }
+            if(f.origin == "local" && f.name == "backup-calibration.gcode"){ backupCalibrationPresent = true; }
           });
           if(page > 0){
             if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
