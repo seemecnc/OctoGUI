@@ -332,12 +332,22 @@ function spottedLog(key, log){
               if(type == "success"){
                 jdata = JSON.parse(data.responseText);
                 if(jdata.status == 1){
-                  console.log("EEPROM BACKED UP");
+                  bootbox.alert({
+                    message: "Calibration saved as calibration-backup.gcode",
+                    backdrop: true
+                  });
                 }else{
-                  alert("Error backing up EEprom");
+                  bootbox.alert({
+                    message: "Error backing up calibration<br>Please consult your manual",
+                    backdrop: true
+                  });
                 }
+                hideOverlay();
               }else{
-                alert("Error backing up EEprom");
+                bootbox.alert({
+                  message: "Error backing up calibration<br>Insufficient Squirrels",
+                  backdrop: true
+                });
               }
             })
           });
@@ -351,6 +361,7 @@ function spottedLog(key, log){
 
 function backupCalibration(){
 
+  showOverlay("Backing up current calibration");
   EEProm = [];
   watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
   sendCommand("M205");
