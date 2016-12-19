@@ -60,24 +60,28 @@ var loadFilamentString = [];
 loadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E530 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 loadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E560 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 loadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
+loadFilamentString['hacker_h2'] = [ "G28", "M109 S220", "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 
 // GCODE to unload filament
 var unloadFilamentString = [];
 unloadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 unloadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 unloadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-850", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
+unloadFilamentString['hacker_h2'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-850", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 
 // GCODE to unload filament mid-print
 var hotUnloadString = [];
 hotUnloadString['eris'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
 hotUnloadString['orion'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "G90", "G92 E0" ];
 hotUnloadString['rostock_max_v3'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-850", "G90", "G92 E0" ];
+hotUnloadString['hacker_h2'] = [ "G91", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-850", "G90", "G92 E0" ];
 
 // GCODE to load filament mid-print
 var hotLoadString = [];
 hotLoadString['eris'] = [ "G91", "G1 E530 F5000", "G1 E80 F150", "G90", "G92 E0" ];
 hotLoadString['orion'] = [ "G91", "G1 E560 F5000", "G1 E80 F150", "G90", "G92 E0" ];
 hotLoadString['rostock_max_v3'] = [ "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0" ];
+hotLoadString['hacker_h2'] = [ "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0" ];
 
 function isFloat(n){
   return String(n).includes('.');
@@ -233,6 +237,9 @@ function spottedLog(key, log){
           break;
         case "Rostock MAX v3":
           pId = "rostock_max_v3";
+          break;
+        case "Hacker H2":
+          pId = "hacker_h2";
           break;
         default:
           pId = 'default';
