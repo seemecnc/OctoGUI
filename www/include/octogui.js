@@ -84,6 +84,17 @@ hotLoadString['orion'] = [ "G91", "G1 E560 F5000", "G1 E80 F150", "G90", "G92 E0
 hotLoadString['rostock_max_v3'] = [ "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0" ];
 hotLoadString['hacker_h2'] = [ "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0" ];
 
+//dc42 variables
+var oldrodlength;
+var oldradius;
+var oldhomedheight;
+var oldxstop;
+var oldystop;
+var oldzstop;
+var oldxpos;
+var oldypos;
+var oldzpos;
+
 function isFloat(n){
   return String(n).includes('.');
   //return Number(n) === n && n % 1 !== 0;
@@ -299,7 +310,7 @@ function spottedLog(key, log){
           EEProm.push("M206 T1 P895 S" + bits[2]);
           break;
 
-        case "1897": // X endstop
+        case "1897": // Z endstop
           EEProm.push("M206 T1 P897 S" + bits[2]);
           break;
 
@@ -371,59 +382,87 @@ function spottedLog(key, log){
       switch(t+bits[1]){
 
         case "1893": // X endstop
+          oldxstop = parseInt(bits[2]);
           EEProm.push("M206 T1 P893 S" + bits[2]);
           break;
 
         case "1895": // Y endstop
+          oldystop = parseInt(bits[2]);
           EEProm.push("M206 T1 P895 S" + bits[2]);
           break;
 
-        case "1897": // X endstop
+        case "1897": // Z endstop
+          oldzstop = parseInt(bits[2]);
           EEProm.push("M206 T1 P897 S" + bits[2]);
           break;
 
         case "3901": // Alpha A
+          oldxpos = parseFloat(bits[2]) - 210;
           EEProm.push("M206 T3 P901 X" + bits[2]);
           break;
 
         case "3905": // Alpha B
+          oldypos = parseFloat(bits[2]) - 330;
           EEProm.push("M206 T3 P905 X" + bits[2]);
           break;
 
         case "3909": // Alpha C
+          oldzpos = parseFloat(bits[2]) - 90;
           EEProm.push("M206 T3 P909 X" + bits[2]);
           break;
 
         case "3881": // Diagonal Rod Length
+          oldrodlength = parseFloat(bits[2]);
           EEProm.push("M206 T3 P881 X" + bits[2]);
           break;
 
         case "3885": // Horizontal Radius
+          oldradius = parseFloat(bits[2]);
           EEProm.push("M206 T3 P885 X" + bits[2]);
           break;
 
         case "3153": // Z Max Length
+          oldhomedheight = parseFloat(bits[2]);
           EEProm.push("M206 T3 P153 X" + bits[2]);
           break;
       }
       if(EEProm.length == 9){
         delete watchLogFor[key]; watchLogFor.length--;
-        console.log(EEProm);  
+        deltaParams = new DeltaParameters(
+          oldrodlength, oldradius, oldhomedheight, oldxstop, oldystop, oldzstop, oldxpos, oldypos, oldzpos
+        );
+        xBedProbePoints = [];
+        yBedProbePoints = [];
+        zBedProbePoints = [];
+        for (var i = 0; i < numPoints; ++i) {
+          xBedProbePoints.push(probePoints[i][0]);
+          yBedProbePoints.push(probePoints[i][1]);
+        }
+        watchLogFor["zProbe"] = "PROBE-ZOFFSET"; watchLogFor.length++;
+        sendCommand("G28","G1 Z25", "G30");
       }
+      break;
+
+    case "zProbe":
+      console.log(log);
+      delete watchLogFor[key]; watchLogFor.length--;
       break;
 
   }
 }
 
-function backupCalibration(){
-
-  /* showOverlay("Backing up EEProm (calibration)");
-  EEProm = [];
-  watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
-  sendCommand("M205");
-  */
+function deltaCalibration(){
+  loadProbePoints();
   EEProm = [];
   watchLogFor["loadEEProm"] = "Recv: EPR:"; watchLogFor.length++;
+  sendCommand("M205");
+}
+
+function backupCalibration(){
+
+  showOverlay("Backing up EEProm (calibration)");
+  EEProm = [];
+  watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
   sendCommand("M205");
 
 }
