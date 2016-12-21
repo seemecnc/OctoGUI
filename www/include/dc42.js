@@ -502,8 +502,6 @@ function calc() {
 	convertIncomingEndstops();
 	try {
 		var rslt = DoDeltaCalibration();
-		document.getElementById("oResult").innerHTML = "&nbsp;Success! " + rslt + "&nbsp;";
-		document.getElementById("oResult").style.backgroundColor = "LightGreen";
 		convertOutgoingEndstops();
 		generateCommands();
 	}
@@ -515,22 +513,27 @@ function calc() {
 
 function generateCommands() {
 
-  updateGCODE = [];
-  updateGCODE.push("M206 T1 P893 S" + deltaParams.xstop.toFixed(0));
-  updateGCODE.push("M206 T1 P895 S" + deltaParams.ystop.toFixed(0));
-  updateGCODE.push("M206 T1 P897 S" + deltaParams.zstop.toFixed(0));
-  updateGCODE.push("M206 T3 P901 X" + (210.0 + Number(deltaParams.xadj.toFixed(2))));
-  updateGCODE.push("M206 T3 P905 X" + (330.0 + Number(deltaParams.yadj.toFixed(2))));
-  updateGCODE.push("M206 T3 P909 X" + (90.0 + Number(deltaParams.zadj.toFixed(2))));
-  updateGCODE.push("M206 T3 P881 X" + deltaParams.diagonal.toFixed(2));
-  updateGCODE.push("M206 T3 P885 X" + deltaParams.radius.toFixed(2));
-  updateGCODE.push("M206 T3 P153 X" + deltaParams.homedHeight.toFixed(2));
-  updateGCODE.push("M500");
-  updateGCODE.push("M117 EEPROM UPDATED");
-  updateGCODE.push("M115");
-  //watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
-  //sendCommand(updateGCODE);
-  console.log(updateGCODE);
+  document.getElementById("oResult").style.backgroundColor = "LightGreen";
+  if(newDeviation < oldDeviation){
+    updateGCODE = [];
+    updateGCODE.push("M206 T1 P893 S" + deltaParams.xstop.toFixed(0));
+    updateGCODE.push("M206 T1 P895 S" + deltaParams.ystop.toFixed(0));
+    updateGCODE.push("M206 T1 P897 S" + deltaParams.zstop.toFixed(0));
+    updateGCODE.push("M206 T3 P901 X" + (210.0 + Number(deltaParams.xadj.toFixed(2))));
+    updateGCODE.push("M206 T3 P905 X" + (330.0 + Number(deltaParams.yadj.toFixed(2))));
+    updateGCODE.push("M206 T3 P909 X" + (90.0 + Number(deltaParams.zadj.toFixed(2))));
+    updateGCODE.push("M206 T3 P881 X" + deltaParams.diagonal.toFixed(2));
+    updateGCODE.push("M206 T3 P885 X" + deltaParams.radius.toFixed(2));
+    updateGCODE.push("M206 T3 P153 X" + deltaParams.homedHeight.toFixed(2));
+    updateGCODE.push("M500");
+    updateGCODE.push("M117 EEPROM UPDATED");
+    updateGCODE.push("M115");
+    sendCommand(updateGCODE);
+    console.log(updateGCODE);
+		document.getElementById("oResult").innerHTML = "&nbsp;Success! " + rslt + "&nbsp;";
+  }else{
+		document.getElementById("oResult").innerHTML = "&nbsp;Success! " + rslt + "&nbsp; <br><br>Keeping old settings. New settings won't improve the calibration";
+  }
 
 }
 
