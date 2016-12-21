@@ -406,7 +406,10 @@ function spottedLog(key, log){
           EEProm.push("M206 T3 P153 X" + bits[2]);
           break;
       }
-      console.log(EEProm.length);
+      if(EEProm.length == 9){
+        delete watchLogFor[key]; watchLogFor.length--;
+        console.log(EEProm);  
+      }
       break;
 
   }
@@ -419,7 +422,9 @@ function backupCalibration(){
   watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
   sendCommand("M205");
   */
+  EEProm = [];
   watchLogFor["loadEEProm"] = "Recv: EPR:"; watchLogFor.length++;
+  sendCommand("M205");
 
 }
 
