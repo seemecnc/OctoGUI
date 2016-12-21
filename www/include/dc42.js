@@ -20,6 +20,8 @@ var degreesToRadians = Math.PI / 180.0;
 
 function loadProbePoints(){
 
+  probePoints = [];
+
   switch(printerId){
     case "eris":
       probePoints.push([0.0,65.0]);
