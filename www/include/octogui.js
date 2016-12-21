@@ -439,7 +439,7 @@ function spottedLog(key, log){
           yBedProbePoints.push(probePoints[i][1]);
         }
         watchLogFor["zProbe"] = "PROBE-ZOFFSET"; watchLogFor.length++;
-        showOverlay("Probing for Delta Calibration<br><div id='oDebug'></div><br><div id='oStatus'></div>");
+        showOverlay("Probing for Delta Calibration<br><div id='oDebug'></div><br><div id='oResult'></div>");
         sendCommand(probeGCODE);
       }
       break;

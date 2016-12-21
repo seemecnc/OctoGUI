@@ -505,7 +505,6 @@ function calc() {
 		document.getElementById("oResult").innerHTML = "&nbsp;Success! " + rslt + "&nbsp;";
 		document.getElementById("oResult").style.backgroundColor = "LightGreen";
 		convertOutgoingEndstops();
-		setNewParameters();
 		generateCommands();
 	}
 	catch (err) {
