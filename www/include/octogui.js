@@ -439,13 +439,19 @@ function spottedLog(key, log){
           yBedProbePoints.push(probePoints[i][1]);
         }
         watchLogFor["zProbe"] = "PROBE-ZOFFSET"; watchLogFor.length++;
-        sendCommand("G28","G1 Z25", "G30");
+        sendCommand(probeGCODE);
       }
       break;
 
     case "zProbe":
-      console.log(log);
-      delete watchLogFor[key]; watchLogFor.length--;
+      var z = parseFloat(log.replace(/.*PROBE-ZOFFSET:/,''));
+      zBedProbePoints.push(-z);
+
+      if(zBedProbePoints.length >= numPoints){
+        delete watchLogFor[key]; watchLogFor.length--;
+        console.log("Done Probing");
+        console.log(zBedProbePoints);
+      }
       break;
 
   }
