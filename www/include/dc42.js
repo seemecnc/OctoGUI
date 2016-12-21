@@ -503,7 +503,7 @@ function calc() {
 	try {
 		var rslt = DoDeltaCalibration();
 		convertOutgoingEndstops();
-		generateCommands();
+		generateCommands(rslt);
 	}
 	catch (err) {
 		document.getElementById("oResult").innerHTML = "&nbsp;Error! " + err + "&nbsp;";
@@ -511,7 +511,7 @@ function calc() {
 	}
 }
 
-function generateCommands() {
+function generateCommands(rslt) {
 
   document.getElementById("oResult").style.backgroundColor = "LightGreen";
   if(newDeviation < oldDeviation){
