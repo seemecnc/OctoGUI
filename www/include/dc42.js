@@ -17,6 +17,8 @@ var probePoints;
 var probeGCODE;
 var updateGCODE;
 var degreesToRadians = Math.PI / 180.0;
+var oldDeviation;
+var newDeviation;
 
 function loadProbePoints(){
 
@@ -81,7 +83,7 @@ function loadProbePoints(){
 
   }
 
-  probeGCODE = ["G28", "G1 Z10" ];
+  probeGCODE = ["G28", "G1 Z20" ];
   probePoints.forEach(function(vals){
     probeGCODE.push("G1 X" + vals[0] + " Y" + vals[1]);
     probeGCODE.push("G30");
@@ -334,12 +336,12 @@ DeltaParameters.prototype.Adjust = function(numFactors, v, norm) {
 }
 
 function ClearDebug() {
-	document.getElementById("debug").innerHTML = "";
+	document.getElementById("oDebug").innerHTML = "";
 }
 
 function DebugPrint(s) {
 	if (debug) {
-		document.getElementById("debug").innerHTML += s + "<br/>";
+		document.getElementById("oDebug").innerHTML += s + "<br/>";
 	}
 }
 
@@ -472,13 +474,15 @@ function DoDeltaCalibration() {
 		if (iteration == 2) { break; }
 	}
 
-	return "Calibrated " + numFactors + " factors using " + numPoints + " points, deviation before " + Math.sqrt(initialSumOfSquares/numPoints).toFixed(2)
-			+ " after " + expectedRmsError.toFixed(2);
+  oldDeviation = Math.sqrt(initialSumOfSquares/numPoints).toFixed(2);
+  newDeviation = expectedRmsError.toFixed(2);
+	return "Calibrated " + numFactors + " factors using " + numPoints + " points, deviation before " + oldDeviation
+			+ " after " + newDeviation;
 }
 
 function convertIncomingEndstops() {
 	var endstopFactor = (firmware == "RRF") ? 1.0
-						: (firmware == "Repetier") ? 1.0/document.getElementById("stepspermm").value
+						: (firmware == "Repetier") ? 1.0/80
 							: -1.0;
 	deltaParams.xstop *= endstopFactor;
 	deltaParams.ystop *= endstopFactor;
@@ -487,7 +491,7 @@ function convertIncomingEndstops() {
 
 function convertOutgoingEndstops() {
 	var endstopFactor = (firmware == "RRF") ? 1.0
-						: (firmware == "Repetier") ? (document.getElementById("stepspermm").value)
+						: (firmware == "Repetier") ? 80
 							: -1.0;
 	deltaParams.xstop *= endstopFactor;
 	deltaParams.ystop *= endstopFactor;
@@ -498,15 +502,36 @@ function calc() {
 	convertIncomingEndstops();
 	try {
 		var rslt = DoDeltaCalibration();
-		document.getElementById("result").innerHTML = "&nbsp;Success! " + rslt + "&nbsp;";
-		document.getElementById("result").style.backgroundColor = "LightGreen";
+		document.getElementById("oResult").innerHTML = "&nbsp;Success! " + rslt + "&nbsp;";
+		document.getElementById("oResult").style.backgroundColor = "LightGreen";
 		convertOutgoingEndstops();
 		setNewParameters();
 		generateCommands();
 	}
 	catch (err) {
-		document.getElementById("result").innerHTML = "&nbsp;Error! " + err + "&nbsp;";
-		document.getElementById("result").style.backgroundColor = "LightPink";
+		document.getElementById("oResult").innerHTML = "&nbsp;Error! " + err + "&nbsp;";
+		document.getElementById("oResult").style.backgroundColor = "LightPink";
 	}
+}
+
+function generateCommands() {
+
+  updateGCODE = [];
+  updateGCODE.push("M206 T1 P893 S" + deltaParams.xstop.toFixed(0));
+  updateGCODE.push("M206 T1 P895 S" + deltaParams.ystop.toFixed(0));
+  updateGCODE.push("M206 T1 P897 S" + deltaParams.zstop.toFixed(0));
+  updateGCODE.push("M206 T3 P901 X" + (210.0 + Number(deltaParams.xadj.toFixed(2))));
+  updateGCODE.push("M206 T3 P905 X" + (330.0 + Number(deltaParams.yadj.toFixed(2))));
+  updateGCODE.push("M206 T3 P909 X" + (90.0 + Number(deltaParams.zadj.toFixed(2))));
+  updateGCODE.push("M206 T3 P881 X" + deltaParams.diagonal.toFixed(2));
+  updateGCODE.push("M206 T3 P885 X" + deltaParams.radius.toFixed(2));
+  updateGCODE.push("M206 T3 P153 X" + deltaParams.homedHeight.toFixed(2));
+  updateGCODE.push("M500");
+  updateGCODE.push("M117 EEPROM UPDATED");
+  updateGCODE.push("M115");
+  //watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
+  //sendCommand(updateGCODE);
+  console.log(updateGCODE);
+
 }
 

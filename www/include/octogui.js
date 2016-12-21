@@ -439,11 +439,13 @@ function spottedLog(key, log){
           yBedProbePoints.push(probePoints[i][1]);
         }
         watchLogFor["zProbe"] = "PROBE-ZOFFSET"; watchLogFor.length++;
+        showOverlay("Probing for Delta Calibration<br><div id='oDebug'></div><br><div id='oStatus'></div>");
         sendCommand(probeGCODE);
       }
       break;
 
     case "zProbe":
+      console.log(log);
       var z = parseFloat(log.replace(/.*PROBE-ZOFFSET:/,''));
       zBedProbePoints.push(-z);
 
@@ -451,6 +453,7 @@ function spottedLog(key, log){
         delete watchLogFor[key]; watchLogFor.length--;
         console.log("Done Probing");
         console.log(zBedProbePoints);
+        calc();
       }
       break;
 
@@ -458,6 +461,7 @@ function spottedLog(key, log){
 }
 
 function deltaCalibration(){
+  showOverlay("Loading current settings from EEProm");
   loadProbePoints();
   EEProm = [];
   watchLogFor["loadEEProm"] = "Recv: EPR:"; watchLogFor.length++;
