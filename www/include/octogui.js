@@ -1370,14 +1370,7 @@ function startupTasks(page){
       break;
 
     case "burnin":
-      var mainHTML = "Select Printer:<br>";
-      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv3\")'>Rostock Max V3</a><br>";
-      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv2\")'>Rostock Max V2</a><br>";
-      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion\")'>Orion</a><br>";
-      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion-atx\")'>Orion ATX</a><br>";
-      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"eris\")'>Eris</a><br>";
-      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a><br>";
-      document.getElementById('main').innerHTML = mainHTML;
+      burninPrinterMenu();
       break;
 
   }
@@ -1395,16 +1388,30 @@ function startupTasks(page){
   } );
 }
 
+function burninPrinterMenu(){
+
+  var mainHTML = "Select Printer:<br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv3\")'>Rostock Max V3</a><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv2\")'>Rostock Max V2</a><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion\")'>Orion</a><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion-atx\")'>Orion ATX</a><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"eris\")'>Eris</a><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a><br>";
+  document.getElementById('main').innerHTML = mainHTML;
+
+}
+
 function burninMenu(){
 
-  var mainHTML = "Flash Firmware<br><br>";
+  var mainHTML = "<b>"+burninPrinter+"</b><br>Flash Firmware<br><br>";
   if(printerStatus == "Operational"){
     mainHTML = mainHTML + "Calibrate Printer<br><br>";
     mainHTML = mainHTML + "DC42 Calibration<br><br>";
-    mainHTML = mainHTML + "Test Print";
+    mainHTML = mainHTML + "Test Print<br><br>";
   }else{
-    mainHTML = mainHTML + "Connect to Printer";
+    mainHTML = mainHTML + "Connect to Printer<br><br>";
   }
+  mainHTML = mainHTML + "<a onclick='burninPrinterMenu()'>Change Printer</a>";
   document.getElementById('main').innerHTML = mainHTML;
 
 }
