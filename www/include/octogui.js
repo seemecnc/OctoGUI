@@ -40,6 +40,9 @@ var firmwareDate = 0;      // Release date of the current firmware
 var missingFW = 0;
 var EEProm;
 var backupCalibrationPresent = false;
+var GUI;
+if (String(window.location).includes("burnin")) { GUI = false; }
+else{ GUI = true; }
 
 // Z Events
 var zEvents = [];
@@ -703,29 +706,31 @@ function updateConnectionStatus(){
           document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
         }
 
-        if(jdata.current.state == "Operational"){
-          if(printerStatus != "Operational"){
-            hotLoading = false;
-            liftOnly = false;
-            liftOnPause = false;
-            currentSpeed = 100;
-            document.getElementById('speedFactor').value = currentSpeed;
-            currentFlow = 100;
-            document.getElementById('flowFactor').value = currentFlow;
-            if(typeof calibrateString[printerId] !== 'undefined'){ document.getElementById('calibratePrinter').style.visibility = "visible"; }
-            else { document.getElementById('calibratePrinter').style.visibility = "hidden"; }
-            if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
-            else { document.getElementById('loadFilament').style.visibility = "hidden"; }
-            if(typeof unloadFilamentString[printerId] !== 'undefined'){ document.getElementById('unloadFilament').style.visibility = "visible"; }
-            else { document.getElementById('unloadFilament').style.visibility = "hidden"; }
-            updateFiles();
-          }
-        }else{
-          if(jdata.current.state != printerStatus){
-            document.getElementById('calibratePrinter').style.visibility = "hidden";
-            document.getElementById('loadFilament').style.visibility = "hidden";
-            document.getElementById('unloadFilament').style.visibility = "hidden";
-            document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+        if(GUI){
+          if(jdata.current.state == "Operational"){
+            if(printerStatus != "Operational"){
+              hotLoading = false;
+              liftOnly = false;
+              liftOnPause = false;
+              currentSpeed = 100;
+              document.getElementById('speedFactor').value = currentSpeed;
+              currentFlow = 100;
+              document.getElementById('flowFactor').value = currentFlow;
+              if(typeof calibrateString[printerId] !== 'undefined'){ document.getElementById('calibratePrinter').style.visibility = "visible"; }
+              else { document.getElementById('calibratePrinter').style.visibility = "hidden"; }
+              if(typeof loadFilamentString[printerId] !== 'undefined'){ document.getElementById('loadFilament').style.visibility = "visible"; }
+              else { document.getElementById('loadFilament').style.visibility = "hidden"; }
+              if(typeof unloadFilamentString[printerId] !== 'undefined'){ document.getElementById('unloadFilament').style.visibility = "visible"; }
+              else { document.getElementById('unloadFilament').style.visibility = "hidden"; }
+              updateFiles();
+            }
+          }else{
+            if(jdata.current.state != printerStatus){
+              document.getElementById('calibratePrinter').style.visibility = "hidden";
+              document.getElementById('loadFilament').style.visibility = "hidden";
+              document.getElementById('unloadFilament').style.visibility = "hidden";
+              document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+            }
           }
         }
 
@@ -760,48 +765,50 @@ function updateStatus(){
 
   updateConnectionStatus();
 
-  //Shut down the hot end if paused too long
-  if(printerStatus == "Paused" && pauseTimeout > 0){
-    if(pauseTimeout + (5 * 60 * 1000) <= (new Date().valueOf())){
-      console.log("Printer paused for too long. Shutting off hot end");
-      pauseTemp = etempTarget;
-      setExtruderTemp(0);
-      pauseTimeout = 0;
+  if(GUI){
+    //Shut down the hot end if paused too long
+    if(printerStatus == "Paused" && pauseTimeout > 0){
+      if(pauseTimeout + (5 * 60 * 1000) <= (new Date().valueOf())){
+        console.log("Printer paused for too long. Shutting off hot end");
+        pauseTemp = etempTarget;
+        setExtruderTemp(0);
+        pauseTimeout = 0;
+      }
     }
-  }
-  if(printerStatus == "Operational" || printerStatus == "Printing" || printerStatus == "Paused"){
-    $.ajax({
-      url: api+"printer?apikey="+apikey,
-      type: "get",
-      contentType:"application/json; charset=utf-8",
-      complete: (function(data,type){
-        if(type == "success"){
-          jdata = JSON.parse(data.responseText);
-          etemp = jdata.temperature.tool0.actual;
-          etempTarget = jdata.temperature.tool0.target;
-          if(heatedBed && typeof jdata.temperature.bed !== 'undefined'){
-            btemp = jdata.temperature.bed.actual;
-            btempTarget = jdata.temperature.bed.target;
+    if(printerStatus == "Operational" || printerStatus == "Printing" || printerStatus == "Paused"){
+      $.ajax({
+        url: api+"printer?apikey="+apikey,
+        type: "get",
+        contentType:"application/json; charset=utf-8",
+        complete: (function(data,type){
+          if(type == "success"){
+            jdata = JSON.parse(data.responseText);
+            etemp = jdata.temperature.tool0.actual;
+            etempTarget = jdata.temperature.tool0.target;
+            if(heatedBed && typeof jdata.temperature.bed !== 'undefined'){
+              btemp = jdata.temperature.bed.actual;
+              btempTarget = jdata.temperature.bed.target;
+            }
+            updateJobStatus();
+          }else{
+            updateConnectionStatus();
+            etemp = "--";
+            btemp = "--";
           }
-          updateJobStatus();
-        }else{
-          updateConnectionStatus();
-          etemp = "--";
-          btemp = "--";
-        }
-      })
-    });
-  }else{
-    etemp = "--";
-    btemp = "--";
+        })
+      });
+    }else{
+      etemp = "--";
+      btemp = "--";
+    }
+    document.getElementById('extruderTemp').innerHTML = etemp;
+    document.getElementById('bedTemp').innerHTML = btemp;
+    document.getElementById('extruderTempTarget').innerHTML = etempTarget;
+    document.getElementById('eTempInput').value = etempTarget;
+    document.getElementById('bedTempTarget').innerHTML = btempTarget;
+    document.getElementById('bTempInput').value = btempTarget;
   }
   document.getElementById('currentStatus').innerHTML = printerStatus;
-  document.getElementById('extruderTemp').innerHTML = etemp;
-  document.getElementById('bedTemp').innerHTML = btemp;
-  document.getElementById('extruderTempTarget').innerHTML = etempTarget;
-  document.getElementById('eTempInput').value = etempTarget;
-  document.getElementById('bedTempTarget').innerHTML = btempTarget;
-  document.getElementById('bTempInput').value = btempTarget;
 }
 
 // Updates the status fields for the current print job
@@ -1229,122 +1236,140 @@ function setSpeedFactor(speed){
 }
 
 // One off inits, tasks, etc to be done after page is loaded
-function startupTasks(){
+function startupTasks(page){
 
-  $('#wifiNetworkName').keyboard({});
-  $('#wifiNetworkPassword').keyboard({});
+  switch(page){
+    case "gui":
+      $('#wifiNetworkName').keyboard({});
+      $('#wifiNetworkPassword').keyboard({});
 
-  dt = $('#filesList').DataTable( {
-    columns: [ { title: "L" }, { title: "Name" } ],
-    searching: false,
-    fixedHeader: false,
-    ordering: false,
-    info: false,
-    pageLength: 4,
-    pagingType: "full",
-    lengthChange: false,
-    select: { items: "row", single: true},
-    fnDrawCallback: function() { $("#filesList thead").remove(); }
-  } );
+      dt = $('#filesList').DataTable( {
+        columns: [ { title: "L" }, { title: "Name" } ],
+        searching: false,
+        fixedHeader: false,
+        ordering: false,
+        info: false,
+        pageLength: 4,
+        pagingType: "full",
+        lengthChange: false,
+        select: { items: "row", single: true},
+        fnDrawCallback: function() { $("#filesList thead").remove(); }
+      } );
 
-  // Onclick handlers for file list
-  $('#filesList tbody').on( 'click', 'tr', function () {
-    var origin = this.cells[0].innerHTML;
-    var name = this.cells[1].innerHTML;
-    switch(origin){
-      case "local":
-        bootbox.prompt({
-          title: name,
-          inputType: 'checkbox',
-          inputOptions: [
-            { text: 'Load ' + name + ' for printing', value: '1' },
-            { text: 'Print ' + name + ' now', value: '2' },
-            { text: 'Copy ' + name + ' to USB', value: '3' },
-            { text: 'Delete ' + name, value: '4' }],
-            callback: function (result) {
-              if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
-                switch(r){
-                  case "1": selectFile("local/" + name); break;
-                  case "2":
-                    selectFile("local/" + name,true);
-                    watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
-                    showOverlay("Preparing to Print:\n" + name);
-                    break;
-                  case "3": copyToUsb(name); break;
-                  case "4": deleteFile(origin, name); break;
+      // Onclick handlers for file list
+      $('#filesList tbody').on( 'click', 'tr', function () {
+        var origin = this.cells[0].innerHTML;
+        var name = this.cells[1].innerHTML;
+        switch(origin){
+          case "local":
+            bootbox.prompt({
+              title: name,
+              inputType: 'checkbox',
+              inputOptions: [
+                { text: 'Load ' + name + ' for printing', value: '1' },
+                { text: 'Print ' + name + ' now', value: '2' },
+                { text: 'Copy ' + name + ' to USB', value: '3' },
+                { text: 'Delete ' + name, value: '4' }],
+                callback: function (result) {
+                  if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
+                    switch(r){
+                      case "1": selectFile("local/" + name); break;
+                      case "2":
+                        selectFile("local/" + name,true);
+                        watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
+                        showOverlay("Preparing to Print:\n" + name);
+                        break;
+                      case "3": copyToUsb(name); break;
+                      case "4": deleteFile(origin, name); break;
+                    }
+                  }); }
                 }
-              }); }
-            }
-        });
-        break;
-      case "sdcard":
-        selectFile(origin + "/" + name);
-        break;
-      case "usb":
-        bootbox.prompt({
-          title: name,
-          inputType: 'checkbox',
-          inputOptions: [
-            { text: 'Copy ' + name + ' to local storage', value: '1' },
-            { text: 'Delete ' + name + ' from USB', value: '2' } ],
-            callback: function (result) {
-              if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
-                switch(r){
-                  case "1": copyToLocal(name); break;
-                  case "2": deleteFile(origin, name); break;
+            });
+            break;
+          case "sdcard":
+            selectFile(origin + "/" + name);
+            break;
+          case "usb":
+            bootbox.prompt({
+              title: name,
+              inputType: 'checkbox',
+              inputOptions: [
+                { text: 'Copy ' + name + ' to local storage', value: '1' },
+                { text: 'Delete ' + name + ' from USB', value: '2' } ],
+                callback: function (result) {
+                  if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
+                    switch(r){
+                      case "1": copyToLocal(name); break;
+                      case "2": deleteFile(origin, name); break;
+                    }
+                  }); }
                 }
-              }); }
-            }
-        });
-        break;
-    }
-  } );
+            });
+            break;
+        }
+      } );
 
-  getClientIP();
+      getClientIP();
 
-  //Init the different popup number pads
-  $('#eTempInput').numpad({
-    onKeypadClose: function(){ setExtruderTemp(Number(document.getElementById('eTempInput').value)); },
-    hidePlusMinusButton: true,
-    hideDecimalButton: true
-  });
-  $('#bTempInput').numpad({
-    onKeypadClose: function(){ setBedTemp(Number(document.getElementById('bTempInput').value)); },
-    hidePlusMinusButton: true,
-    hideDecimalButton: true
-  });
-  $('#speedFactor').numpad({
-    onKeypadClose: function(){ setSpeedFactor(Number(document.getElementById('speedFactor').value)); },
-    hidePlusMinusButton: true,
-    hideDecimalButton: true
-  });
-  $('#flowFactor').numpad({
-    onKeypadClose: function(){ setFlowFactor(Number(document.getElementById('flowFactor').value)); },
-    hidePlusMinusButton: true,
-    hideDecimalButton: true
-  });
-  $('#zHopChecks').numpad({
-    onKeypadClose: function(){ zHopCheck = Number(document.getElementById('zHopChecks').value); },
-    hidePlusMinusButton: true,
-    hideDecimalButton: true
-  });
+      //Init the different popup number pads
+      $('#eTempInput').numpad({
+        onKeypadClose: function(){ setExtruderTemp(Number(document.getElementById('eTempInput').value)); },
+        hidePlusMinusButton: true,
+        hideDecimalButton: true
+      });
+      $('#bTempInput').numpad({
+        onKeypadClose: function(){ setBedTemp(Number(document.getElementById('bTempInput').value)); },
+        hidePlusMinusButton: true,
+        hideDecimalButton: true
+      });
+      $('#speedFactor').numpad({
+        onKeypadClose: function(){ setSpeedFactor(Number(document.getElementById('speedFactor').value)); },
+        hidePlusMinusButton: true,
+        hideDecimalButton: true
+      });
+      $('#flowFactor').numpad({
+        onKeypadClose: function(){ setFlowFactor(Number(document.getElementById('flowFactor').value)); },
+        hidePlusMinusButton: true,
+        hideDecimalButton: true
+      });
+      $('#zHopChecks').numpad({
+        onKeypadClose: function(){ zHopCheck = Number(document.getElementById('zHopChecks').value); },
+          hidePlusMinusButton: true,
+          hideDecimalButton: true
+      });
 
-  //Init zMenu
-  zdt = $('#zMenuTable').DataTable( {
-    columns: [ { title: "Height" }, { title: "Event" }, { title: "Arg" }, { title: "Remove" } ],
-    searching: false,
-    fixedHeader: false,
-    ordering: false,
-    info: false,
-    pageLength: 6,
-    lengthChange: false,
-    fnDrawCallback: function() { $("#zMenuTable thead").remove(); }
-  } );
-  $('#zMenuTable tbody').on( 'click', 'div.zdelete', function (){
-    zdt.row( $(this).parents('tr') ).remove().draw();
-    zNum--;
-    if(zNum == 0){ addZMenuRow(); }
-  } );
+      //Init zMenu
+      zdt = $('#zMenuTable').DataTable( {
+        columns: [ { title: "Height" }, { title: "Event" }, { title: "Arg" }, { title: "Remove" } ],
+        searching: false,
+        fixedHeader: false,
+        ordering: false,
+        info: false,
+        pageLength: 6,
+        lengthChange: false,
+        fnDrawCallback: function() { $("#zMenuTable thead").remove(); }
+      } );
+      $('#zMenuTable tbody').on( 'click', 'div.zdelete', function (){
+        zdt.row( $(this).parents('tr') ).remove().draw();
+        zNum--;
+        if(zNum == 0){ addZMenuRow(); }
+      } );
+
+      addZMenuRow();
+      document.getElementById('apiKey').innerHTML = apikey;
+      document.getElementById('speedFactor').value = currentSpeed;
+      document.getElementById('flowFactor').value = currentFlow;
+      document.getElementById('zHopChecks').value = zHopCheck;
+      getPrinterProfile();
+      updateFiles();
+      break;
+
+    case "burnin":
+      var mainHTML = "LOADED";
+      document.getElementById('main').innerHTML = mainHTML;
+      break;
+
+  }
 
   //Init eeprom table
   edt = $('#eepromTable').DataTable( {
@@ -1357,14 +1382,6 @@ function startupTasks(){
     lengthChange: false,
     fnDrawCallback: function() { $("#eepromTable thead").remove(); }
   } );
-
-  addZMenuRow();
-  document.getElementById('apiKey').innerHTML = apikey;
-  document.getElementById('speedFactor').value = currentSpeed;
-  document.getElementById('flowFactor').value = currentFlow;
-  document.getElementById('zHopChecks').value = zHopCheck;
-  getPrinterProfile();
-  updateFiles();
 }
 
 function saveZMenu(){
@@ -1490,9 +1507,6 @@ function hideOverlay(){
   overlayShowTime = 0;
 }
 
-//Update status every second
-window.setInterval( function(){ updateStatus(); }, 1000);
-
 //Basic settings for all popup touchpads
 $.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width:80%"></table>';
 $.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
@@ -1500,4 +1514,7 @@ $.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" />';
 $.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="width:75%"></button>';
 $.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="width:100%;"></button>';
 $.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');}
+
+//Update status every second
+window.setInterval( function(){ updateStatus(); }, 1000);
 
