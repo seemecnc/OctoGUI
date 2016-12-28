@@ -1435,7 +1435,7 @@ function burninMenu(){
     mainHTML = mainHTML + "<a onclick='deltaCalibration()'>DC42 Calibration</a><br><br>";
     mainHTML = mainHTML + "Test Print<br><br>";
   }else{
-    mainHTML = mainHTML + "Connect to Printer<br><br>";
+    mainHTML = mainHTML + "<a onclick='connectPrinter(\"connect\")'>Connect to Printer</a><br><br>";
   }
   mainHTML = mainHTML + "<a onclick='burninPrinterMenu()'>Change Printer</a>";
   document.getElementById('main').innerHTML = mainHTML;
