@@ -1192,15 +1192,17 @@ function getPrinterProfile(){
           heatedBed = jdata.profiles[i].heatedBed;
           maxZHeight = jdata.profiles[i].volume.height;
           document.getElementById('printerModel').innerHTML = jdata.profiles[i].name;
-          if(heatedBed) {
-            document.getElementById('bedTempDisplay').style.visibility = "visible";
-            document.getElementById('bedTempSet').style.visibility = "visible";
-          }else {
-            document.getElementById('bedTempDisplay').style.visibility = "hidden";
-            document.getElementById('bedTempSet').style.visibility = "hidden";
+          if(GUI){
+            if(heatedBed) {
+              document.getElementById('bedTempDisplay').style.visibility = "visible";
+              document.getElementById('bedTempSet').style.visibility = "visible";
+            }else {
+              document.getElementById('bedTempDisplay').style.visibility = "hidden";
+              document.getElementById('bedTempSet').style.visibility = "hidden";
+            }
+            if(printerId == 'eris'){ document.getElementById('fanControl').style.visibility = "hidden"; }
+            else { document.getElementById('fanControl').style.visibility = "visible"; }
           }
-          if(printerId == 'eris'){ document.getElementById('fanControl').style.visibility = "hidden"; }
-          else { document.getElementById('fanControl').style.visibility = "visible"; }
         }
       }
     })
