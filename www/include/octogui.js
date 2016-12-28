@@ -130,24 +130,28 @@ sock.onmessage = function(e) {
   //Only process "current" messages
   if (typeof e.data.current !== 'undefined'){
     var t;
-    if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
-    else{ currentZCount = 0; }
-    //watch for Z height actions
-    if(typeof watchForZ[0] !== 'undefined'){
-      if(printerStatus == "Printing" && currentZCount >= zHopCheck && currentZ >= watchForZ[0]['height'] && currentZ != null){
-        spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
-        watchForZ.splice(0,1);
-        document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+
+    if(GUI){
+      if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
+      else{ currentZCount = 0; }
+      //watch for Z height actions
+      if(typeof watchForZ[0] !== 'undefined'){
+        if(printerStatus == "Printing" && currentZCount >= zHopCheck && currentZ >= watchForZ[0]['height'] && currentZ != null){
+          spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
+          watchForZ.splice(0,1);
+          document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+        }
       }
+      currentZ = e.data.current.currentZ;
+      document.getElementById('currentZ').innerHTML = currentZ;
+      if (e.data.current.progress.completion !== null){
+        document.getElementById('progressBar').style.width = e.data.current.progress.completion.toFixed()+'%';
+        document.getElementById('progressText').innerHTML = e.data.current.progress.completion.toFixed(2)+'% Complete';
+      }
+      document.getElementById('currentPrintTime').innerHTML = humanTime(e.data.current.progress.printTime);
+      document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
     }
-    currentZ = e.data.current.currentZ;
-    document.getElementById('currentZ').innerHTML = currentZ;
-    if (e.data.current.progress.completion !== null){
-      document.getElementById('progressBar').style.width = e.data.current.progress.completion.toFixed()+'%';
-      document.getElementById('progressText').innerHTML = e.data.current.progress.completion.toFixed(2)+'% Complete';
-    }
-    document.getElementById('currentPrintTime').innerHTML = humanTime(e.data.current.progress.printTime);
-    document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
+
     //watch for Log actions
     if(watchLogFor.length > 0){
       for(var i in watchLogFor){
@@ -198,6 +202,12 @@ function spottedLog(key, log){
       delete watchLogFor[key]; watchLogFor.length--;
       connectPrinter("disconnect");
       reconnect = true;
+      break;
+
+    case "burninPrinterMenu": // Refresh the burnin printer menu and hide the overlay
+      delete watchLogFor[key]; watchLogFor.length--;
+      hideOverlay();
+      burninPrinterMenu();
       break;
 
     case "X": // Logging return extruder position
@@ -1392,7 +1402,7 @@ function flashFirmware(){
 
   if(burninPrinter != "null"){
     showOverlay("Flashing Firmware");
-    watchLogFor["hideOverlay"] = "Operational"; watchLogFor.length++;
+    watchLogFor["burninPrinterMenu"] = "Operational"; watchLogFor.length++;
     $.ajax({
       url: "include/f.php?c=flash&printer="+burninPrinter,
       type: "get",
@@ -1403,6 +1413,7 @@ function flashFirmware(){
 
 function burninPrinterMenu(){
 
+  connectPrinter("disconnect");
   var mainHTML = "Select Printer:<br>";
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv3\")'>Rostock Max V3</a><br>";
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv2\")'>Rostock Max V2</a><br>";
@@ -1416,11 +1427,10 @@ function burninPrinterMenu(){
 
 function burninMenu(){
 
-  connectPrinter("disconnect");
   var mainHTML = "<b>"+burninPrinter+"</b><br><a onclick='flashFirmware()'>Flash Firmware</a><br><br>";
   if(printerStatus == "Operational"){
-    mainHTML = mainHTML + "Calibrate Printer<br><br>";
-    mainHTML = mainHTML + "DC42 Calibration<br><br>";
+    mainHTML = mainHTML + "<a onclick='calibratePrinter()'>Calibrate Printer</a><br><br>";
+    mainHTML = mainHTML + "<a onclick='deltaCalibration()'>DC42 Calibration</a><br><br>";
     mainHTML = mainHTML + "Test Print<br><br>";
   }else{
     mainHTML = mainHTML + "Connect to Printer<br><br>";
