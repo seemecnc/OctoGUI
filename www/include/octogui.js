@@ -757,6 +757,7 @@ function updateConnectionStatus(){
           watchLogFor.length++;
           sendCommand("M115");
           missingFW = 0;
+          if(!(GUI)){ burninMenu(); }
         }
         else{ //In case the M115 command gets lost in the shuffle
           if(typeof watchLogFor['filamentInfo'] !== 'undefined' && printerStatus == "Operational" && missingFW < 3){
