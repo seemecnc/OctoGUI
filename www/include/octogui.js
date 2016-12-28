@@ -207,7 +207,6 @@ function spottedLog(key, log){
     case "burninPrinterMenu": // Refresh the burnin printer menu and hide the overlay
       delete watchLogFor[key]; watchLogFor.length--;
       hideOverlay();
-      burninPrinterMenu();
       break;
 
     case "X": // Logging return extruder position
@@ -1385,6 +1384,7 @@ function startupTasks(page){
 
     case "burnin":
       burninPrinterMenu();
+      getClientIP();
       break;
 
   }
@@ -1406,7 +1406,7 @@ function flashFirmware(){
 
   if(burninPrinter != "null"){
     showOverlay("Flashing Firmware");
-    watchLogFor["burninPrinterMenu"] = "Operational"; watchLogFor.length++;
+    watchLogFor["burninPrinterMenu"] = "to 'Operational"; watchLogFor.length++;
     $.ajax({
       url: "include/f.php?c=flash&printer="+burninPrinter,
       type: "get",
