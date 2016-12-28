@@ -1,2 +1,2 @@
 www-data ALL=(root) NOPASSWD: /var/www/html/OctoGUI/scripts/network-setup.sh
-www-data ALL=(root) NOPASSWD: /usr/local/bin/hub-ctrl
+www-data ALL=(pi) NOPASSWD: /var/www/html/OctoGUI/scripts/fw-wrapper.sh

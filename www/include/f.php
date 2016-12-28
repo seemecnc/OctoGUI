@@ -123,10 +123,12 @@ function backupCalibration($commands){
 
 function flashFirmware($printer){
 
-  $fwpath = "/var/www/html/Firmware/Repetier Firmware";
-  if(file_exists($fwpath."/".$printer)){
-    $cmd = "DISPLAY=:0.0 /usr/bin/lxterminal -e '/var/www/html/OctoGUI/scripts/firmware-update.sh \"".$fwpath."/".$printer."\"'";
-    echo $cmd;
+  $fwpath = "/var/www/html/fw";
+  $file = $fwpath."/".$printer.".hex";
+  if(file_exists($file)){
+    echo "OK";
+    $cmd = "sudo -u pi /var/www/html/OctoGUI/scripts/fw-wrapper.sh $file";
+    echo shell_exec($cmd);
   }
 }
 
