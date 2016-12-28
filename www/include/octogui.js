@@ -58,6 +58,7 @@ calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400"
 calibrateString['orion'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
 calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
 calibrateString['hacker_h2'] = "G29";
+calibrateString['rostock_max_v2'] = "G29";
 
 // GCODE to Load filament
 var loadFilamentString = [];
@@ -270,8 +271,10 @@ function spottedLog(key, log){
 
     case "filamentInfo": // Update amount of filament used
       missingFW = 0;
-      document.getElementById('filamentInfo').style.visibility = "visible";
-      document.getElementById('filamentInfo').innerHTML = log;
+      if(GUI){
+        document.getElementById('filamentInfo').style.visibility = "visible";
+        document.getElementById('filamentInfo').innerHTML = log;
+      }
       delete watchLogFor[key]; watchLogFor.length--;
       break;
 
@@ -1365,7 +1368,13 @@ function startupTasks(page){
       break;
 
     case "burnin":
-      var mainHTML = "LOADED";
+      var mainHTML = "Select Printer:<br>";
+      mainHTML = mainHTML + "<a onclick='burninPrinter(\"rostockv3\")'>Rostock Max V3</a><br>";
+      mainHTML = mainHTML + "<a onclick='burninPrinter(\"rostockv2\")'>Rostock Max V2</a><br>";
+      mainHTML = mainHTML + "<a onclick='burninPrinter(\"orion\")'>Orion</a><br>";
+      mainHTML = mainHTML + "<a onclick='burninPrinter(\"orion-atx\")'>Orion ATX</a><br>";
+      mainHTML = mainHTML + "<a onclick='burninPrinter(\"eris\")'>Eris</a><br>";
+      mainHTML = mainHTML + "<a onclick='burninPrinter(\"h2\")'>Hacker H2</a><br>";
       document.getElementById('main').innerHTML = mainHTML;
       break;
 
