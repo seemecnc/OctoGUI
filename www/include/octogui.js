@@ -461,19 +461,33 @@ function spottedLog(key, log){
 }
 
 function deltaCalibration(){
-  showOverlay("Loading current settings from EEProm");
-  loadProbePoints();
-  EEProm = [];
-  watchLogFor["loadEEProm"] = "Recv: EPR:"; watchLogFor.length++;
-  sendCommand("M205");
+  if(printerStatus == "Operational"){
+    showOverlay("Loading current settings from EEProm");
+    loadProbePoints();
+    EEProm = [];
+    watchLogFor["loadEEProm"] = "Recv: EPR:"; watchLogFor.length++;
+    sendCommand("M205");
+  }else{
+    bootbox.alert({
+      message: "You cannot calibrate when printer is in state: " + printerStatus,
+      backdrop: true
+    });
+  }
 }
 
 function backupCalibration(){
 
-  showOverlay("Backing up EEProm (calibration)");
-  EEProm = [];
-  watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
-  sendCommand("M205");
+  if(printerStatus == "Operational"){
+    showOverlay("Backing up EEProm (calibration)");
+    EEProm = [];
+    watchLogFor["backupEEProm"] = "Recv: EPR:"; watchLogFor.length++;
+    sendCommand("M205");
+  }else{
+    bootbox.alert({
+      message: "You cannot backup EEProm when printer is in state: " + printerStatus,
+      backdrop: true
+    });
+  }
 
 }
 
