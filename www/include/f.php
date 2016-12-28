@@ -121,6 +121,15 @@ function backupCalibration($commands){
 
 }
 
+function flashFirmware($printer){
+
+  $fwpath = "/var/www/html/Firmware/Repetier Firmware";
+  if(file_exists($fwpath."/".$printer)){
+    $cmd = "DISPLAY=:0.0 /usr/bin/lxterminal -e '/var/www/html/OctoGUI/scripts/firmware-update.sh \"".$fwpath."/".$printer."\"'";
+    echo $cmd;
+  }
+}
+
 switch($_REQUEST['c']){
 
   case "backupcalibration":
@@ -156,6 +165,12 @@ switch($_REQUEST['c']){
   case "network":
     changeNetworkSettings($_REQUEST["ssid"],$_REQUEST["pw"]);
     echo "{\"status\":1}";
+    break;
+
+  case "flash":
+    if(isset($_REQUEST['printer'])){
+      flashFirmware($_REQUEST['printer']);
+    }
     break;
 
 }

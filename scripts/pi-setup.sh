@@ -94,6 +94,16 @@ then
 fi
 chown -R pi:pi /var/www/html/OctoGUI
 
+#Clone Firmware from git if it's not already there
+if [ ! -d /var/www/html/Firmware ]
+then
+  cd /var/www/html
+  git clone https://github.com/seemecnc/Firmware
+else
+  cd /var/www/html/Firmware
+  git pull
+fi
+
 osfiles="refresh-chromium.sh:/home/pi/refresh-chromium.sh ucheck.sh:/home/pi/ucheck.sh default:/etc/nginx/sites-available/default start.sh:/home/pi/start.sh firmware-update.sh:/home/pi/firmware-update.sh"
 osfiles="$osfiles chromium.desktop:/home/pi/.config/autostart/chromium.desktop usbmount.conf:/etc/usbmount/usbmount.conf haproxy.cfg:/etc/haproxy/haproxy.cfg hub-ctrl:/usr/local/bin/hub-ctrl"
 osfiles="$osfiles sudo-octogui:/etc/sudoers.d/octogui"
