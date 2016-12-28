@@ -9,7 +9,12 @@ DISPLAY=:0.0 /usr/bin/xset s off
 DISPLAY=:0.0 /usr/bin/xset -dpms
 DISPLAY=:0.0 /usr/bin/xset s noblank
 DISPLAY=:0.0 /usr/bin/unclutter -idle 0.1 &
-DISPLAY=:0.0 /usr/bin/chromium-browser --kiosk http://localhost/seeme/ --fullscreen 2> /dev/null &
+if [ -f /home/pi/BURNIN ]
+then
+  DISPLAY=:0.0 /usr/bin/chromium-browser --kiosk http://localhost/seeme/OctoGUI/www/burnin.html --fullscreen 2> /dev/null &
+else
+  DISPLAY=:0.0 /usr/bin/chromium-browser --kiosk http://localhost/seeme/ --fullscreen 2> /dev/null &
+fi
 cd /var/www/html/OctoGUI
 res=$(git pull)
 check=$(echo "$res"|grep "up-to-date" -i)
