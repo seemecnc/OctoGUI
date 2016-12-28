@@ -1419,12 +1419,12 @@ function burninPrinterMenu(){
 
   connectPrinter("disconnect");
   var mainHTML = "Select Printer:<br>";
-  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv3\")'>Rostock Max V3</a><br>";
-  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv2\")'>Rostock Max V2</a><br>";
-  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion\")'>Orion</a><br>";
-  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion-atx\")'>Orion ATX</a><br>";
-  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"eris\")'>Eris</a><br>";
-  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv3\")'>Rostock Max V3</a> - - ";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv2\")'>Rostock Max V2</a><br><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion\")'>Orion</a> - - ";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion-atx\")'>Orion ATX</a><br><br>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"eris\")'>Eris</a> - - ";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a>";
   document.getElementById('main').innerHTML = mainHTML;
 
 }
@@ -1439,7 +1439,7 @@ function burninMenu(){
   }else{
     mainHTML = mainHTML + "<a onclick='connectPrinter(\"connect\")'>Connect to Printer</a><br><br>";
   }
-  mainHTML = mainHTML + "<a onclick='burninPrinterMenu()'>Change Printer</a>";
+  mainHTML = mainHTML + "<a onclick='burninPrinterMenu()'>Change Printer</a> - - <a onclick='location.reload()'>Reset</a>";
   document.getElementById('main').innerHTML = mainHTML;
 
 }
