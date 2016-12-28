@@ -40,7 +40,7 @@ var firmwareDate = 0;      // Release date of the current firmware
 var missingFW = 0;
 var EEProm;
 var backupCalibrationPresent = false;
-var burninPrinter;
+var burninPrinter = null;
 
 var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
@@ -1388,6 +1388,19 @@ function startupTasks(page){
   } );
 }
 
+function flashFirmware(){
+
+  if(burninPrinter != "null"){
+    showOverlay("Flashing Firmware");
+    watchLogFor["hideOverlay"] = "Operational"; watchLogFor.length++;
+    $.ajax({
+      url: "include/f.php?c=flash&printer="+burninPrinter,
+      type: "get",
+    });
+  }
+
+}
+
 function burninPrinterMenu(){
 
   var mainHTML = "Select Printer:<br>";
@@ -1403,7 +1416,8 @@ function burninPrinterMenu(){
 
 function burninMenu(){
 
-  var mainHTML = "<b>"+burninPrinter+"</b><br>Flash Firmware<br><br>";
+  connectPrinter("disconnect");
+  var mainHTML = "<b>"+burninPrinter+"</b><br><a onclick='flashFirmware()'>Flash Firmware</a><br><br>";
   if(printerStatus == "Operational"){
     mainHTML = mainHTML + "Calibrate Printer<br><br>";
     mainHTML = mainHTML + "DC42 Calibration<br><br>";
