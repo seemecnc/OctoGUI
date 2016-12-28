@@ -40,6 +40,8 @@ var firmwareDate = 0;      // Release date of the current firmware
 var missingFW = 0;
 var EEProm;
 var backupCalibrationPresent = false;
+var burninPrinter;
+
 var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
 else{ GUI = true; }
@@ -1369,12 +1371,12 @@ function startupTasks(page){
 
     case "burnin":
       var mainHTML = "Select Printer:<br>";
-      mainHTML = mainHTML + "<a onclick='burninPrinter(\"rostockv3\")'>Rostock Max V3</a><br>";
-      mainHTML = mainHTML + "<a onclick='burninPrinter(\"rostockv2\")'>Rostock Max V2</a><br>";
-      mainHTML = mainHTML + "<a onclick='burninPrinter(\"orion\")'>Orion</a><br>";
-      mainHTML = mainHTML + "<a onclick='burninPrinter(\"orion-atx\")'>Orion ATX</a><br>";
-      mainHTML = mainHTML + "<a onclick='burninPrinter(\"eris\")'>Eris</a><br>";
-      mainHTML = mainHTML + "<a onclick='burninPrinter(\"h2\")'>Hacker H2</a><br>";
+      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv3\")'>Rostock Max V3</a><br>";
+      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"rostockv2\")'>Rostock Max V2</a><br>";
+      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion\")'>Orion</a><br>";
+      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion-atx\")'>Orion ATX</a><br>";
+      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"eris\")'>Eris</a><br>";
+      mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a><br>";
       document.getElementById('main').innerHTML = mainHTML;
       break;
 
@@ -1391,6 +1393,27 @@ function startupTasks(page){
     lengthChange: false,
     fnDrawCallback: function() { $("#eepromTable thead").remove(); }
   } );
+}
+
+function burninMenu(){
+
+  var mainHTML = "Flash Firmware<br><br>";
+  if(printerStatus == "Operational"){
+    mainHTML = mainHTML + "Calibrate Printer<br><br>";
+    mainHTML = mainHTML + "DC42 Calibration<br><br>";
+    mainHTML = mainHTML + "Test Print";
+  }else{
+    mainHTML = mainHTML + "Connect to Printer";
+  }
+  document.getElementById('main').innerHTML = mainHTML;
+
+}
+
+function setBurninPrinter(bPrinter){
+
+  burninPrinter = bPrinter;
+  burninMenu();
+
 }
 
 function saveZMenu(){
