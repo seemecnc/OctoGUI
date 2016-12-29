@@ -22,5 +22,24 @@ if [ -z "$check" ]
 then
     sudo bash /var/www/html/OctoGUI/scripts/pi-setup.sh
 fi
+
+if [ -f /home/pi/BURNIN ]
+then
+  cd /var/www/html/OctoGUI/scripts
+  for file in *gcode
+  do
+    if [ -f /home/pi/.octoprint/uploads/$file ]
+    then
+      check=$(diff $file /home/pi/.octoprint/uploads/$file)
+      if [ -n "$check" ]
+      then
+        cp -f $file /home/pi/.octoprint/uploads/$file
+      fi
+    else
+      cp $file /home/pi/.octoprint/uploads/$file
+    fi
+  done
+fi
+
 sleep 15
 DISPLAY=:0.0 xdotool key ctrl+F5

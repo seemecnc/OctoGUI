@@ -1429,13 +1429,52 @@ function burninPrinterMenu(){
 
 }
 
+function burninTestPrint(){
+
+  var OK = false;
+  switch(burninPrinter){
+
+    case "rostockv3":
+      selectFile("local/rostock.gcode",true);
+      OK = true;
+      break;
+
+    case "rostockv2":
+      selectFile("local/rostock.gcode",true);
+      OK = true;
+      break;
+
+    case "orion":
+      selectFile("local/orion.gcode",true);
+      OK = true;
+      break;
+
+    case "eris":
+      selectFile("local/eris.gcode",true);
+      OK = true;
+      break;
+
+    case "h2":
+      selectFile("local/h2.gcode",true);
+      OK = true;
+      break;
+
+  }
+
+  if(OK){
+    watchLogFor["burninPrinterMenu"] = "to 'Operational"; watchLogFor.length++;
+    showOverlay("Printing Calibration Circle");
+  }
+
+}
+
 function burninMenu(){
 
   var mainHTML = "<b>"+burninPrinter+"</b><br><a onclick='flashFirmware()'>Flash Firmware</a><br><br>";
   if(printerStatus == "Operational"){
     mainHTML = mainHTML + "<a onclick='calibratePrinter()'>Calibrate Printer</a><br><br>";
     mainHTML = mainHTML + "<a onclick='deltaCalibration()'>DC42 Calibration</a><br><br>";
-    mainHTML = mainHTML + "Test Print<br><br>";
+    mainHTML = mainHTML + "<a onclick='burninTestPrint()'>Test Print</a><br><br>";
   }else{
     mainHTML = mainHTML + "<a onclick='connectPrinter(\"connect\")'>Connect to Printer</a><br><br>";
   }
