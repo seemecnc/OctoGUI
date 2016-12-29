@@ -1463,7 +1463,7 @@ function burninTestPrint(){
 
   if(OK){
     watchLogFor["burninPrinterMenu"] = "to 'Operational"; watchLogFor.length++;
-    showOverlay("Printing Calibration Circle");
+    showOverlay("Printing Calibration Circle<br><br><a onclick='printCommand(\"cancel\")'>Cancel Print job</a>");
   }
 
 }
