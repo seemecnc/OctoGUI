@@ -355,6 +355,19 @@ function spottedLog(key, log){
           EEProm.push("M206 T3 P153 X" + bits[2]);
           break;
 
+        case "3925": // Max Printable Radius
+          EEProm.push("M206 T3 P925 X" + bits[2]);
+          break;
+
+        case "3808": // Z-probe Offset
+          EEprom.push("M206 T3 P808 X" + bits[2]);
+          break;
+
+        case "0230": // Extr Max PID
+          EEprom.push("M206 T0 P230 S" + bits[2]);
+          break;
+
+
         case "3246": // Last EEProm value
           EEProm.push("M500");
           EEProm.push("M117 Calibration Restored");
