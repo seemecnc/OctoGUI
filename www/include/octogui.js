@@ -1,6 +1,7 @@
 var minOverlayTime = 2000; // Minimum time to show the Overlay w/ message
 
-var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
+//var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
+var sock;
 var api = "http://" + window.location.host + "/api/";
 var apikey = "ABAABABB";
 var printerStatus = "Checking...";
@@ -107,6 +108,20 @@ function isFloat(n){
   //return Number(n) === n && n % 1 !== 0;
 }
 
+function resetSocket(){
+
+  console.log("Closing socket");
+  var status = sock.close();
+  console.log("Opening Socket");
+  initSocket();
+  console.log("Socket Opened");
+  
+}
+
+
+function initSocket(){
+
+sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
 // SockJS info from Octoprint
 sock.onopen = function(){
 
@@ -125,6 +140,7 @@ sock.onopen = function(){
 
 }
 
+
 // SockJS message handling
 sock.onmessage = function(e) {
 
@@ -132,6 +148,7 @@ sock.onmessage = function(e) {
   if (typeof e.data.current !== 'undefined'){
     var t;
     lastMessage = new Date().valueOf();
+    console.log("Message at: " + lastMessage);
 
     if(GUI){
       if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
@@ -164,6 +181,8 @@ sock.onmessage = function(e) {
     }
   }
 };
+
+}
 
 // Actions to take when Z height is hit
 function spottedZ(action,arg){
@@ -1638,3 +1657,4 @@ $.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass(
 //Update status every second
 window.setInterval( function(){ updateStatus(); }, 1000);
 
+initSocket();
