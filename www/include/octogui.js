@@ -47,6 +47,13 @@ var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
 else{ GUI = true; }
 
+// Online states
+var onlineStates = [];
+onlineStates.push("Operational");
+onlineStates.push("Paused");
+onlineStates.push("Printing from SD");
+onlineStates.push("Printing");
+
 // Z Events
 var zEvents = [];
 zEvents.push({ "command":"Filament", "label":"Change Filament" });
@@ -775,6 +782,16 @@ function updateConnectionStatus(){
               document.getElementById('loadFilament').style.visibility = "hidden";
               document.getElementById('unloadFilament').style.visibility = "hidden";
               document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+            }
+          }
+          if(onlineStates.indexOf(printerStatus) != -1){
+            if(lastMessage > 0 && lastMessage + (1 * 60 * 1000) <= (new Date().valueOf())){
+              lastMessage = 0;
+              resetSocket();
+              bootbox.alert({
+                message: "Octoprint Socket has been reset! - Tell Ryan",
+                backdrop: true
+              });
             }
           }
         }
