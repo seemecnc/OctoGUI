@@ -1,6 +1,5 @@
 var minOverlayTime = 2000; // Minimum time to show the Overlay w/ message
 
-//var sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
 var sock;
 var api = "http://" + window.location.host + "/api/";
 var apikey = "ABAABABB";
@@ -115,72 +114,71 @@ function resetSocket(){
   console.log("Opening Socket");
   initSocket();
   console.log("Socket Opened");
-  
+
 }
 
 
 function initSocket(){
 
-sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
-// SockJS info from Octoprint
-sock.onopen = function(){
+  sock = new SockJS('http://' + window.location.host + '/sockjs?apikey='+apikey);
 
-  //Slow down the update frequency to 1hz
-  sock.send( JSON.stringify({"throttle": 2} ));
+  // SockJS info from Octoprint
+  sock.onopen = function(){
 
-  //Ask for M115 info on status change
-  if(typeof watchLogFor['filamentInfo'] == 'undefined' && printerStatus != "Closed" && printerStatus != "Connecting" && printerStatus != "Detecting serial port"){
-    watchLogFor['firmwareInfo'] = "FIRMWARE";
-    watchLogFor.length++;
-    watchLogFor['filamentInfo'] = "Printed filament";
-    watchLogFor.length++;
-    missingFW = 0;
-    sendCommand("M115");
-  }
+    //Slow down the update frequency to 1hz
+    sock.send( JSON.stringify({"throttle": 2} ));
 
-}
-
-
-// SockJS message handling
-sock.onmessage = function(e) {
-
-  //Only process "current" messages
-  if (typeof e.data.current !== 'undefined'){
-    var t;
-    lastMessage = new Date().valueOf();
-    console.log("Message at: " + lastMessage);
-
-    if(GUI){
-      if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
-      else{ currentZCount = 0; }
-      //watch for Z height actions
-      if(typeof watchForZ[0] !== 'undefined'){
-        if(printerStatus == "Printing" && currentZCount >= zHopCheck && currentZ >= watchForZ[0]['height'] && currentZ != null){
-          spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
-          watchForZ.splice(0,1);
-          document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
-        }
-      }
-      currentZ = e.data.current.currentZ;
-      document.getElementById('currentZ').innerHTML = currentZ;
-      if (e.data.current.progress.completion !== null){
-        document.getElementById('progressBar').style.width = e.data.current.progress.completion.toFixed()+'%';
-        document.getElementById('progressText').innerHTML = e.data.current.progress.completion.toFixed(2)+'% Complete';
-      }
-      document.getElementById('currentPrintTime').innerHTML = humanTime(e.data.current.progress.printTime);
-      document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
+    //Ask for M115 info on status change
+    if(typeof watchLogFor['filamentInfo'] == 'undefined' && printerStatus != "Closed" && printerStatus != "Connecting" && printerStatus != "Detecting serial port"){
+      watchLogFor['firmwareInfo'] = "FIRMWARE";
+      watchLogFor.length++;
+      watchLogFor['filamentInfo'] = "Printed filament";
+      watchLogFor.length++;
+      missingFW = 0;
+      sendCommand("M115");
     }
 
-    //watch for Log actions
-    if(watchLogFor.length > 0){
-      for(var i in watchLogFor){
-        for(var l in e.data.current.logs){
-          if(t = e.data.current.logs[l].includes(watchLogFor[i])){ spottedLog(i, e.data.current.logs[l]); }
+  }
+
+  // SockJS message handling
+  sock.onmessage = function(e) {
+
+    //Only process "current" messages
+    if (typeof e.data.current !== 'undefined'){
+      var t;
+      lastMessage = new Date().valueOf();
+
+      if(GUI){
+        if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
+        else{ currentZCount = 0; }
+        //watch for Z height actions
+        if(typeof watchForZ[0] !== 'undefined'){
+          if(printerStatus == "Printing" && currentZCount >= zHopCheck && currentZ >= watchForZ[0]['height'] && currentZ != null){
+            spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
+            watchForZ.splice(0,1);
+            document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+          }
+        }
+        currentZ = e.data.current.currentZ;
+        document.getElementById('currentZ').innerHTML = currentZ;
+        if (e.data.current.progress.completion !== null){
+          document.getElementById('progressBar').style.width = e.data.current.progress.completion.toFixed()+'%';
+          document.getElementById('progressText').innerHTML = e.data.current.progress.completion.toFixed(2)+'% Complete';
+        }
+        document.getElementById('currentPrintTime').innerHTML = humanTime(e.data.current.progress.printTime);
+        document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
+      }
+
+      //watch for Log actions
+      if(watchLogFor.length > 0){
+        for(var i in watchLogFor){
+          for(var l in e.data.current.logs){
+            if(t = e.data.current.logs[l].includes(watchLogFor[i])){ spottedLog(i, e.data.current.logs[l]); }
+          }
         }
       }
     }
-  }
-};
+  };
 
 }
 
@@ -1657,4 +1655,6 @@ $.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass(
 //Update status every second
 window.setInterval( function(){ updateStatus(); }, 1000);
 
+//Initialize Octoprint SockJS connection
 initSocket();
+
