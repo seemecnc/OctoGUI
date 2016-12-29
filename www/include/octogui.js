@@ -41,6 +41,7 @@ var missingFW = 0;
 var EEProm;
 var backupCalibrationPresent = false;
 var burninPrinter = null;
+var lastMessage = 0;
 
 var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
@@ -130,6 +131,7 @@ sock.onmessage = function(e) {
   //Only process "current" messages
   if (typeof e.data.current !== 'undefined'){
     var t;
+    lastMessage = new Date().valueOf();
 
     if(GUI){
       if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
@@ -366,7 +368,6 @@ function spottedLog(key, log){
         case "0230": // Extr Max PID
           EEprom.push("M206 T0 P230 S" + bits[2]);
           break;
-
 
         case "3246": // Last EEProm value
           EEProm.push("M500");
