@@ -174,6 +174,22 @@ function initSocket(){
         }
         document.getElementById('currentPrintTime').innerHTML = humanTime(e.data.current.progress.printTime);
         document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
+
+        if(typeof e.data.current.temps[0] !== 'undefined'){
+          console.log(e.data.current.temps);
+          etemp = e.data.current.temps[0].tool0.actual;
+          etempTarget = e.data.current.temps[0].tool0.target;
+          if(typeof e.data.current.temps[0].bed !== 'undefined'){
+            btemp = e.data.current.temps[0].bed.actual;
+            btempTarget = e.data.current.temps[0].bed.target;
+            document.getElementById('bedTemp').innerHTML = btemp;
+            document.getElementById('bedTempTarget').innerHTML = btempTarget;
+            document.getElementById('bTempInput').value = btempTarget;
+          }
+          document.getElementById('extruderTemp').innerHTML = etemp;
+          document.getElementById('extruderTempTarget').innerHTML = etempTarget;
+          document.getElementById('eTempInput').value = etempTarget;
+        }
       }
 
       //watch for Log actions
@@ -386,11 +402,11 @@ function spottedLog(key, log){
           break;
 
         case "3808": // Z-probe Offset
-          EEprom.push("M206 T3 P808 X" + bits[2]);
+          EEProm.push("M206 T3 P808 X" + bits[2]);
           break;
 
         case "0230": // Extr Max PID
-          EEprom.push("M206 T0 P230 S" + bits[2]);
+          EEProm.push("M206 T0 P230 S" + bits[2]);
           break;
 
         case "3246": // Last EEProm value
@@ -856,14 +872,14 @@ function updateStatus(){
             updateJobStatus();
           }else{
             updateConnectionStatus();
-            etemp = "--";
-            btemp = "--";
+            //etemp = "--";
+            //btemp = "--";
           }
         })
       });
     }else{
-      etemp = "--";
-      btemp = "--";
+      //etemp = "--";
+      //btemp = "--";
     }
     document.getElementById('extruderTemp').innerHTML = etemp;
     document.getElementById('bedTemp').innerHTML = btemp;
