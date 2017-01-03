@@ -9,4 +9,12 @@ if [ "$res" != "Printer is not operational" ]; then status=$(echo "$res"|jq .sta
   if [ "$status" != "Operational" -a -z "$check" ]; then problem="Status: $status"; fi
 fi
 
-if [ "$problem" == "null" ]; then sudo /sbin/shutdown -r now; fi
+if [ "$problem" == "null" ]
+then
+  if [ -f /home/pi/NOGUI ]
+  then
+    sudo service octoprint restart
+  else
+    sudo /sbin/shutdown -r now
+  fi
+fi
