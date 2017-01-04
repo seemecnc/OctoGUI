@@ -1355,9 +1355,9 @@ function startupTasks(page){
                 callback: function (result) {
                   if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
                     switch(r){
-                      case "1": selectFile("local/" + name); break;
+                      case "1": selectFile(origin + "/" + name); break;
                       case "2":
-                        selectFile("local/" + name,true);
+                        selectFile(origin + "/" + name,true);
                         watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
                         showOverlay("Preparing to Print:\n" + name);
                         break;
@@ -1378,9 +1378,9 @@ function startupTasks(page){
                 callback: function (result) {
                   if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
                     switch(r){
-                      case "1": selectFile("local/" + name); break;
+                      case "1": selectFile(origin + "/" + name); break;
                       case "2":
-                        selectFile("local/" + name,true);
+                        selectFile(origin + "/" + name,true);
                         watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
                         showOverlay("Preparing to Print:\n" + name);
                         break;
