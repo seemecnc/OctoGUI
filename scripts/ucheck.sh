@@ -14,6 +14,13 @@ then
   if [ -f /home/pi/NOGUI ]
   then
     sudo service octoprint restart
+    cd /var/www/html/OctoGUI
+    res=$(git pull)
+    check=$(echo "$res"|grep "up-to-date" -i)
+    if [ -z "$check" ]
+    then
+      sudo bash /var/www/html/OctoGUI/scripts/pi-setup.sh
+    fi
   else
     sudo /sbin/shutdown -r now
   fi
