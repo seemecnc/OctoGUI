@@ -1369,7 +1369,25 @@ function startupTasks(page){
             });
             break;
           case "sdcard":
-            selectFile(origin + "/" + name);
+            bootbox.prompt({
+              title: name,
+              inputType: 'checkbox',
+              inputOptions: [
+                { text: 'Load ' + name + ' for printing', value: '1' },
+                { text: 'Print ' + name + ' now', value: '2' }],
+                callback: function (result) {
+                  if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
+                    switch(r){
+                      case "1": selectFile("local/" + name); break;
+                      case "2":
+                        selectFile("local/" + name,true);
+                        watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
+                        showOverlay("Preparing to Print:\n" + name);
+                        break;
+                    }
+                  }); }
+                }
+            });
             break;
           case "usb":
             bootbox.prompt({
