@@ -248,6 +248,7 @@ function spottedLog(key, log){
 
     case "burninPrinterMenu": // Refresh the burnin printer menu and hide the overlay
       delete watchLogFor[key]; watchLogFor.length--;
+      disableSteppers();
       hideOverlay();
       break;
 
