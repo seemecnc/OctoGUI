@@ -174,7 +174,7 @@ switch($_REQUEST['c']){
       flashFirmware($_REQUEST['printer']);
     }
     break;
-
+/*
   case "connect":
     $ch = curl_init();
     $post = array('command' => "connect","baudrate" => 250000,"port" => printerPort());
@@ -184,7 +184,7 @@ switch($_REQUEST['c']){
     curl_setopt($ch, CURLOPT_URL,'http://localhost/api/connection?apikey='.$apikey);
     curl_exec($ch);
     break;
-
+ */
 }
 
 ?>
