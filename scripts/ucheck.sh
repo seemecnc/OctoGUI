@@ -21,6 +21,8 @@ then
     then
       sudo bash /var/www/html/OctoGUI/scripts/pi-setup.sh
     fi
+    cd /var/www/html/fw
+    git pull
   else
     sudo /sbin/shutdown -r now
   fi

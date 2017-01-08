@@ -9,6 +9,8 @@ then
   then
     sudo bash /var/www/html/OctoGUI/scripts/pi-setup.sh
   fi
+  cd /var/www/html/fw
+  git pull
 else
   if [ -f /home/pi/chromium.tar.gz -a ! -d /tmp/chromium ]
   then
@@ -33,6 +35,8 @@ else
   then
     sudo bash /var/www/html/OctoGUI/scripts/pi-setup.sh
   fi
+  cd /var/www/html/fw
+  git pull
 
   if [ -f /home/pi/BURNIN ]
   then
@@ -52,7 +56,7 @@ else
     done
   fi
 
-  sleep 15
+  sleep 10
   DISPLAY=:0.0 xdotool key ctrl+F5
 
 fi
