@@ -1024,6 +1024,12 @@ function deleteFile(origin, file){
 
 // Refreshes the fileList table - keeps current page if provided
 function updateFiles(page){
+  $.ajax({
+    url: api+"printer/sd?apikey="+apikey,
+    type: "post",
+    contentType:"application/json; charset=utf-8",
+    data: JSON.stringify({"command":"refresh"})
+  });
   page = page || 0;
   $.ajax({
     url: "include/f.php?c=list",
