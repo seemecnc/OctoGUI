@@ -177,7 +177,7 @@ switch($_REQUEST['c']){
 
   case "connect":
     $ch = curl_init();
-    $post = array('command': "connect","baudrate": 250000,"port":printerPort());
+    $post = array('command' => "connect","baudrate" => 250000,"port" => printerPort());
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST,1);
     curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
