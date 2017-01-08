@@ -174,17 +174,18 @@ switch($_REQUEST['c']){
       flashFirmware($_REQUEST['printer']);
     }
     break;
-/*
+
   case "connect":
     $ch = curl_init();
     $post = array('command' => "connect","baudrate" => 250000,"port" => printerPort());
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($post));
     curl_setopt($ch, CURLOPT_URL,'http://localhost/api/connection?apikey='.$apikey);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
     curl_exec($ch);
     break;
- */
+
 }
 
 ?>
