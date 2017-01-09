@@ -1147,7 +1147,6 @@ function resumeHotLoad(){
     if(returnX != null && returnY != null){
       sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E12", "G92 E" + returnE ] );
     }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E12", "G92 E" + returnE ] ); }
-    document.getElementById('hotLoad').style.visibility = "hidden";
     hotLoading = false;
     liftOnly = false;
     returnE = 0;
@@ -1297,7 +1296,7 @@ function pauseUnload(){
       sendCommand("G28");
       if(!(liftOnly)){ sendCommand(hotUnloadString[printerId]); }
       document.getElementById('hotUnload').style.visibility = "hidden";
-      document.getElementById('hotLoad').style.visibility = "visible";
+      showOverlay("Filament unloading.<br>Load new filament an inch past the extruder,<br> then <a onclick='playLoad()'>CLICK HERE</a> to finish.");
       pauseTimeout = new Date().valueOf();
     }else{ alert("Error. Last extruder position not found. Please Resume your print, then pause to try again."); }
   }else{ alert("pauseUnload criteria not met! " + printerStatus + " Z:" + currentZ + "/" + maxZHeight); }
