@@ -1305,6 +1305,7 @@ function pauseUnload(){
 // Load filament after changing mid print, heating nozzel if necissary
 function playLoad(){
   var c = hotLoadString[printerId];
+  hideOverlay();
   if(printerStatus == "Paused" && typeof hotLoadString[printerId] !== 'undefined'){
     if(pauseTemp > 0){
       console.log("Heating extruder before loading filament");
