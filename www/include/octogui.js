@@ -183,7 +183,6 @@ function initSocket(){
         document.getElementById('currentPrintTimeLeft').innerHTML = humanTime(e.data.current.progress.printTimeLeft);
 
         if(typeof e.data.current.temps[0] !== 'undefined'){
-          console.log(e.data.current.temps);
           etemp = e.data.current.temps[0].tool0.actual;
           etempTarget = e.data.current.temps[0].tool0.target;
           if(typeof e.data.current.temps[0].bed !== 'undefined'){
