@@ -164,7 +164,7 @@ function initSocket(){
       if(GUI){
         //watch for Z height actions
         if(typeof watchForZ[0] !== 'undefined'){
-          if(printerStatus == "Printing" && currentZCount >= zHopCheck && currentZ >= watchForZ[0]['height'] && currentZ != null){
+          if(printerStatus == "Printing" && currentZ >= watchForZ[0]['height'] && currentZ != null){
             if(currentZCount >= zHopCheck){
             spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
             watchForZ.splice(0,1);
