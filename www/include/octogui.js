@@ -42,6 +42,8 @@ var EEProm;
 var backupCalibrationPresent = false;
 var burninPrinter = null;
 var lastMessage = 0;
+var lastFileUpdate = 0;
+var fileUpdate = 0;
 
 var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
@@ -53,6 +55,11 @@ onlineStates.push("Operational");
 onlineStates.push("Paused");
 onlineStates.push("Printing from SD");
 onlineStates.push("Printing");
+
+var printingStates = [];
+printingStates.push("Paused");
+printingStates.push("Printing from SD");
+printingStates.push("Printing");
 
 // Z Events
 var zEvents = [];
@@ -848,6 +855,7 @@ function updateStatus(){
 
   if(GUI){
     //Shut down the hot end if paused too long
+    if(lastFileUpdate + (5 * 60 * 1000) <= (new Date().valueOf())){ updateFiles(); }
     if(printerStatus == "Paused" && pauseTimeout > 0){
       if(pauseTimeout + (5 * 60 * 1000) <= (new Date().valueOf())){
         console.log("Printer paused for too long. Shutting off hot end");
@@ -873,14 +881,10 @@ function updateStatus(){
             updateJobStatus();
           }else{
             updateConnectionStatus();
-            //etemp = "--";
-            //btemp = "--";
           }
         })
       });
     }else{
-      //etemp = "--";
-      //btemp = "--";
     }
     document.getElementById('extruderTemp').innerHTML = etemp;
     document.getElementById('bedTemp').innerHTML = btemp;
@@ -1024,6 +1028,8 @@ function deleteFile(origin, file){
 
 // Refreshes the fileList table - keeps current page if provided
 function updateFiles(page){
+  fileUpdate = 1;
+  lastFileUpdate = new Date().valueOf();
   $.ajax({
     url: api+"printer/sd?apikey="+apikey,
     type: "post",
@@ -1036,6 +1042,7 @@ function updateFiles(page){
     type: "get",
     contentType:"application/json; charset=utf-8",
     complete: (function(data,type){
+      fileUpdate = 0;
       if(type == "success"){
         backupCalibrationPresent = false;
         jdata = JSON.parse(data.responseText);
@@ -1188,17 +1195,19 @@ function printCommand(command){
     else{ c = JSON.stringify({ 'command': command }); }
   }
   if(command == "cancel"){
-    bootbox.confirm("Are you sure you want to cancel the current print job?.", function(result){
-      if(result){
-        showOverlay("Canceling print job");
-        watchLogFor["hideOverlay"] = "Operational"; watchLogFor.length++;
-        $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c, success: (function(){
-          sendCommand("G28");
-          setExtruderTemp(0);
-          if(heatedBed){ setBedTemp(0);
-        } }) });
-      }
-    });
+    if(printingStates.indexOf(printerStatus) != -1){
+      bootbox.confirm("Are you sure you want to cancel the current print job?.", function(result){
+        if(result){
+          showOverlay("Canceling print job");
+          watchLogFor["hideOverlay"] = "Operational"; watchLogFor.length++;
+          $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c, success: (function(){
+            sendCommand("G28");
+            setExtruderTemp(0);
+            if(heatedBed){ setBedTemp(0);
+            } }) });
+        }
+      });
+    }
   }else{
     $.ajax({ url: api+"job?apikey="+apikey, type: "post", contentType:"application/json; charset=utf-8", data: c });
   }
