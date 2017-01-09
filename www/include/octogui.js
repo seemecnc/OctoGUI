@@ -118,7 +118,6 @@ var oldzpos;
 
 function isFloat(n){
   return String(n).includes('.');
-  //return Number(n) === n && n % 1 !== 0;
 }
 
 function resetSocket(){
@@ -163,15 +162,15 @@ function initSocket(){
       lastMessage = new Date().valueOf();
 
       if(GUI){
-        if(currentZ == e.data.current.currentZ && $.isNumeric(e.data.current.currentZ)){ currentZCount++; }
-        else{ currentZCount = 0; }
         //watch for Z height actions
         if(typeof watchForZ[0] !== 'undefined'){
           if(printerStatus == "Printing" && currentZCount >= zHopCheck && currentZ >= watchForZ[0]['height'] && currentZ != null){
+            if(currentZCount >= zHopCheck){
             spottedZ(watchForZ[0]['action'],watchForZ[0]['arg']);
             watchForZ.splice(0,1);
             document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
-          }
+            }else{ currentZCount++; }
+          }else { currentZCount = 0; }
         }
         currentZ = e.data.current.currentZ;
         document.getElementById('currentZ').innerHTML = currentZ;
