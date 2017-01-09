@@ -1358,51 +1358,59 @@ function startupTasks(page){
       $('#filesList tbody').on( 'click', 'tr', function () {
         var origin = this.cells[0].innerHTML;
         var name = this.cells[1].innerHTML;
+        var gcodeOptions;
+        if(onlineStates.indexOf(printerStatus) != -1){
+          gcodeOptions = [
+            { text: 'Load ' + name + ' for printing', value: '1' },
+            { text: 'Print ' + name + ' now', value: '2' },
+            { text: 'Delete ' + name, value: '4' }];
+        }else{
+          gcodeOptions = [
+            { text: 'Delete ' + name, value: '4' }];
+
+        }
+
         switch(origin){
           case "local":
+            gcodeOptions.push({ text: 'Copy ' + name + ' to USB', value: '3' });
             bootbox.prompt({
               title: name,
               inputType: 'checkbox',
-              inputOptions: [
-                { text: 'Load ' + name + ' for printing', value: '1' },
-                { text: 'Print ' + name + ' now', value: '2' },
-                { text: 'Copy ' + name + ' to USB', value: '3' },
-                { text: 'Delete ' + name, value: '4' }],
-                callback: function (result) {
-                  if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
-                    switch(r){
-                      case "1": selectFile(origin + "/" + name); break;
-                      case "2":
-                        selectFile(origin + "/" + name,true);
-                        watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
-                        showOverlay("Preparing to Print:\n" + name);
-                        break;
-                      case "3": copyToUsb(name); break;
-                      case "4": deleteFile(origin, name); break;
-                    }
-                  }); }
-                }
+              inputOptions: gcodeOptions,
+              callback: function (result) {
+                if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
+                  switch(r){
+                    case "1": selectFile(origin + "/" + name); break;
+                    case "2":
+                      selectFile(origin + "/" + name,true);
+                      watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
+                      showOverlay("Preparing to Print:\n" + name);
+                      break;
+                    case "3": copyToUsb(name); break;
+                    case "4": deleteFile(origin, name); break;
+                  }
+                }); }
+              }
             });
             break;
           case "sdcard":
             bootbox.prompt({
               title: name,
               inputType: 'checkbox',
-              inputOptions: [
-                { text: 'Load ' + name + ' for printing', value: '1' },
-                { text: 'Print ' + name + ' now', value: '2' }],
-                callback: function (result) {
-                  if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
-                    switch(r){
-                      case "1": selectFile(origin + "/" + name); break;
-                      case "2":
-                        selectFile(origin + "/" + name,true);
-                        watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
-                        showOverlay("Preparing to Print:\n" + name);
-                        break;
-                    }
-                  }); }
-                }
+              inputOptions: gcodeOptions,
+              callback: function (result) {
+                if(typeof result !== 'undefined' && result != null){ result.forEach(function(r){
+                  switch(r){
+                    case "1": selectFile(origin + "/" + name); break;
+                    case "2":
+                      selectFile(origin + "/" + name,true);
+                      watchLogFor["hideOverlay"] = "Printing"; watchLogFor.length++;
+                      showOverlay("Preparing to Print:\n" + name);
+                      break
+                    case "4": deleteFile(origin, name); break;
+                  }
+                }); }
+              }
             });
             break;
           case "usb":
