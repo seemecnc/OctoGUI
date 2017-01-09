@@ -37,13 +37,13 @@ var dt;                    // fileList DataTables handle
 var reconnect = false;     // variable to automatically reconnect to the printer when disconnected
 var overlayShowTime = 0;   // Time that the overlay was shown on screen.
 var firmwareDate = 0;      // Release date of the current firmware
-var missingFW = 0;
-var EEProm;
+var missingFW = 0;         // Number of M115 commands that have gone unanswered
+var EEProm;                // Array for storing eeprom values
+var burninPrinter = null;  // Array to track if the screen is in burnin mode
+var lastMessage = 0;       // Timestamp of last SockJS message
+var lastFileUpdate = 0;    // Timestamp of last updateFiles()
+var fileUpdate = 0;        // updateFiles PID tracker
 var backupCalibrationPresent = false;
-var burninPrinter = null;
-var lastMessage = 0;
-var lastFileUpdate = 0;
-var fileUpdate = 0;
 
 var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
