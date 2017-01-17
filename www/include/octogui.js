@@ -66,6 +66,7 @@ var zEvents = [];
 zEvents.push({ "command":"Filament", "label":"Change Filament" });
 zEvents.push({ "command":"Speed", "label":"Change Speed" });
 zEvents.push({ "command":"ExtruderTemp", "label":"Extruder Temperature" });
+zEvents.push({ "command":"ExtruderFlow", "label":"Extruder Flow (%)" });
 zEvents.push({ "command":"BedTemp", "label":"Bed Temperature" });
 zEvents.push({ "command":"FanSpeed", "label":"Fan Speed" });
 
@@ -226,6 +227,10 @@ function spottedZ(action,arg){
 
     case "ExtruderTemp":
       setExtruderTemp(arg);
+      break;
+
+    case "ExtruderFLow":
+      setFlowFactor(arg);
       break;
 
     case "BedTemp":
