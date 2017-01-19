@@ -1103,7 +1103,7 @@ function disableSteppers(){
   }
 }
 
-// Home all Axis and disabled the stepper motors. TODO: Setup motor enable/disable fuctions/buttons
+// Home all Axis
 function homePrinter(){
   if(printerStatus == "Printing" || printerStatus == "Printing from SD"){
     bootbox.alert({
@@ -1150,8 +1150,8 @@ function resumeHotLoad(){
   if(hotLoading){
     if(liftOnly){ sendCommand("G92 E0"); }
     if(returnX != null && returnY != null){
-      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E12", "G92 E" + returnE ] );
-    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E12", "G92 E" + returnE ] ); }
+      sendCommand( [ "G28", "90", "G0 X" + returnX + " Y" + returnY + " Z" + returnZ +" F1440 E6", "G92 E" + returnE ] );
+    }else{ sendCommand( [ "G28", "90", "G0 Z" + returnZ +" F1440 E6", "G92 E" + returnE ] ); }
     hotLoading = false;
     liftOnly = false;
     returnE = 0;
@@ -1623,9 +1623,6 @@ function saveZMenu(){
     }
   }
   watchForZ.sort(dynamicSort("height"));
-//  var zMessage = "Z Events Saved";
-//  if(zSkip > 0){ zMessage = zMessage + ". " + zSkip + " zEvents skipped."; }
-//  bootbox.alert({ message: zMessage, backdrop: true });
   document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
   rebuildZMenu();
 
