@@ -1093,7 +1093,7 @@ function sendCommand(command){
 }
 
 function disableSteppers(){
-  if(printerStatus == "Printing" || printerStatus == "Printing from SD"){
+  if(GUI && (printerStatus == "Printing" || printerStatus == "Printing from SD")){
     bootbox.alert({
       message: "Print job in progress. Cancel the job if you really want to disable the stepper motors.",
       backdrop: true
