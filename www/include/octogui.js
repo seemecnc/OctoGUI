@@ -1583,7 +1583,9 @@ function burninMenu(){
   if(printerStatus == "Operational"){
     mainHTML = mainHTML + "<a onclick='calibratePrinter()'>Calibrate Printer</a><br><br>";
     mainHTML = mainHTML + "<a onclick='deltaCalibration()'>DC42 Calibration</a><br><br>";
+    mainHTML = mainHTML + "<a onclick='loadFilament()'>Load Filament</a><br><br>";
     mainHTML = mainHTML + "<a onclick='burninTestPrint()'>Test Print</a><br><br>";
+    mainHTML = mainHTML + "<a onclick='unloadFilament()'>Unload Filament</a><br><br>";
   }else{
     mainHTML = mainHTML + "<a onclick='connectPrinter(\"connect\")'>Connect to Printer</a><br><br>";
   }
