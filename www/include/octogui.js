@@ -811,6 +811,11 @@ function updateConnectionStatus(){
               document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
             }
           }
+          if(printingStates.indexOf(printerStatus) != -1){
+            document.getElementById('burninSpan').style.visibility = "hidden";
+          }else{
+            document.getElementById('burninSpan').style.visibility = "visible";
+          }
           if(onlineStates.indexOf(printerStatus) != -1){
             if(lastMessage > 0 && lastMessage + (1 * 60 * 1000) <= (new Date().valueOf())){
               lastMessage = 0;
