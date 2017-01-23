@@ -1594,6 +1594,7 @@ function burninMenu(){
   }else{
     mainHTML = mainHTML + "<a onclick='connectPrinter(\"connect\")'>Connect to Printer</a><br><br>";
   }
+  mainHTML = mainHTML + "<a onclick='loadEEProm()'>Edit EEProm</a><br><br>";
   mainHTML = mainHTML + "<a onclick='burninPrinterMenu()'>Change Printer</a> - - <a onclick='location.reload()'>Reset</a>";
   document.getElementById('main').innerHTML = mainHTML;
 
