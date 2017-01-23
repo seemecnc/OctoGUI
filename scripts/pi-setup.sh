@@ -58,11 +58,11 @@ then
 fi
 
 #Add Terminal keyboard shortcut
-check=$(grep "C-A-t" /home/pi/.config/openbox/lxde-pi-rc.xml)
-if [ -z "$check" ]
-then
-  sed /home/pi/.config/openbox/lxde-pi-rc.xml -i -e 's/<keyboard>/<keyboard>\n<keybind key=\"C-A-t\"><action name=\"Execute\"><command>lxterminal<\/command><\/action>\n<\/keybind>/'
-fi
+#check=$(grep "C-A-t" /home/pi/.config/openbox/lxde-pi-rc.xml)
+#if [ -z "$check" ]
+#then
+#  sed /home/pi/.config/openbox/lxde-pi-rc.xml -i -e 's/<keyboard>/<keyboard>\n<keybind key=\"C-A-t\"><action name=\"Execute\"><command>lxterminal<\/command><\/action>\n<\/keybind>/'
+#fi
 
 mkdir -p /home/pi/.ssh /mnt/usb
 
