@@ -53,6 +53,20 @@ function loadProbePoints(){
       bedRadius = 80;
       break;
 
+    case "rostock_max_v2":
+      probePoints.push([0,140]);
+      probePoints.push([121.24,70]);
+      probePoints.push([121.24,-70]);
+      probePoints.push([0,-140]);
+      probePoints.push([-121.24,-70]);
+      probePoints.push([-121.24,70]);
+      probePoints.push([0,70]);
+      probePoints.push([60.62,-35]);
+      probePoints.push([-60.62,-35]);
+      probePoints.push([0,0]);
+      bedRadius = 140;
+      break;
+
     case "rostock_max_v3":
       probePoints.push([0,140]);
       probePoints.push([121.24,70]);
