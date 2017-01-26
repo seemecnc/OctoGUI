@@ -75,6 +75,7 @@ var calibrateString = [];
 calibrateString['eris'] = [ "M202 Z1850", "G69 S2", "G68", "G30 S2", "M202 Z400", "M500", "G4 S2", "M115" ];
 calibrateString['orion'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
 calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68 ", "M117 HORIZONTAL RADIUS CALIBRATED", "G30 S2 ", "M117 Z Height Calibrated", "G4 S2", "M500", "M117 CALIBRATION SAVED", "M115" ];
+calibrateString['rostock_max_v3_dual'] = "G29";
 calibrateString['hacker_h2'] = "G29";
 calibrateString['rostock_max_v2'] = "G29";
 
@@ -83,6 +84,7 @@ var loadFilamentString = [];
 loadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E530 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 loadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E560 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 loadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
+loadFilamentString['rostock_max_v3_dual'] = [ "G28", "M109 S220", "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 loadFilamentString['hacker_h2'] = [ "G28", "M109 S220", "G91", "G1 E780 F5000", "G1 E100 F150", "G90", "G92 E0", "M104 S0", "M84", "M115" ];
 
 // GCODE to unload filament
@@ -90,6 +92,7 @@ var unloadFilamentString = [];
 unloadFilamentString['eris'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 unloadFilamentString['orion'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-600", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 unloadFilamentString['rostock_max_v3'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-850", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
+unloadFilamentString['rostock_max_v3_dual'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-850", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 unloadFilamentString['hacker_h2'] = [ "G28", "M109 S220", "G91", "G1 E30 F75", "G1 E-75 F5000", "G90", "G92 E0", "G4 S3", "G91", "G1 E-850", "M104 S0", "G90", "G92 E0", "M84", "M115" ];
 
 // GCODE to unload filament mid-print
