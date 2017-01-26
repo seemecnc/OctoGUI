@@ -318,6 +318,9 @@ function spottedLog(key, log){
         case "Rostock MAX v3":
           pId = "rostock_max_v3";
           break;
+        case "Rostock MAX v3 Dual":
+          pId = "rostock_max_v3";
+          break;
         case "Hacker H2":
           pId = "hacker_h2";
           break;
