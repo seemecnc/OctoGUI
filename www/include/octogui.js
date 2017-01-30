@@ -742,12 +742,16 @@ function unloadFilament(){
 
 // Set the Nozzel temperature
 function setExtruderTemp(target){
-  $.ajax({
-    url: api+"printer/tool?apikey="+apikey,
-    type: "post",
-    contentType:"application/json; charset=utf-8",
-    data: JSON.stringify({"command":"target","targets":{"tool0": target}})
-  });
+  if(printerId == "rostock_max_v3_dual"){
+    sendCommand("M104 S" + target);
+  }else{
+    $.ajax({
+      url: api+"printer/tool?apikey="+apikey,
+      type: "post",
+      contentType:"application/json; charset=utf-8",
+      data: JSON.stringify({"command":"target","targets":{"tool0": target}})
+    });
+  }
   etempTarget = target;
   document.getElementById('extruderTempTarget').innerHTML = etempTarget;
   document.getElementById('eTempInput').value = etempTarget;
