@@ -1,5 +1,5 @@
 #!/bin/bash
-let maxuptime=$(( 24 * 3600))
+let maxuptime=$(( 16 * 3600))
 problem="null"
 utime=$(cat /proc/uptime|cut -f1 -d'.')
 if [ $utime -lt $maxuptime ]; then echo "Uptime not long enough - $utime"; problem="uptime"; fi
