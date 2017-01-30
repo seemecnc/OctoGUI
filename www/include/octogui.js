@@ -830,10 +830,7 @@ function updateConnectionStatus(){
             if(lastMessage > 0 && lastMessage + (1 * 60 * 1000) <= (new Date().valueOf())){
               lastMessage = 0;
               resetSocket();
-              bootbox.alert({
-                message: "Octoprint Socket has been reset! - Tell Ryan",
-                backdrop: true
-              });
+              console.log("resetting Octoprint socket");
             }
           }
         }
