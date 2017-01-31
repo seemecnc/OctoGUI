@@ -606,6 +606,13 @@ function loadEEProm(){
   showEEProm();
 }
 
+function PIDTune(){
+  showOverylay("PID Tuning the hot end");
+  watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
+  sendCommand("M303 P0 S280 X0");
+  sendCommand("M115");
+}
+
 // Find the current IP of the client and update it on screen
 function getClientIP() {
   window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
@@ -1595,6 +1602,7 @@ function burninMenu(){
   if(printerStatus == "Operational"){
     mainHTML = mainHTML + "<a onclick='calibratePrinter()'>Calibrate Printer</a><br><br>";
     mainHTML = mainHTML + "<a onclick='deltaCalibration()'>DC42 Calibration</a><br><br>";
+    mainHTML = mainHTML + "<a onclick='PIDTune()'>PID Tune</a><br><br>";
     mainHTML = mainHTML + "<a onclick='loadFilament()'>Load Filament</a><br><br>";
     mainHTML = mainHTML + "<a onclick='burninTestPrint()'>Test Print</a><br><br>";
     mainHTML = mainHTML + "<a onclick='unloadFilament()'>Unload Filament</a><br><br>";
