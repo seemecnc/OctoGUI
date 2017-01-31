@@ -607,7 +607,7 @@ function loadEEProm(){
 }
 
 function PIDTune(){
-  showOverylay("PID Tuning the hot end");
+  showOverlay("PID Tuning the hot end");
   watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
   sendCommand("M303 P0 S280 X0");
   sendCommand("M115");
