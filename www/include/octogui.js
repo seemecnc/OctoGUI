@@ -1511,6 +1511,7 @@ function startupTasks(page){
       break;
 
     case "burnin":
+      getPrinterProfile();
       burninPrinterMenu();
       getClientIP();
       break;
