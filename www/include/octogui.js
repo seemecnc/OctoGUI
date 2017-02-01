@@ -44,6 +44,7 @@ var lastMessage = 0;       // Timestamp of last SockJS message
 var lastFileUpdate = 0;    // Timestamp of last updateFiles()
 var fileUpdate = 0;        // updateFiles PID tracker
 var backupCalibrationPresent = false;
+var firmwareCopyCalibration = false;
 
 var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
@@ -253,6 +254,10 @@ function spottedLog(key, log){
   log = log.replace(/Recv:\ /,'');
   switch(key){
 
+    case "restoreBackup":
+      selectFile("local/calibration-backup.gcode",true);
+      break;
+
     case "COMMERROR": // Connection error - usually happens after cancelling a print on a Rostock
       delete watchLogFor[key]; watchLogFor.length--;
       connectPrinter("disconnect");
@@ -438,10 +443,14 @@ function spottedLog(key, log){
               if(type == "success"){
                 jdata = JSON.parse(data.responseText);
                 if(jdata.status == 1){
-                  bootbox.alert({
-                    message: "Calibration saved as calibration-backup.gcode",
-                    backdrop: true
-                  });
+                  if(firmwareCopyCalibration){
+                    flashFirmware();
+                  }else{
+                    bootbox.alert({
+                      message: "Calibration saved as calibration-backup.gcode",
+                      backdrop: true
+                    });
+                  }
                   updateFiles();
                 }else{
                   bootbox.alert({
@@ -1531,11 +1540,40 @@ function startupTasks(page){
   } );
 }
 
+function updateFirmware(){
+  switch(printerId){
+    case "orion":
+      burninPrinter = "orion";
+      break;
+    case "eris":
+      burninPrinter = "eris";
+      break;
+    case "rostock_max_v2";
+      burninPrinter = "rostockv2";
+      break;
+    case "rostock_max_v3";
+      burninPrinter = "rostockv3";
+      break;
+    case "rostock_max_v3_dual";
+      burninPrinter = "rostock-dual";
+      break;
+    case "hacker_h2";
+      burninPrinter = "h2";
+      break;
+  }
+  firmwareCopyCalibration = true;
+  backupCalibration();
+}
+
 function flashFirmware(){
 
   if(burninPrinter != "null"){
     showOverlay("Flashing Firmware");
-    watchLogFor["burninPrinterMenu"] = "to 'Operational"; watchLogFor.length++;
+    if(firmwareCopyCalibration){
+      watchLogFor["restoreBackup"] = "to 'Operational"; watchLogFor.length++;
+    }else{
+      watchLogFor["burninPrinterMenu"] = "to 'Operational"; watchLogFor.length++;
+    }
     $.ajax({
       url: "include/f.php?c=flash&printer="+burninPrinter,
       type: "get",
