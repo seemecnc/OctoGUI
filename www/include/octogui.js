@@ -1541,6 +1541,7 @@ function startupTasks(page){
 }
 
 function updateFirmware(){
+  connectPrinter("disconnect");
   switch(printerId){
     case "orion":
       burninPrinter = "orion";
@@ -1571,6 +1572,7 @@ function flashFirmware(){
     showOverlay("Flashing Firmware");
     if(firmwareCopyCalibration){
       watchLogFor["restoreBackup"] = "to 'Operational"; watchLogFor.length++;
+      firmwareCopyCalibration = false;
     }else{
       watchLogFor["burninPrinterMenu"] = "to 'Operational"; watchLogFor.length++;
     }
