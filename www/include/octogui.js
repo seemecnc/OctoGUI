@@ -262,6 +262,7 @@ function spottedLog(key, log){
       watchLogFor.length++;
       missingFW = 0;
       sendCommand("M115");
+      delete watchLogFor[key]; watchLogFor.length--;
       break;
 
     case "COMMERROR": // Connection error - usually happens after cancelling a print on a Rostock
