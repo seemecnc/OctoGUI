@@ -256,6 +256,12 @@ function spottedLog(key, log){
 
     case "restoreBackup":
       selectFile("local/calibration-backup.gcode",true);
+      watchLogFor['firmwareInfo'] = "FIRMWARE";
+      watchLogFor.length++;
+      watchLogFor['filamentInfo'] = "Printed filament";
+      watchLogFor.length++;
+      missingFW = 0;
+      sendCommand("M115");
       break;
 
     case "COMMERROR": // Connection error - usually happens after cancelling a print on a Rostock
