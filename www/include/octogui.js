@@ -444,6 +444,7 @@ function spottedLog(key, log){
                 jdata = JSON.parse(data.responseText);
                 if(jdata.status == 1){
                   if(firmwareCopyCalibration){
+                    connectPrinter("disconnect");
                     flashFirmware();
                   }else{
                     bootbox.alert({
@@ -1541,7 +1542,6 @@ function startupTasks(page){
 }
 
 function updateFirmware(){
-  connectPrinter("disconnect");
   switch(printerId){
     case "orion":
       burninPrinter = "orion";
