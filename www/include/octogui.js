@@ -1547,7 +1547,7 @@ function startupTasks(page){
 
 function updateFirmware(){
   if(printerStatus == "Operational"){
-    bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
+    bootbox.confirm("Do you want to update your firmware?", function(result){
       if(result){
         switch(printerId){
           case "orion":
