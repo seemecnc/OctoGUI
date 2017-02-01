@@ -828,6 +828,8 @@ function updateConnectionStatus(){
               else { document.getElementById('loadFilament').style.visibility = "hidden"; }
               if(typeof unloadFilamentString[printerId] !== 'undefined'){ document.getElementById('unloadFilament').style.visibility = "visible"; }
               else { document.getElementById('unloadFilament').style.visibility = "hidden"; }
+              document.getElementById('firmwareInfo').onclick = function(){ updateFirmware(); };
+              document.getElementById('firmwareDate').onclick = function(){ updateFirmware(); };
               updateFiles();
             }
           }else{
@@ -836,6 +838,8 @@ function updateConnectionStatus(){
               document.getElementById('loadFilament').style.visibility = "hidden";
               document.getElementById('unloadFilament').style.visibility = "hidden";
               document.getElementById("zMenuButton").innerHTML = watchForZ.length + " Active Z Events";
+              document.getElementById('firmwareInfo').onclick = null;
+              document.getElementById('firmwareDate').onclick = null;
             }
           }
           if(printingStates.indexOf(printerStatus) != -1){
@@ -1542,28 +1546,36 @@ function startupTasks(page){
 }
 
 function updateFirmware(){
-  switch(printerId){
-    case "orion":
-      burninPrinter = "orion";
-      break;
-    case "eris":
-      burninPrinter = "eris";
-      break;
-    case "rostock_max_v2":
-      burninPrinter = "rostockv2";
-      break;
-    case "rostock_max_v3":
-      burninPrinter = "rostockv3";
-      break;
-    case "rostock_max_v3_dual":
-      burninPrinter = "rostock-dual";
-      break;
-    case "hacker_h2":
-      burninPrinter = "h2";
-      break;
+  if(printerStatus == "Operational"){
+    bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
+      if(result){
+        switch(printerId){
+          case "orion":
+            burninPrinter = "orion";
+            break;
+          case "eris":
+            burninPrinter = "eris";
+            break;
+          case "rostock_max_v2":
+            burninPrinter = "rostockv2";
+            break;
+          case "rostock_max_v3":
+            burninPrinter = "rostockv3";
+            break;
+          case "rostock_max_v3_dual":
+            burninPrinter = "rostock-dual";
+            break;
+          case "hacker_h2":
+            burninPrinter = "h2";
+            break;
+        }
+        firmwareCopyCalibration = true;
+        backupCalibration();
+      }
+    });
+  }else{
+    bootbox.alert("You cannot update firmware when Printer is "+ printerStatus);
   }
-  firmwareCopyCalibration = true;
-  backupCalibration();
 }
 
 function flashFirmware(){
