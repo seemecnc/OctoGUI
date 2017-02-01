@@ -1548,16 +1548,16 @@ function updateFirmware(){
     case "eris":
       burninPrinter = "eris";
       break;
-    case "rostock_max_v2";
+    case "rostock_max_v2":
       burninPrinter = "rostockv2";
       break;
-    case "rostock_max_v3";
+    case "rostock_max_v3":
       burninPrinter = "rostockv3";
       break;
-    case "rostock_max_v3_dual";
+    case "rostock_max_v3_dual":
       burninPrinter = "rostock-dual";
       break;
-    case "hacker_h2";
+    case "hacker_h2":
       burninPrinter = "h2";
       break;
   }
