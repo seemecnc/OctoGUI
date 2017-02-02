@@ -4,7 +4,7 @@ check=$(grep "repetierTargetTemp" /home/pi/.octoprint/config.yaml)
 if [ -z "$check" ]
 then
   echo "Tweaking settings and restarting octoprint"
-  sed -i -e 's/^\ \ key:.*/\ \ key:\ ABAABABB/' -e 's/^plugins/feature:\n\ \ alwaysSendChecksum:\ true\n\ \ externalHeatupDetection:\ false\n\ \ repetierTargetTemp:\ true\nplugins/' /home/pi/.octoprint/config.yaml
+  sed -i -e 's/^\ \ key:.*/\ \ key:\ ABAABABB/' /home/pi/.octoprint/config.yaml
   service octoprint restart
   sleep 15
 fi
