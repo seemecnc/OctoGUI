@@ -1570,7 +1570,7 @@ function updateFirmware(){
             burninPrinter = "rostockv3";
             break;
           case "rostock_max_v3_dual":
-            burninPrinter = "rostock-dual";
+            burninPrinter = "rostockv3-dual";
             break;
           case "hacker_h2":
             burninPrinter = "h2";
