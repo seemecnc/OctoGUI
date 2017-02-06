@@ -626,6 +626,8 @@ function loadEEProm(){
 function PIDTune(targetTemp){
   showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
   watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
+  fanSpeed("off");
+  sendCommand("G28");
   sendCommand("M303 P0 S" + targetTemp + " X0");
   sendCommand("M115");
 }
