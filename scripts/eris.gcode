@@ -1095,6 +1095,7 @@ M104 S0
 M140 S0
 G28
 M104 S0
+M84
 ;End of Gcode
 ;SETTING_3 {"global_quality": "[general]\\nversion = 2\\nname = Eris PLA .4\\nde
 ;SETTING_3 finition = custom\\n\\n[metadata]\\nquality_type = normal\\ntype = qu
