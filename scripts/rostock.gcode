@@ -1333,6 +1333,7 @@ M104 S0
 M140 S0
 G28
 M104 S0
+M84
 ;End of Gcode
 ;SETTING_3 {"global_quality": "[general]\\nversion = 2\\nname = Rostock Slow\\nd
 ;SETTING_3 efinition = custom\\n\\n[metadata]\\nquality_type = normal\\ntype = q
