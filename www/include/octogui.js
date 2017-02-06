@@ -623,10 +623,10 @@ function loadEEProm(){
   showEEProm();
 }
 
-function PIDTune(){
-  showOverlay("PID Tuning the hot end");
+function PIDTune(targetTemp){
+  showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
   watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
-  sendCommand("M303 P0 S250 X0");
+  sendCommand("M303 P0 S" + targetTemp + " X0");
   sendCommand("M115");
 }
 
@@ -1662,7 +1662,7 @@ function burninMenu(){
   if(printerStatus == "Operational"){
     mainHTML = mainHTML + "<a onclick='calibratePrinter()'>Calibrate Printer</a><br><br>";
     mainHTML = mainHTML + "<a onclick='deltaCalibration()'>DC42 Calibration</a><br><br>";
-    mainHTML = mainHTML + "<a onclick='PIDTune()'>PID Tune</a><br><br>";
+    mainHTML = mainHTML + "<a onclick='PIDTune(250)'>PID Tune</a><br><br>";
     mainHTML = mainHTML + "<a onclick='loadFilament()'>Load Filament</a><br><br>";
     mainHTML = mainHTML + "<a onclick='burninTestPrint()'>Test Print</a><br><br>";
     mainHTML = mainHTML + "<a onclick='unloadFilament()'>Unload Filament</a><br><br>";
