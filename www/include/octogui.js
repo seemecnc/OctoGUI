@@ -627,8 +627,7 @@ function PIDTune(targetTemp){
   showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
   watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
   fanSpeed("off");
-  sendCommand(["G28", "M84", "M303 P0 S" + targetTemp + " X0"]);
-  sendCommand("M115");
+  sendCommand(["G28", "M84", "M303 P0 S" + targetTemp + " X0", "M115"]);
 }
 
 // Find the current IP of the client and update it on screen
