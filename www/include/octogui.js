@@ -231,6 +231,8 @@ function spottedTemp(action){
       sendCommand(["G28", "M84"]);
       break;
 
+  }
+
 }
 
 function piShutdown(){
