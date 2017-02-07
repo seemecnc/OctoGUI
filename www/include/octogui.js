@@ -667,7 +667,7 @@ function coolIt(){
       setExtruderTemp(0);
       fanSpeed("on");
       sendCommand(["G28", "G0 Z0.2", "M84"]);
-      watchForTemp[0] = { "target":30, "action":"parkit", "range":2 };
+      watchForTemp[0] = { "target":33, "action":"parkit", "range":2 };
     }
   });
 
