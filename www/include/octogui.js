@@ -640,10 +640,17 @@ function loadEEProm(){
 }
 
 function PIDTune(targetTemp){
-  showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
-  watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
-  fanSpeed("off");
-  sendCommand(["G28", "M84", "M303 P0 S" + targetTemp + " X0", "M115"]);
+  if(printerStatus == "Operational"){
+    showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
+    watchLogFor["hideOverlay"] = "MACHINE_TYPE"; watchLogFor.length++;
+    fanSpeed("off");
+    sendCommand(["G28", "M84", "M303 P0 S" + targetTemp + " X0", "M115"]);
+  }else{
+    bootbox.alert({
+      message: "Cannot PID Tune when printer is " + printerStatus,
+      backdrop: true
+    });
+  }
 }
 
 // Find the current IP of the client and update it on screen
