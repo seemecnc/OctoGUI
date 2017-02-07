@@ -45,6 +45,7 @@ var lastFileUpdate = 0;    // Timestamp of last updateFiles()
 var fileUpdate = 0;        // updateFiles PID tracker
 var backupCalibrationPresent = false;
 var firmwareCopyCalibration = false;
+var watchForTemp = [];
 
 var GUI;
 if (String(window.location).includes("burnin")) { GUI = false; }
@@ -189,6 +190,12 @@ function initSocket(){
         if(typeof e.data.current.temps[0] !== 'undefined'){
           etemp = e.data.current.temps[0].tool0.actual;
           etempTarget = e.data.current.temps[0].tool0.target;
+          if(typeof watchForTemp[0] !== 'undefined'){
+            if(watchForTemp[0]['target'] - Number(etemp) <= watchForTemp[0]['range'] && Number(etemp) - watchForTemp[0]['target'] <= watchForTemp[0]['range']){
+              spottedTemp(watchForTemp[0]['action']);
+              watchForTemp.splice(0,1);
+            }
+          }
           if(typeof e.data.current.temps[0].bed !== 'undefined'){
             btemp = e.data.current.temps[0].bed.actual;
             btempTarget = e.data.current.temps[0].bed.target;
@@ -212,6 +219,17 @@ function initSocket(){
       }
     }
   };
+
+}
+
+function spottedTemp(action){
+
+  switch(action){
+
+    case "parkit":
+      fanSpeed("off");
+      sendCommand(["G28", "M84"]);
+      break;
 
 }
 
@@ -645,6 +663,7 @@ function coolIt(){
     if(result){
       fanSpeed("on");
       sendCommand(["M104 S0", "G28", "G0 Z0.2", "M84"]);
+      watchForTemp[0] = { "target":30, "action":"parkit", "range":2 };
     }
   });
 
