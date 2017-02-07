@@ -639,6 +639,17 @@ function loadEEProm(){
   showEEProm();
 }
 
+function coolIt(){
+
+  bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
+    if(result){
+      fanSpeed("on");
+      sendCommand(["M104 S0", "G28", "G0 Z0.2"]);
+    }
+  });
+
+}
+
 function PIDTune(targetTemp){
   if(printerStatus == "Operational"){
     showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
