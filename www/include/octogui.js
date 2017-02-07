@@ -217,7 +217,7 @@ function initSocket(){
 
 function piShutdown(){
 
-  showOverlay("Wait 10 seconds after shutting down to unplug the PI<br><br><a onclick='coreCommand(\"shutdown\")'>CLICK HERE TO SHUTDOWN</a>");
+  showOverlay("Wait 10 seconds after shutdown to unplug the PI<br><br><a onclick='coreCommand(\"shutdown\")'>CLICK HERE TO SHUTDOWN</a>");
 
 }
 
