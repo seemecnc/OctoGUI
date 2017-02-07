@@ -215,6 +215,16 @@ function initSocket(){
 
 }
 
+function coreCommand(command){
+
+  $.ajax({
+    url: api+"system/commands/core/" + command + "?apikey="+apikey,
+    type: "post",
+    contentType:"application/json; charset=utf-8"
+  });
+
+}
+
 // Actions to take when Z height is hit
 function spottedZ(action,arg){
 
