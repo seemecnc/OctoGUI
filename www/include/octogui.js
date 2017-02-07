@@ -1077,35 +1077,37 @@ function updateFiles(page){
     url: api+"printer/sd?apikey="+apikey,
     type: "post",
     contentType:"application/json; charset=utf-8",
-    data: JSON.stringify({"command":"refresh"})
-  });
-  page = page || 0;
-  $.ajax({
-    url: "include/f.php?c=list",
-    type: "get",
-    contentType:"application/json; charset=utf-8",
-    complete: (function(data,type){
-      fileUpdate = 0;
-      if(type == "success"){
-        backupCalibrationPresent = false;
-        jdata = JSON.parse(data.responseText);
-        dt.clear();
-        if(jdata == null){ dt.draw(); }
-        else{
-          var sortString;
-          if(sortRev){ sortString = "-" + sortBy; }
-          else{ sortString = sortBy; }
-          var files = jdata.sort(dynamicSort(sortString));
-          files.forEach(function(f){
-            dt.row.add([ f.origin, f.name ]);
-            if(f.origin == "local" && f.name == "backup-calibration.gcode"){ backupCalibrationPresent = true; }
-          });
-          if(page > 0){
-            if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
-            dt.page(page).draw(false);
-          }else { dt.draw(); }
-        }
-      }
+    data: JSON.stringify({"command":"refresh"}),
+    complete: (function(){
+      page = page || 0;
+      $.ajax({
+        url: "include/f.php?c=list",
+        type: "get",
+        contentType:"application/json; charset=utf-8",
+        complete: (function(data,type){
+          fileUpdate = 0;
+          if(type == "success"){
+            backupCalibrationPresent = false;
+            jdata = JSON.parse(data.responseText);
+            dt.clear();
+            if(jdata == null){ dt.draw(); }
+            else{
+              var sortString;
+              if(sortRev){ sortString = "-" + sortBy; }
+              else{ sortString = sortBy; }
+              var files = jdata.sort(dynamicSort(sortString));
+              files.forEach(function(f){
+                dt.row.add([ f.origin, f.name ]);
+                if(f.origin == "local" && f.name == "backup-calibration.gcode"){ backupCalibrationPresent = true; }
+              });
+              if(page > 0){
+                if(page >= (dt.page.info().pages)){ page = dt.page.info().pages - 1; }
+                dt.page(page).draw(false);
+              }else { dt.draw(); }
+            }
+          }
+        })
+      });
     })
   });
 }
