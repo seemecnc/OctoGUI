@@ -1624,7 +1624,7 @@ function burninPrinterMenu(){
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion\")'>Orion</a> - - ";
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion-atx\")'>Orion ATX</a><br><br>";
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"eris\")'>Eris</a> - - ";
-  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a>";
+  mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a><br><br><br><br><a onclick='coreCommand(\"shutdown\")'>Shutdown Screen</a><br>";
   document.getElementById('main').innerHTML = mainHTML;
 
 }
