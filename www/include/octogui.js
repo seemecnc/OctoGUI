@@ -661,15 +661,19 @@ function loadEEProm(){
 
 function coolIt(){
 
-  bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
-    if(result){
-      if(heatedBed){ setBedTemp(0); }
-      setExtruderTemp(0);
-      fanSpeed("on");
-      sendCommand(["G28", "G0 Z0.2", "M84"]);
-      watchForTemp[0] = { "target":33, "action":"parkit", "range":2 };
-    }
-  });
+  if(printerStatus == "Operational"){
+    bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
+      if(result){
+        if(heatedBed){ setBedTemp(0); }
+        setExtruderTemp(0);
+        fanSpeed("on");
+        sendCommand(["G28", "G0 Z0.2", "M84"]);
+        if(Number(etemp) >= 35){
+          watchForTemp[0] = { "target":33, "action":"parkit", "range":2 };
+        }
+      }
+    });
+  }
 
 }
 
