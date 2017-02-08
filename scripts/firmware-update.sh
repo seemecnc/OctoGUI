@@ -47,17 +47,22 @@ fi
 
 if [ "$problem" == "null" ]
 then
-  echo -n "Cycling USB bus ... "
-  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 0
-  sleep 2
-  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
-  echo "DONE"
-  sleep 2
-  fport=$(getPort)
-  if [ -z "$fport" ]; then echo "Error detecting port"; exit 1; fi
-  echo "Flashing on $fport"
-  avrdude -v -p m2560 -c stk500v2 -P $fport -b 115200 -D -U flash:w:$eclear:i
-  sleep 2
+  if [ "$2" != "-n" ]
+  then
+    echo -n "Cycling USB bus ... "
+    sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 0
+    sleep 2
+    sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
+    echo "DONE"
+    sleep 2
+    fport=$(getPort)
+    if [ -z "$fport" ]; then echo "Error detecting port"; exit 1; fi
+    echo "Flashing on $fport"
+    avrdude -v -p m2560 -c stk500v2 -P $fport -b 115200 -D -U flash:w:$eclear:i
+    sleep 2
+  else
+    echo "Skipping EEProm clear"
+  fi
   echo -n "Cycling USB bus ... "
   sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 0
   sleep 2
