@@ -229,6 +229,7 @@ function spottedTemp(action){
     case "parkit":
       fanSpeed("off");
       sendCommand(["G28", "M84"]);
+      hideOverlay();
       break;
 
   }
