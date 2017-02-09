@@ -550,7 +550,9 @@ function generateCommands(rslt) {
     updateGCODE.push("M206 T3 P901 X" + (210.0 + Number(deltaParams.xadj.toFixed(2))));
     updateGCODE.push("M206 T3 P905 X" + (330.0 + Number(deltaParams.yadj.toFixed(2))));
     updateGCODE.push("M206 T3 P909 X" + (90.0 + Number(deltaParams.zadj.toFixed(2))));
-    updateGCODE.push("M206 T3 P881 X" + deltaParams.diagonal.toFixed(2));
+    if(numFactors == 7){
+      updateGCODE.push("M206 T3 P881 X" + deltaParams.diagonal.toFixed(2));
+    }
     updateGCODE.push("M206 T3 P885 X" + deltaParams.radius.toFixed(2));
     updateGCODE.push("M206 T3 P153 X" + deltaParams.homedHeight.toFixed(2));
     updateGCODE.push("M500");
