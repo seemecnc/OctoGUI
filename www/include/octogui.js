@@ -664,6 +664,7 @@ function coolIt(){
   if(printerStatus == "Operational"){
     bootbox.confirm("Make sure the print bed is clear and there is no filament hanging from the extruder.", function(result){
       if(result){
+        showOverlay("Actively cooling the hot end");
         if(heatedBed){ setBedTemp(0); }
         setExtruderTemp(0);
         fanSpeed("on");
