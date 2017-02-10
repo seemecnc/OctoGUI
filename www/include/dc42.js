@@ -2,15 +2,11 @@
 // Delta calibration script
 
 var debug = false;
-
-var initialPoints = 10;
-var initialFactors = 7;
-
 var deltaParams;
 var firmware = "Repetier";
 var bedRadius;
 var numPoints = 10;
-var numFactors = 7;
+var numFactors = 6;
 var xBedProbePoints, yBedProbePoints, zBedProbePoints;
 var normalise = true;
 var probePoints;
