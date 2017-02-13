@@ -228,8 +228,7 @@ function spottedTemp(action){
 
     case "parkit":
       fanSpeed("off");
-      GCode::executeFString(PSTR("M206 T0 P254 S200"));
-      sendCommand(["G28", "M84"]);
+      sendCommand(["M206 T0 P254 S200","G28", "M84"]);
       hideOverlay();
       break;
 
