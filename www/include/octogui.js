@@ -228,6 +228,7 @@ function spottedTemp(action){
 
     case "parkit":
       fanSpeed("off");
+      GCode::executeFString(PSTR("M206 T0 P254 S200"));
       sendCommand(["G28", "M84"]);
       hideOverlay();
       break;
@@ -669,6 +670,7 @@ function coolIt(){
         if(heatedBed){ setBedTemp(0); }
         setExtruderTemp(0);
         fanSpeed("on");
+        GCode::executeFString(PSTR("M206 T0 P254 S255"));
         sendCommand(["G28", "G0 Z0.2", "M84"]);
         if(Number(etemp) >= 40){
           watchForTemp[0] = { "target":38, "action":"parkit", "range":2 };
