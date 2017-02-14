@@ -397,6 +397,12 @@ function spottedLog(key, log){
       delete watchLogFor[key]; watchLogFor.length--;
       break;
 
+    case "fanOff":
+      hideOverlay();
+      delete watchLogFor[key]; watchLogFor.length--;
+      fanSpeed("off");
+      break;
+
     case "hideOverlay": // Set the Overlay to hidden
       var curTime = new Date().valueOf();
       if(overlayShowTime > 0 && (overlayShowTime + minOverlayTime >= curTime)){ setTimeout(hideOverlay, overlayShowTime + minOverlayTime - curTime); }
@@ -677,6 +683,20 @@ function coolIt(){
     });
   }
 
+}
+
+function fanPIDTune(targetTemp){
+  if(printerStatus == "Operational"){
+    showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
+    watchLogFor["fanOff"] = "MACHINE_TYPE"; watchLogFor.length++;
+    fanSpeed("on");
+    sendCommand(["G28", "G0 Z1", "M84", "M303 P0 S" + targetTemp + " X0", "M115"]);
+  }else{
+    bootbox.alert({
+      message: "Cannot PID Tune when printer is " + printerStatus,
+      backdrop: true
+    });
+  }
 }
 
 function PIDTune(targetTemp){
