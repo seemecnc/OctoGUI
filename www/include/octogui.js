@@ -401,6 +401,7 @@ function spottedLog(key, log){
       hideOverlay();
       delete watchLogFor[key]; watchLogFor.length--;
       fanSpeed("off");
+      sendCommand("G28");
       break;
 
     case "hideOverlay": // Set the Overlay to hidden
@@ -690,7 +691,7 @@ function fanPIDTune(targetTemp){
     showOverlay("PID Tuning the hot end<br>Target: "+targetTemp);
     watchLogFor["fanOff"] = "MACHINE_TYPE"; watchLogFor.length++;
     fanSpeed("on");
-    sendCommand(["G28", "G0 Z1", "M84", "M303 P0 S" + targetTemp + " X0", "M115"]);
+    sendCommand(["G28", "M84", "M303 P0 S" + targetTemp + " X0", "M115"]);
   }else{
     bootbox.alert({
       message: "Cannot PID Tune when printer is " + printerStatus,
