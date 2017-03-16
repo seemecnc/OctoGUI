@@ -121,7 +121,7 @@ function backupCalibration($commands){
 
 }
 
-function flashFirmware($printeri,$nowipe){
+function flashFirmware($printer,$nowipe){
 
   $fwpath = "/var/www/html/fw";
   $file = $fwpath."/".$printer.".hex";
