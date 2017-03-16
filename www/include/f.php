@@ -121,13 +121,16 @@ function backupCalibration($commands){
 
 }
 
-function flashFirmware($printer){
+function flashFirmware($printeri,$nowipe){
 
   $fwpath = "/var/www/html/fw";
   $file = $fwpath."/".$printer.".hex";
   if(file_exists($file)){
     echo "OK";
-    $cmd = "sudo -u pi /var/www/html/OctoGUI/scripts/fw-wrapper.sh $file";
+    if($nowipe == "1")
+      $cmd = "sudo -u pi /var/www/html/OctoGUI/scripts/fw-wrapper.sh $file -n";
+    else
+      $cmd = "sudo -u pi /var/www/html/OctoGUI/scripts/fw-wrapper.sh $file";
     echo shell_exec($cmd);
   }
 }
@@ -171,7 +174,7 @@ switch($_REQUEST['c']){
 
   case "flash":
     if(isset($_REQUEST['printer'])){
-      flashFirmware($_REQUEST['printer']);
+      flashFirmware($_REQUEST['printer'],$_REQUEST['nowipe']);
     }
     break;
 
