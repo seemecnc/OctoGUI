@@ -1681,8 +1681,11 @@ function flashFirmware(){
     }else{
       watchLogFor["burninPrinterMenu"] = "to 'Operational"; watchLogFor.length++;
     }
+    var URL;
+    if(GUI){ URL = "include/f.php?c=flash&nowipe=1&printer="+burninPrinter; }
+    else { URL = "include/f.php?c=flash&printer="+burninPrinter; }
     $.ajax({
-      url: "include/f.php?c=flash&nowipe=1&printer="+burninPrinter,
+      url: URL,
       type: "get",
     });
   }
