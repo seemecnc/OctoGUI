@@ -80,6 +80,7 @@ calibrateString['rostock_max_v3'] = [ "G69 S2", "M117 ENDSTOPS CALIBRATED", "G68
 calibrateString['rostock_max_v3_dual'] = "G29";
 calibrateString['hacker_h2'] = "G29";
 calibrateString['rostock_max_v2'] = "G29";
+calibrateString['artemis'] = "G29";
 
 // GCODE to Load filament
 var loadFilamentString = [];
@@ -358,6 +359,9 @@ function spottedLog(key, log){
       document.getElementById('firmwareDate').style.visibility = "visible";
       document.getElementById('firmwareDate').innerHTML = firmwareDate;
       switch(fwp){
+        case "Artemis":
+          pId = "artemis";
+          break;
         case "ERIS Delta":
           pId = "eris";
           break;

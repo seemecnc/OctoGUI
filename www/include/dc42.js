@@ -105,6 +105,20 @@ function loadProbePoints(){
       bedRadius = 70;
       break;
 
+    case "artemis":
+      probePoints.push([0,70]);
+      probePoints.push([60.62,35]);
+      probePoints.push([60.62,-35]);
+      probePoints.push([0,-70]);
+      probePoints.push([-60.62,-35]);
+      probePoints.push([-60.62,35]);
+      probePoints.push([0,35]);
+      probePoints.push([30.31,-17.5]);
+      probePoints.push([-30.31,-17.5]);
+      probePoints.push([0,0]);
+      bedRadius = 70;
+      break;
+
   }
 
   probeGCODE = ["G28", "G1 Z20" ];
