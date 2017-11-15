@@ -74,12 +74,18 @@ then
   echo "Flashing on $fport"
   avrdude -v -p m2560 -c stk500v2 -P $fport -b 115200 -D -U flash:w:$1:i
   echo -n "Waiting for board to init "
-  for i in `seq 1 15`
+  for i in `seq 1 11`
   do
     echo -n "."
     sleep 1
   done
   echo " DONE"
+  echo -n "Cycling USB bus ... "
+  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 0
+  sleep 2
+  sudo /usr/local/bin/hub-ctrl -h 0 -P 2 -p 1
+  echo "DONE"
+  sleep 2
   echo "Reconnecting"
   curl -H "Content-Type: application/json" -X POST -d "{\"command\":\"connect\",\"port\":\"$(getPort)\"}" http://localhost/api/connection?apikey=ABAABABB
 else
