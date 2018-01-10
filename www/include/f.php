@@ -183,6 +183,10 @@ switch($_REQUEST['c']){
     }
     break;
 
+  case "flashFSR":
+    flashFSR();
+    break;
+
   case "connect":
     $ch = curl_init();
     $post = array('command' => "connect","baudrate" => 250000,"port" => printerPort());
