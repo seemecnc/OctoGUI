@@ -121,6 +121,11 @@ function backupCalibration($commands){
 
 }
 
+function flashFSR(){
+  $cmd = "sudo -u pi /var/www/html/OctoGUI/scripts/aflash.sh /var/www/html/OctoGUI/scripts/FSR.hex";
+  shell_exec($cmd);
+}
+
 function flashFirmware($printer,$nowipe){
 
   $fwpath = "/var/www/html/fw";

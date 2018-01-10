@@ -1675,6 +1675,16 @@ function updateFirmware(){
   }
 }
 
+function flashFSR(){
+    var URL;
+    URL = "include/f.php?c=flashFSR";
+    $.ajax({
+      url: URL,
+      type: "get",
+    });
+
+}
+
 function flashFirmware(){
 
   if(burninPrinter != "null"){
@@ -1764,6 +1774,7 @@ function burninMenu(){
     mainHTML = mainHTML + "<a onclick='connectPrinter(\"connect\")'>Connect to Printer</a><br><br>";
   }
   mainHTML = mainHTML + "<a onclick='burninPrinterMenu()'>Change Printer</a> - - <a onclick='location.reload()'>Reset</a>";
+  mainHTML = mainHTML + "<br><Br><a onclick='flashFSR()'>Flash FSR</a><br>";
   document.getElementById('main').innerHTML = mainHTML;
 
 }
