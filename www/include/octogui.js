@@ -1716,6 +1716,7 @@ function burninPrinterMenu(){
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"orion-atx\")'>Orion ATX</a><br><br>";
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"eris\")'>Eris</a> - - ";
   mainHTML = mainHTML + "<a onclick='setBurninPrinter(\"h2\")'>Hacker H2</a><br><br><br><br><a onclick='piShutdown()'>Shutdown Screen</a><br>";
+  mainHTML = mainHTML + "<br><Br><a onclick='flashFSR()'>Flash FSR</a><br>";
   document.getElementById('main').innerHTML = mainHTML;
 
 }
@@ -1774,7 +1775,6 @@ function burninMenu(){
     mainHTML = mainHTML + "<a onclick='connectPrinter(\"connect\")'>Connect to Printer</a><br><br>";
   }
   mainHTML = mainHTML + "<a onclick='burninPrinterMenu()'>Change Printer</a> - - <a onclick='location.reload()'>Reset</a>";
-  mainHTML = mainHTML + "<br><Br><a onclick='flashFSR()'>Flash FSR</a><br>";
   document.getElementById('main').innerHTML = mainHTML;
 
 }

@@ -122,7 +122,7 @@ function backupCalibration($commands){
 }
 
 function flashFSR(){
-  $cmd = "sudo -u pi /var/www/html/OctoGUI/scripts/aflash.sh /var/www/html/OctoGUI/scripts/FSR.hex";
+  $cmd = "sudo /var/www/html/OctoGUI/scripts/aflash.sh /var/www/html/OctoGUI/scripts/FSR.hex";
   shell_exec($cmd);
 }
 

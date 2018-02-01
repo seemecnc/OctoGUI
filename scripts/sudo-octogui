@@ -1,4 +1,4 @@
 www-data ALL=(root) NOPASSWD: /var/www/html/OctoGUI/scripts/network-setup.sh
 www-data ALL=(pi) NOPASSWD: /var/www/html/OctoGUI/scripts/fw-wrapper.sh
-www-data ALL=(pi) NOPASSWD: /var/www/html/OctoGUI/scripts/aflash.sh
+www-data ALL=(root) NOPASSWD: /var/www/html/OctoGUI/scripts/aflash.sh
 
